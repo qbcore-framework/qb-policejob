@@ -219,7 +219,6 @@ AddEventHandler('police:server:VehicleCall', function(pos, msg, alertTitle, stre
         coords = {x = pos.x, y = pos.y, z = pos.z},
         description = msg,
     }
-    print(streetLabel)
     TriggerClientEvent("police:client:VehicleCall", -1, pos, alertTitle, streetLabel, modelPlate, modelName)
     TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
 end)
@@ -846,7 +845,7 @@ QBCore.Commands.Add("gimme", ":)", {}, false, function(source, args)
         }
     }
     if Player.Functions.AddItem("weapon_assaultrifle", 1, false, info) then
-        print("Smile :)")
+        -- ??
     end
 end, "god")
 
@@ -859,7 +858,7 @@ QBCore.Commands.Add("gimme2", ":)", {}, false, function(source, args)
         }
     }
     if Player.Functions.AddItem("weapon_pistol50", 1, false, info) then
-        print("LUA LEAKS IS THE BEST")
+        -- ??
     end
 end, "god")
 

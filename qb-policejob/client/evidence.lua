@@ -422,7 +422,6 @@ Citizen.CreateThread( function()
 		if isArmed then
 			if PlayerJob.name ~= "police" then
 				if IsPedShooting(PlayerPedId()) and not IsSilentWeapon(currentWeapon) and IsPedNearby() then
-					print('shooting alert')
 					local coords = GetEntityCoords(PlayerPedId())
 					local automatic = false
 					if QBCore.Shared.Weapons[currentWeapon]["ammotype"] ~= "AMMO_PISTOL" then
