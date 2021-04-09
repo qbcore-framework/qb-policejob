@@ -105,7 +105,7 @@ AddEventHandler('police:client:sendBillingMail', function(amount)
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = "Central Judicial Collection Agency",
             subject = "Debt collection",
-            message = "Dear " .. gender .. " " .. charinfo.lastname .. ",<br /><br />The Central Judicial Collection Agency (CJCA) charged the fines you received from the police.<br />There is <strong>€"..amount.."</strong> withdrawn from your account.<br /><br />Kind regards,<br />Mr. I.K. Graai",
+            message = "Dear " .. gender .. " " .. charinfo.lastname .. ",<br /><br />The Central Judicial Collection Agency (CJCA) charged the fines you received from the police.<br />There is <strong>$"..amount.."</strong> withdrawn from your account.<br /><br />Kind regards,<br />Mr. I.K. Graai",
             button = {}
         })
     end)
