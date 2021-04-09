@@ -29,7 +29,7 @@ Citizen.CreateThread(function()
                             else
                                 DrawText3D(v.x, v.y, v.z, "~r~E~w~ - Get off duty")
                             end
-                            if IsControlJustReleased(0, Keys["E"]) then
+                            if IsControlJustReleased(0, 38) then
                                 onDuty = not onDuty
                                 TriggerServerEvent("police:server:UpdateCurrentCops")
                                 TriggerServerEvent("QBCore:ToggleDuty")
@@ -46,7 +46,7 @@ Citizen.CreateThread(function()
                     if #(pos - vector3(v.x, v.y, v.z)) < 2 then
                         if #(pos - vector3(v.x, v.y, v.z)) < 1.0 then
                             DrawText3D(v.x, v.y, v.z, "~g~E~w~ -    Evidence stash")
-                            if IsControlJustReleased(0, Keys["E"]) then
+                            if IsControlJustReleased(0, 38) then
                                 TriggerServerEvent("inventory:server:OpenInventory", "stash", "policeevidence", {
                                     maxweight = 4000000,
                                     slots = 500,
@@ -63,7 +63,7 @@ Citizen.CreateThread(function()
                     if #(pos - vector3(v.x, v.y, v.z)) < 2 then
                         if #(pos - vector3(v.x, v.y, v.z)) < 1.0 then
                             DrawText3D(v.x, v.y, v.z, "~g~E~w~ - evidence stash")
-                            if IsControlJustReleased(0, Keys["E"]) then
+                            if IsControlJustReleased(0, 38) then
                                 TriggerServerEvent("inventory:server:OpenInventory", "stash", "policeevidence2", {
                                     maxweight = 4000000,
                                     slots = 500,
@@ -80,7 +80,7 @@ Citizen.CreateThread(function()
                     if #(pos - vector3(v.x, v.y, v.z)) < 2 then
                         if #(pos - vector3(v.x, v.y, v.z)) < 1.0 then
                             DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Evidence stash")
-                            if IsControlJustReleased(0, Keys["E"]) then
+                            if IsControlJustReleased(0, 38) then
                                 TriggerServerEvent("inventory:server:OpenInventory", "stash", "policeevidence3", {
                                     maxweight = 4000000,
                                     slots = 500,
@@ -97,7 +97,7 @@ Citizen.CreateThread(function()
                     if #(pos - vector3(v.x, v.y, v.z)) < 2 then
                         if #(pos - vector3(v.x, v.y, v.z)) < 1.0 then
                             DrawText3D(v.x, v.y, v.z, "~r~E~w~ - Bin")
-                            if IsControlJustReleased(0, Keys["E"]) then
+                            if IsControlJustReleased(0, 38) then
                                 TriggerServerEvent("inventory:server:OpenInventory", "stash", "policetrash", {
                                     maxweight = 4000000,
                                     slots = 300,
@@ -120,7 +120,7 @@ Citizen.CreateThread(function()
                                  else
                                      DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Vehicles")
                                  end
-                                 if IsControlJustReleased(0, Keys["E"]) then
+                                 if IsControlJustReleased(0, 38) then
                                      if IsPedInAnyVehicle(PlayerPedId(), false) then
                                          QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
                                      else
@@ -145,7 +145,7 @@ Citizen.CreateThread(function()
                                 else
                                     DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Vehicles")
                                 end
-                                if IsControlJustReleased(0, Keys["E"]) then
+                                if IsControlJustReleased(0, 38) then
                                     if IsPedInAnyVehicle(PlayerPedId(), false) then
                                         QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
                                     else
@@ -170,7 +170,7 @@ Citizen.CreateThread(function()
                                 else
                                     DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Take a helicopter")
                                 end
-                                if IsControlJustReleased(0, Keys["E"]) then
+                                if IsControlJustReleased(0, 38) then
                                     if IsPedInAnyVehicle(PlayerPedId(), false) then
                                         QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
                                     else
@@ -196,7 +196,7 @@ Citizen.CreateThread(function()
                         if onDuty then
                             if #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
                                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Armory")
-                                if IsControlJustReleased(0, Keys["E"]) then
+                                if IsControlJustReleased(0, 38) then
                                     SetWeaponSeries()
                                     TriggerServerEvent("inventory:server:OpenInventory", "shop", "police", Config.Items)
                                 end
@@ -212,7 +212,7 @@ Citizen.CreateThread(function()
                         if onDuty then
                             if #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
                                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Personal stash")
-                                if IsControlJustReleased(0, Keys["E"]) then
+                                if IsControlJustReleased(0, 38) then
                                     TriggerServerEvent("inventory:server:OpenInventory", "stash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
                                     TriggerEvent("inventory:client:SetCurrentStash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
                                 end
@@ -228,7 +228,7 @@ Citizen.CreateThread(function()
                         if onDuty then
                             if #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
                                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Scan fingerprint")
-                                if IsControlJustReleased(0, Keys["E"]) then
+                                if IsControlJustReleased(0, 38) then
                                     local player, distance = GetClosestPlayer()
                                     if player ~= -1 and distance < 2.5 then
                                         local playerId = GetPlayerServerId(player)

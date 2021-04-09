@@ -5,9 +5,9 @@ Citizen.CreateThread(function()
             DisableAllControlActions(0)
             EnableControlAction(0, 1, true)
 			EnableControlAction(0, 2, true)
-            EnableControlAction(0, Keys['T'], true)
-            EnableControlAction(0, Keys['E'], true)
-            EnableControlAction(0, Keys['ESC'], true)
+            EnableControlAction(0, 245, true)
+            EnableControlAction(0, 38, true)
+            EnableControlAction(0, 322, true)
         end
 
         if isHandcuffed then
@@ -16,26 +16,26 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 25, true) -- Aim
 			DisableControlAction(0, 263, true) -- Melee Attack 1
 
-			DisableControlAction(0, Keys['R'], true) -- Reload
-			DisableControlAction(0, Keys['SPACE'], true) -- Jump
-			DisableControlAction(0, Keys['Q'], true) -- Cover
-			DisableControlAction(0, Keys['TAB'], true) -- Select Weapon
-			DisableControlAction(0, Keys['F'], true) -- Also 'enter'?
+			DisableControlAction(0, 45, true) -- Reload
+			DisableControlAction(0, 22, true) -- Jump
+			DisableControlAction(0, 44, true) -- Cover
+			DisableControlAction(0, 37, true) -- Select Weapon
+			DisableControlAction(0, 23, true) -- Also 'enter'?
 
-			DisableControlAction(0, Keys['F1'], true) -- Disable phone
-			DisableControlAction(0, Keys['F2'], true) -- Inventory
-			DisableControlAction(0, Keys['F3'], true) -- Animations
-			DisableControlAction(0, Keys['F6'], true) -- Job
+			DisableControlAction(0, 288, true) -- Disable phone
+			DisableControlAction(0, 289, true) -- Inventory
+			DisableControlAction(0, 170, true) -- Animations
+			DisableControlAction(0, 167, true) -- Job
 
-			DisableControlAction(0, Keys['C'], true) -- Disable looking behind
-			DisableControlAction(0, Keys['X'], true) -- Disable clearing animation
-			DisableControlAction(2, Keys['P'], true) -- Disable pause screen
+			DisableControlAction(0, 26, true) -- Disable looking behind
+			DisableControlAction(0, 73, true) -- Disable clearing animation
+			DisableControlAction(2, 199, true) -- Disable pause screen
 
 			DisableControlAction(0, 59, true) -- Disable steering in vehicle
 			DisableControlAction(0, 71, true) -- Disable driving forward in vehicle
 			DisableControlAction(0, 72, true) -- Disable reversing in vehicle
 
-			DisableControlAction(2, Keys['LEFTCTRL'], true) -- Disable going stealth
+			DisableControlAction(2, 36, true) -- Disable going stealth
 
 			DisableControlAction(0, 264, true) -- Disable melee
 			DisableControlAction(0, 257, true) -- Disable melee

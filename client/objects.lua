@@ -287,7 +287,7 @@ Citizen.CreateThread(function()
                     if not IsPedInAnyVehicle(PlayerPedId()) then
                         if PlayerJob.name == "police" and PlayerJob.onduty then
                             DrawText3D(pos.x, pos.y, pos.z, '[E] Delete Spike')
-                            if IsControlJustPressed(0, Keys["E"]) then
+                            if IsControlJustPressed(0, 38) then
                                 NetworkRegisterEntityAsNetworked(SpawnedSpikes[ClosestSpike].object)
                                 NetworkRequestControlOfEntity(SpawnedSpikes[ClosestSpike].object)            
                                 SetEntityAsMissionEntity(SpawnedSpikes[ClosestSpike].object)        

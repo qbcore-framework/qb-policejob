@@ -10,7 +10,7 @@ local speed_ud = 3.0 -- speed by which the camera pans up-down
 local toggle_helicam = 51 -- control id of the button by which to toggle the helicam mode. Default: INPUT_CONTEXT (E)
 local toggle_vision = 25 -- control id to toggle vision mode. Default: INPUT_AIM (Right mouse btn)
 local toggle_rappel = 154 -- control id to rappel out of the heli. Default: INPUT_DUCK (X)
-local toggle_spotlight = Keys["H"] -- control id to toggle the front spotlight Default: INPUT_PhoneCameraGrid (G)
+local toggle_spotlight = 74 -- control id to toggle the front spotlight Default: INPUT_PhoneCameraGrid (G)
 local toggle_lock_on = 22 -- control id to lock onto a vehicle with the camera. Default is INPUT_SPRINT (spacebar)
 
 -- Script starts here

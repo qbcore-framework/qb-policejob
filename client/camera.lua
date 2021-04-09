@@ -8,7 +8,7 @@ Citizen.CreateThread(function()
         local ped = GetPlayerPed(PlayerId())
         local pedPos = GetEntityCoords(ped, false)
         local pedHead = GetEntityRotation(ped, 2)
-        if IsControlJustReleased(0, Keys["H"]) then
+        if IsControlJustReleased(0, 74) then
             -- ??
         end
         if createdCamera ~= 0 then
@@ -22,7 +22,7 @@ Citizen.CreateThread(function()
             end
 
             -- CLOSE CAMERAS
-            if IsControlJustPressed(1, Keys["BACKSPACE"]) then
+            if IsControlJustPressed(1, 177) then
                 DoScreenFadeOut(250)
                 while not IsScreenFadedOut() do
                     Citizen.Wait(0)
@@ -41,26 +41,26 @@ Citizen.CreateThread(function()
                 local getCameraRot = GetCamRot(createdCamera, 2)
 
                 -- ROTATE UP
-                if IsControlPressed(0, Keys["W"]) then
+                if IsControlPressed(0, 32) then
                     if getCameraRot.x <= 0.0 then
                         SetCamRot(createdCamera, getCameraRot.x + 0.7, 0.0, getCameraRot.z, 2)
                     end
                 end
 
                 -- ROTATE DOWN
-                if IsControlPressed(0, Keys["S"]) then
+                if IsControlPressed(0, 8) then
                     if getCameraRot.x >= -50.0 then
                         SetCamRot(createdCamera, getCameraRot.x - 0.7, 0.0, getCameraRot.z, 2)
                     end
                 end
 
                 -- ROTATE LEFT
-                if IsControlPressed(0, Keys["A"]) then
+                if IsControlPressed(0, 34) then
                     SetCamRot(createdCamera, getCameraRot.x, 0.0, getCameraRot.z + 0.7, 2)
                 end
 
                 -- ROTATE RIGHT
-                if IsControlPressed(0, Keys["D"]) then
+                if IsControlPressed(0, 9) then
                     SetCamRot(createdCamera, getCameraRot.x, 0.0, getCameraRot.z - 0.7, 2)
                 end
             end
