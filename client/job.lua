@@ -346,6 +346,8 @@ AddEventHandler('police:client:CheckStatus', function()
                         end
                     end
                 end, playerId)
+            else
+                QBCore.Functions.Notify("No One Nearby", "error")
             end
         end
     end)

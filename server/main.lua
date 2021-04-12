@@ -691,7 +691,7 @@ QBCore.Functions.CreateCallback('police:GetCops', function(source, cb)
 	cb(amount)
 end)
 
-QBCore.Commands.Add("setpolice", "Hire An Officer (Police Only)", {{name="id", help="Player ID"}}, true, function(source, args)
+--[[ QBCore.Commands.Add("setpolice", "Hire An Officer (Police Only)", {{name="id", help="Player ID"}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(tonumber(args[1]))
     local Myself = QBCore.Functions.GetPlayer(source)
     if Player ~= nil then 
@@ -699,7 +699,7 @@ QBCore.Commands.Add("setpolice", "Hire An Officer (Police Only)", {{name="id", h
             Player.Functions.SetJob("police")
         end
     end
-end)
+end) ]]
 
 QBCore.Commands.Add("spikestrip", "Place Spike Strip (Police Only)", {}, false, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
@@ -711,7 +711,7 @@ QBCore.Commands.Add("spikestrip", "Place Spike Strip (Police Only)", {}, false, 
 end)
 
 
-QBCore.Commands.Add("firepolice", "Fire An Officer (Police Only)", {{name="id", help="Player ID"}}, true, function(source, args)
+--[[ QBCore.Commands.Add("firepolice", "Fire An Officer (Police Only)", {{name="id", help="Player ID"}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(tonumber(args[1]))
     local Myself = QBCore.Functions.GetPlayer(source)
     if Player ~= nil then 
@@ -719,7 +719,7 @@ QBCore.Commands.Add("firepolice", "Fire An Officer (Police Only)", {{name="id", 
             Player.Functions.SetJob("unemployed")
         end
     end
-end)
+end) ]]
 
 function IsHighCommand(citizenid)
     local retval = false
