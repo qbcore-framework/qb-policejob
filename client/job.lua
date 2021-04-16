@@ -583,13 +583,19 @@ end
 
 function IsArmoryWhitelist()
     local retval = false
-    local citizenid = QBCore.Functions.GetPlayerData().citizenid
+
+    if QBCore.Functions.GetPlayerData().job.name == 'police' then
+        retval = true
+    end
+
+--[[     local citizenid = QBCore.Functions.GetPlayerData().citizenid
     for k, v in pairs(Config.ArmoryWhitelist) do
         if v == citizenid then
             retval = true
             break
         end
-    end
+    end ]]
+
     return retval
 end
 
