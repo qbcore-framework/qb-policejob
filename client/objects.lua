@@ -153,19 +153,18 @@ AddEventHandler('police:client:spawnObject', function(objectId, type, player)
 end)
 
 function GetClosestPoliceObject()
-    local pos = GetEntityCoords(PlayerPedId(), true)
+    local pos = GetEntityCoords(GetPlayerPed(-1), true)
     local current = nil
     local dist = nil
 
     for id, data in pairs(ObjectList) do
         if current ~= nil then
-            local dist2 = #(pos - vector3(ObjectList[id].coords.x, ObjectList[id].coords.y, ObjectList[id].coords.z))
-            if dist2 < dist then
+            if(GetDistanceBetweenCoords(pos, ObjectList[id].coords.x, ObjectList[id].coords.y, ObjectList[id].coords.z, true) < dist)then
                 current = id
-                dist = dist2
+                dist = GetDistanceBetweenCoords(pos, ObjectList[id].coords.x, ObjectList[id].coords.y, ObjectList[id].coords.z, true)
             end
         else
-            dist = dist2
+            dist = GetDistanceBetweenCoords(pos, ObjectList[id].coords.x, ObjectList[id].coords.y, ObjectList[id].coords.z, true)
             current = id
         end
     end
