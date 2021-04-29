@@ -43,7 +43,7 @@ Config.Locations = {
    },    
    ["stash"] = {
        [1] = {x = 453.075, y = -980.124, z = 30.889, h = 90.654},
-       [2] = {x = -434.63, y = 6001.63, z = 31.71, h = 316.5, r = 1.0},
+       [2] = {x = -434.63, y = 6001.63, z = 31.71, h = 316.5, r = 1.0}, 
    },     
    ["impound"] = {
        [1] = {x = 436.68, y = -1007.42, z = 27.32, h = 180.0},
@@ -83,18 +83,9 @@ Config.Locations = {
    },
 }
 
-Config.ArmoryWhitelist = {
-    "FUN28030",
-    "HHV33808",
-    "MWE31087",
-    "UOH84809",
-    "ONT04484",
-    "SUC74168",
-    "KGV59544",
-    "OEJ87427",
-}
+Config.ArmoryWhitelist = {}
 
-Config.Helicopter = "pzulu"
+Config.Helicopter = "POLMAV"
 
 Config.SecurityCameras = {
     hideradar = false,
@@ -129,34 +120,26 @@ Config.SecurityCameras = {
         [28] = {label = "Don's Country Store Paleto Bay CAM#1", x = 166.42, y = 6634.4, z = 33.69, r = {x = -35.0, y = 0.0, z = 32.00}, canRotate = false, isOnline = true},
         [29] = {label = "Don's Country Store Paleto Bay CAM#2", x = 163.74, y = 6644.34, z = 33.69, r = {x = -35.0, y = 0.0, z = 168.00}, canRotate = false, isOnline = true},
         [30] = {label = "Don's Country Store Paleto Bay CAM#3", x = 169.54, y = 6640.89, z = 33.69, r = {x = -35.0, y = 0.0, z = 5.78}, canRotate = false, isOnline = true},
-        [31] = {label = "Vangelico Juwelier CAM#1", x = -627.54, y = -239.74, z = 40.33, r = {x = -35.0, y = 0.0, z = 5.78}, canRotate = true, isOnline = true},
-        [32] = {label = "Vangelico Juwelier CAM#2", x = -627.51, y = -229.51, z = 40.24, r = {x = -35.0, y = 0.0, z = -95.78}, canRotate = true, isOnline = true},
-        [33] = {label = "Vangelico Juwelier CAM#3", x = -620.3, y = -224.31, z = 40.23, r = {x = -35.0, y = 0.0, z = 165.78}, canRotate = true, isOnline = true},
-        [34] = {label = "Vangelico Juwelier CAM#4", x = -622.57, y = -236.3, z = 40.31, r = {x = -35.0, y = 0.0, z = 5.78}, canRotate = true, isOnline = true},
+        [31] = {label = "Vangelico Jewelery CAM#1", x = -627.54, y = -239.74, z = 40.33, r = {x = -35.0, y = 0.0, z = 5.78}, canRotate = true, isOnline = true},
+        [32] = {label = "Vangelico Jewelery CAM#2", x = -627.51, y = -229.51, z = 40.24, r = {x = -35.0, y = 0.0, z = -95.78}, canRotate = true, isOnline = true},
+        [33] = {label = "Vangelico Jewelery CAM#3", x = -620.3, y = -224.31, z = 40.23, r = {x = -35.0, y = 0.0, z = 165.78}, canRotate = true, isOnline = true},
+        [34] = {label = "Vangelico Jewelery CAM#4", x = -622.57, y = -236.3, z = 40.31, r = {x = -35.0, y = 0.0, z = 5.78}, canRotate = true, isOnline = true},
     },
 }
 
 Config.Vehicles = {
-    ["ptouran"] = "Volkswagen Touran",
-    ["ptouran11"] = "Volkswagen Touran 2011",
-    ["pbklasse"] = "Mercedes B-Klasse",
-    ["paudi"] = "Audi A6",
-    ["pamarok"] = "Volkswagen Amarok",
-    ["pt5"] = "Volkswagen T5",
-    ["pt6"] = "Volkswagen T6",
-    ["pfosprinter"] = "Mercedes-Benz Sprinter (FO)",
-    ["pyamahamotor"] = "Yamaha Motor",
-    ["pbmwmotor2"] = "BMW Motor",
-    ["pschafter"] = "Unmarked Schafter",
-    ["poracle"] = "Unmarked Oracle",
-    ["dsimerc"] = "Mercedes (DSI)",
-    ["dsivito"] = "Mercedes Vito (DSI)",
-    ["dsiq5"] = "Audi Q5 (DSI)",
+    ["police"] = "Police Car 1",
+    ["police1"] = "Police Car 2",
+    ["police2"] = "Police Car 3",
+    ["police3"] = "Police Car 4",
+    ["police4"] = "Police Car 5",
+    ["policeb"] = "Police Car 6",
+    ["policet"] = "Police Car 7",
+    ["sheriff"] = "Sheriff Car 1",
+    ["sheriff2"] = "Sheriff Car 2",
 }
 
-Config.WhitelistedVehicles = {
-    ["pcharger"] = "Dodge Charger (UC)",
-}
+Config.WhitelistedVehicles = {}
 
 Config.AmmoLabels = {
     ["AMMO_PISTOL"] = "9x19mm Parabellum kogel",

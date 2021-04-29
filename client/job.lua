@@ -141,9 +141,9 @@ Citizen.CreateThread(function()
                             DrawMarker(2, v.x, v.y, v.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 200, 0, 0, 222, false, false, false, true, false, false, false)
                             if #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
                                 if IsPedInAnyVehicle(PlayerPedId(), false) then
-                                    DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Store vehicle")
+                                    DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Impound Vehicle")
                                 else
-                                    DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Vehicles")
+                                    DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Police Impound")
                                 end
                                 if IsControlJustReleased(0, 38) then
                                     if IsPedInAnyVehicle(PlayerPedId(), false) then
@@ -357,14 +357,14 @@ function MenuImpound()
     ped = PlayerPedId();
     MenuTitle = "Impounded"
     ClearMenu()
-    Menu.addButton("Vehicles", "ImpoundVehicleList", nil)
+    Menu.addButton("Police Impound", "ImpoundVehicleList", nil)
     Menu.addButton("Close menu", "closeMenuFull", nil) 
 end
 
 function ImpoundVehicleList()
     QBCore.Functions.TriggerCallback("police:GetImpoundedVehicles", function(result)
         ped = PlayerPedId();
-        MenuTitle = "Vehicles:"
+        MenuTitle = "Impounded Vehicles:"
         ClearMenu()
 
         if result == nil then
