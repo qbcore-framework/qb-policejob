@@ -339,7 +339,7 @@ AddEventHandler('police:server:spawnObject', function(type)
     local src = source
     local objectId = CreateObjectId()
     Objects[objectId] = type
-    TriggerClientEvent("police:client:spawnObject", -1, objectId, type, src)
+    TriggerClientEvent("police:client:spawnObject", src, objectId, type, src)
 end)
 
 RegisterServerEvent('police:server:deleteObject')
