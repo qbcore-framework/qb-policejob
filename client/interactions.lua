@@ -8,6 +8,8 @@ Citizen.CreateThread(function()
             EnableControlAction(0, 245, true)
             EnableControlAction(0, 38, true)
             EnableControlAction(0, 322, true)
+	    EnableControlAction(0, 249, true)
+            EnableControlAction(0, 46, true)
         end
 
         if isHandcuffed then
@@ -45,6 +47,8 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 143, true) -- Disable melee
 			DisableControlAction(0, 75, true)  -- Disable exit vehicle
 			DisableControlAction(27, 75, true) -- Disable exit vehicle
+	    		EnableControlAction(0, 249, true) -- Added for talking while cuffed
+            		EnableControlAction(0, 46, true)  -- Added for talking while cuffed
 
             if (not IsEntityPlayingAnim(PlayerPedId(), "mp_arresting", "idle", 3) and not IsEntityPlayingAnim(PlayerPedId(), "mp_arrest_paired", "crook_p2_back_right", 3)) and not QBCore.Functions.GetPlayerData().metadata["isdead"] then
                 loadAnimDict("mp_arresting")
