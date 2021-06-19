@@ -738,11 +738,10 @@ end) ]]
 
 function IsHighCommand(citizenid)
     local retval = false
-    for k, v in pairs(Config.ArmoryWhitelist) do
-        if v == citizenid then
-            retval = true
-        end
-    end
+    local Player = QBCore.Functions.GetPlayerByCitizenId(citizenid)
+	if Player.PlayerData.job.grade.level >= 3 then
+    	    retval = true
+	end
     return retval
 end
 
