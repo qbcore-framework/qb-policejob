@@ -158,8 +158,8 @@ function GetClosestPoliceObject()
     local dist = nil
 
     for id, data in pairs(ObjectList) do
+        local dist2 = #(pos - vector3(ObjectList[id].coords.x, ObjectList[id].coords.y, ObjectList[id].coords.z))
         if current ~= nil then
-            local dist2 = #(pos - vector3(ObjectList[id].coords.x, ObjectList[id].coords.y, ObjectList[id].coords.z))
             if dist2 < dist then
                 current = id
                 dist = dist2
