@@ -1143,7 +1143,7 @@ QBCore.Functions.CreateCallback('police:server:IsPoliceForcePresent', function(s
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
         if Player ~= nil then 
-            if Player.PlayerData.job.name == "police" and (Player.PlayerData.grade.level == 4 or Player.PlayerData.grade.level == 3 or Player.PlayerData.grade.level == 2) then
+            if Player.PlayerData.job.name == "police" and Player.PlayerData.grade.level >= 2 then
 	    	retval = true
 	    	break
             end
