@@ -4,8 +4,9 @@ game 'gta5'
 description 'QB-PoliceJob'
 version '1.0.0'
 
+shared_script 'config.lua'
+
 client_scripts {
-	'config.lua',
 	'client/main.lua',
 	'client/camera.lua',
 	'client/interactions.lua',
@@ -15,24 +16,21 @@ client_scripts {
 	--'client/anpr.lua',
 	'client/evidence.lua',
 	'client/objects.lua',
-	'client/tracker.lua',
+	'client/tracker.lua'
 }
 
-server_scripts {
-	'config.lua',
-	'server/main.lua',
-}
+server_script 'server/main.lua'
 
-ui_page "html/index.html"
+ui_page 'html/index.html'
 
 files {
-    "html/index.html",
-    "html/vue.min.js",
-	"html/script.js",
-	"html/tablet-frame.png",
-	"html/fingerprint.png",
-	"html/main.css",
-	"html/vcr-ocd.ttf",
+	'html/index.html',
+	'html/vue.min.js',
+	'html/script.js',
+	'html/tablet-frame.png',
+	'html/fingerprint.png',
+	'html/main.css',
+	'html/vcr-ocd.ttf'
 }
 
 exports {
@@ -40,6 +38,4 @@ exports {
 	'IsArmoryWhitelist'
 }
 
-dependencies {
-	'qb-core'
-}
+dependency 'qb-core'
