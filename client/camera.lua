@@ -2,74 +2,83 @@ local cameraActive = false
 local currentCameraIndex = 0
 local currentCameraIndexIndex = 0
 local createdCamera = 0
-
-Citizen.CreateThread(function()
-    while true do
-        local ped = GetPlayerPed(PlayerId())
-        local pedPos = GetEntityCoords(ped, false)
-        local pedHead = GetEntityRotation(ped, 2)
-        if IsControlJustReleased(0, 74) then
-            -- ??
-        end
-        if createdCamera ~= 0 then
-            local instructions = CreateInstuctionScaleform("instructional_buttons")
-            DrawScaleformMovieFullscreen(instructions, 255, 255, 255, 255, 0)
-            SetTimecycleModifier("scanline_cam_cheap")
-            SetTimecycleModifierStrength(1.0)
-
-            if Config.SecurityCameras.hideradar then
-                DisplayRadar(false)
-            end
-
-            -- CLOSE CAMERAS
-            if IsControlJustPressed(1, 177) then
-                DoScreenFadeOut(250)
-                while not IsScreenFadedOut() do
-                    Citizen.Wait(0)
-                end
-                CloseSecurityCamera()
-                SendNUIMessage({
-                    type = "disablecam",
-                })
-                DoScreenFadeIn(250)
-            end
-
-            ---------------------------------------------------------------------------
-            -- CAMERA ROTATION CONTROLS
-            ---------------------------------------------------------------------------
-            if Config.SecurityCameras.cameras[currentCameraIndexIndex].canRotate then
-                local getCameraRot = GetCamRot(createdCamera, 2)
-
-                -- ROTATE UP
-                if IsControlPressed(0, 32) then
-                    if getCameraRot.x <= 0.0 then
-                        SetCamRot(createdCamera, getCameraRot.x + 0.7, 0.0, getCameraRot.z, 2)
-                    end
-                end
-
-                -- ROTATE DOWN
-                if IsControlPressed(0, 8) then
-                    if getCameraRot.x >= -50.0 then
-                        SetCamRot(createdCamera, getCameraRot.x - 0.7, 0.0, getCameraRot.z, 2)
-                    end
-                end
-
-                -- ROTATE LEFT
-                if IsControlPressed(0, 34) then
-                    SetCamRot(createdCamera, getCameraRot.x, 0.0, getCameraRot.z + 0.7, 2)
-                end
-
-                -- ROTATE RIGHT
-                if IsControlPressed(0, 9) then
-                    SetCamRot(createdCamera, getCameraRot.x, 0.0, getCameraRot.z - 0.7, 2)
-                end
-            end
-        else
-            --Citizen.Wait(2000)
-        end
-        Citizen.Wait(0)
-    end
+RegisterNetEvent('QBCore:Client:OnJobUpdate')
+AddEventHandler('QBCore:Client:OnJobUpdate', function(job)
+if job.name == "police" then
+    GetCreateCamera()
+end
 end)
+
+function GetCreateCamera()
+    Citizen.CreateThread(function()
+        while true do
+            local ped = GetPlayerPed(PlayerId())
+            local pedPos = GetEntityCoords(ped, false)
+            local pedHead = GetEntityRotation(ped, 2)
+            if IsControlJustReleased(0, 74) then
+                -- ??
+            end
+            if createdCamera ~= 0 then
+                local instructions = CreateInstuctionScaleform("instructional_buttons")
+                DrawScaleformMovieFullscreen(instructions, 255, 255, 255, 255, 0)
+                SetTimecycleModifier("scanline_cam_cheap")
+                SetTimecycleModifierStrength(1.0)
+    
+                if Config.SecurityCameras.hideradar then
+                    DisplayRadar(false)
+                end
+    
+                -- CLOSE CAMERAS
+                if IsControlJustPressed(1, 177) then
+                    DoScreenFadeOut(250)
+                    while not IsScreenFadedOut() do
+                        Citizen.Wait(0)
+                    end
+                    CloseSecurityCamera()
+                    SendNUIMessage({
+                        type = "disablecam",
+                    })
+                    DoScreenFadeIn(250)
+                end
+    
+                ---------------------------------------------------------------------------
+                -- CAMERA ROTATION CONTROLS
+                ---------------------------------------------------------------------------
+                if Config.SecurityCameras.cameras[currentCameraIndexIndex].canRotate then
+                    local getCameraRot = GetCamRot(createdCamera, 2)
+    
+                    -- ROTATE UP
+                    if IsControlPressed(0, 32) then
+                        if getCameraRot.x <= 0.0 then
+                            SetCamRot(createdCamera, getCameraRot.x + 0.7, 0.0, getCameraRot.z, 2)
+                        end
+                    end
+    
+                    -- ROTATE DOWN
+                    if IsControlPressed(0, 8) then
+                        if getCameraRot.x >= -50.0 then
+                            SetCamRot(createdCamera, getCameraRot.x - 0.7, 0.0, getCameraRot.z, 2)
+                        end
+                    end
+    
+                    -- ROTATE LEFT
+                    if IsControlPressed(0, 34) then
+                        SetCamRot(createdCamera, getCameraRot.x, 0.0, getCameraRot.z + 0.7, 2)
+                    end
+    
+                    -- ROTATE RIGHT
+                    if IsControlPressed(0, 9) then
+                        SetCamRot(createdCamera, getCameraRot.x, 0.0, getCameraRot.z - 0.7, 2)
+                    end
+                end
+            else
+                --Citizen.Wait(2000)
+            end
+            Citizen.Wait(0)
+        end
+    end)
+end
+
 
 RegisterNetEvent('police:client:ActiveCamera')
 AddEventHandler('police:client:ActiveCamera', function(cameraId)
