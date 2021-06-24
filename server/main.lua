@@ -1057,6 +1057,27 @@ QBCore.Commands.Add("anklet", "Attach Tracking Anklet (Police Only)", {}, false,
     end
 end)
 
+QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{"csn", "CSN of the person"}}, true, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
+    
+    if Player.PlayerData.job.name == "police" then
+        if args[1] ~= nil then
+            local citizenid = args[1]
+            local Target = QBCore.Functions.GetPlayerByCitizenId(citizenid)
+
+            if Target ~= nil then
+                if Target.PlayerData.metadata["tracker"] then
+                    TriggerClientEvent("police:client:SendTrackerLocation", Target.PlayerData.source, source)
+                else
+                    TriggerClientEvent('QBCore:Notify', source, 'This person doesn\'t have an anklet on.', 'error')
+                end
+            end
+        end
+    else
+        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+    end
+end)
+
 QBCore.Commands.Add("removeanklet", "Remove Tracking Anklet (Police Only)", {{"bsn", "BSN of person"}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
     
