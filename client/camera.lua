@@ -5,7 +5,7 @@ local createdCamera = 0
 
 Citizen.CreateThread(function()
     while true do
-        local ped = GetPlayerPed(PlayerId())
+        local ped = PlayerPedId()
         local pedPos = GetEntityCoords(ped, false)
         local pedHead = GetEntityRotation(ped, 2)
         if IsControlJustReleased(0, 74) then
