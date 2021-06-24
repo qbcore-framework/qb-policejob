@@ -85,9 +85,9 @@ AddEventHandler('police:client:ActiveCamera', function(cameraId)
             connected = Config.SecurityCameras.cameras[cameraId].isOnline,
             time = GetCurrentTime(),
         })
-        local firstCamx = Config.SecurityCameras.cameras[cameraId].x
-        local firstCamy = Config.SecurityCameras.cameras[cameraId].y
-        local firstCamz = Config.SecurityCameras.cameras[cameraId].z
+        local firstCamx = Config.SecurityCameras.cameras[cameraId].coords.x
+        local firstCamy = Config.SecurityCameras.cameras[cameraId].coords.y
+        local firstCamz = Config.SecurityCameras.cameras[cameraId].coords.z
         local firstCamr = Config.SecurityCameras.cameras[cameraId].r
         SetFocusArea(firstCamx, firstCamy, firstCamz, firstCamx, firstCamy, firstCamz)
         ChangeSecurityCamera(firstCamx, firstCamy, firstCamz, firstCamr)
