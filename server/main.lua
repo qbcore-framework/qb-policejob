@@ -49,7 +49,7 @@ AddEventHandler('police:server:CuffPlayer', function(playerId, isSoftcuff)
     local Player = QBCore.Functions.GetPlayer(source)
     local CuffedPlayer = QBCore.Functions.GetPlayer(playerId)
     if CuffedPlayer ~= nil then
-        if Player.Functions.GetItemByName("handcuffs") ~= nil or Player.PlayerData.job.name == "police" then
+        if Player.Functions.GetItemByName("handcuffs") > 0 or Player.PlayerData.job.name == "police" then
             TriggerClientEvent("police:client:GetCuffed", CuffedPlayer.PlayerData.source, Player.PlayerData.source, isSoftcuff)           
         end
     end
@@ -195,7 +195,7 @@ AddEventHandler('police:server:PoliceAlertMessage', function(title, streetLabel,
         if Player ~= nil then 
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                 TriggerClientEvent("police:client:PoliceAlertMessage", v, title, streetLabel, coords)
-            elseif Player.Functions.GetItemByName("radioscanner") ~= nil and math.random(1, 100) <= 50 then
+            elseif Player.Functions.GetItemByName("radioscanner") > 0 and math.random(1, 100) <= 50 then
                 TriggerClientEvent("police:client:PoliceAlertMessage", v, title, streetLabel, coords)
             end
         end
@@ -211,7 +211,7 @@ AddEventHandler('police:server:GunshotAlert', function(streetLabel, isAutomatic,
         if Player ~= nil then 
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                 TriggerClientEvent("police:client:GunShotAlert", Player.PlayerData.source, streetLabel, isAutomatic, fromVehicle, coords, vehicleInfo)
-            elseif Player.Functions.GetItemByName("radioscanner") ~= nil and math.random(1, 100) <= 50 then
+            elseif Player.Functions.GetItemByName("radioscanner") > 0 and math.random(1, 100) <= 50 then
                 TriggerClientEvent("police:client:GunShotAlert", Player.PlayerData.source, streetLabel, isAutomatic, fromVehicle, coords, vehicleInfo)
             end
         end
@@ -443,7 +443,7 @@ AddEventHandler('evidence:server:CreateCasing', function(weapon, coords)
     local serieNumber = nil
     if weaponInfo ~= nil then 
         local weaponItem = Player.Functions.GetItemByName(weaponInfo["name"])
-        if weaponItem ~= nil then
+        if weaponItem > 0 then
             if weaponItem.info ~= nil and  weaponItem.info ~= "" then 
                 serieNumber = weaponItem.info.serie
             end
@@ -579,7 +579,7 @@ QBCore.Functions.CreateCallback('police:IsSilencedWeapon', function(source, cb, 
     local Player = QBCore.Functions.GetPlayer(source)
     local itemInfo = Player.Functions.GetItemByName(QBCore.Shared.Weapons[weapon]["name"])
     local retval = false
-    if itemInfo ~= nil then 
+    if itemInfo > 0 then 
         if itemInfo.info ~= nil and itemInfo.info.attachments ~= nil then 
             for k, v in pairs(itemInfo.info.attachments) do
                 if itemInfo.info.attachments[k].component == "COMPONENT_AT_AR_SUPP_02" or itemInfo.info.attachments[k].component == "COMPONENT_AT_AR_SUPP" or itemInfo.info.attachments[k].component == "COMPONENT_AT_PI_SUPP_02" or itemInfo.info.attachments[k].component == "COMPONENT_AT_PI_SUPP" then
@@ -1011,7 +1011,7 @@ QBCore.Commands.Add("911", "Send a report to emergency services", {{name="messag
     local message = table.concat(args, " ")
     local Player = QBCore.Functions.GetPlayer(source)
 
-    if Player.Functions.GetItemByName("phone") ~= nil then
+    if Player.Functions.GetItemByName("phone") > 0 then
         TriggerClientEvent("police:client:SendEmergencyMessage", source, message)
         TriggerEvent("qb-log:server:CreateLog", "911", "911 alert", "blue", "**"..GetPlayerName(source).."** (CitizenID: "..Player.PlayerData.citizenid.." | ID: "..source..") **Alert:** " ..message, false)
     else
@@ -1023,7 +1023,7 @@ QBCore.Commands.Add("911a", "Send an anonymous report to emergency services (giv
     local message = table.concat(args, " ")
     local Player = QBCore.Functions.GetPlayer(source)
 
-    if Player.Functions.GetItemByName("phone") ~= nil then
+    if Player.Functions.GetItemByName("phone") > 0 then
         TriggerClientEvent("police:client:CallAnim", source)
         TriggerClientEvent('police:client:Send112AMessage', -1, message)
     else
