@@ -22,14 +22,14 @@ RegisterServerEvent('police:server:CheckBills')
 AddEventHandler('police:server:CheckBills', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    QBCore.Functions.ExecuteSql(false, "SELECT * FROM `bills` WHERE `citizenid` = '"..Player.PlayerData.citizenid.."' AND `type` = 'police'", function(result)
+    exports.ghmattimysql:execute('SELECT * FROM bills WHERE citizenid=@citizenid AND type=@type', {['@citizenid'] = Player.PlayerData.citizenid, ['@type'] = 'police'}, function(result)
         if result[1] ~= nil then
             local totalAmount = 0
 			for k, v in pairs(result) do
 				totalAmount = totalAmount + tonumber(v.amount)
             end
             Player.Functions.RemoveMoney("bank", totalAmount, "paid-all-bills")
-            QBCore.Functions.ExecuteSql(false, "DELETE FROM `bills` WHERE `citizenid` = '"..Player.PlayerData.citizenid.."' AND `type` = 'police'")
+            exports.ghmattimysql:execute('DELETE FROM bills WHERE citizenid=@citizenid AND type=@type', {['@citizenid'] = Player.PlayerData.citizenid, ['@type'] = 'police'})
             TriggerClientEvent('police:client:sendBillingMail', src, totalAmount)
             TriggerEvent('qb-moneysafe:server:DepositMoney', "police", totalAmount, "bills")
 		end
