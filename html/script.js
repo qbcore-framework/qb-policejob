@@ -107,7 +107,7 @@ Databank.Close = function() {
 
 Fingerprint.Open = function() {
     $(".fingerprint-container").fadeIn(150);
-    $(".fingerprint-id").html("Fingerprint ID<p>Geen resultaat</p>");
+    $(".fingerprint-id").html("Fingerprint ID<p>No result</p>");
 }
 
 Fingerprint.Close = function() {
