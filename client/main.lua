@@ -6,17 +6,7 @@ isEscorted = false
 draggerId = 0
 PlayerJob = {}
 onDuty = false
-
 databankOpen = false
-
-QBCore = nil
-Citizen.CreateThread(function() 
-    while QBCore == nil do
-        TriggerEvent("QBCore:GetObject", function(obj) QBCore = obj end)
-        Citizen.Wait(200)
-    end
-    SetCarItemsInfo()
-end)
 
 Citizen.CreateThread(function()
     for k, station in pairs(Config.Locations["stations"]) do
