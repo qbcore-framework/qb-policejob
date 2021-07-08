@@ -12,7 +12,7 @@ function DrawText3D(x, y, z, text)
     DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
     ClearDrawOrigin()
 end
-
+globalPlate = nil
 local currentGarage = 1
 Citizen.CreateThread(function()
     while true do
@@ -115,11 +115,18 @@ Citizen.CreateThread(function()
                          if onDuty then
                              DrawMarker(2, v.x, v.y, v.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 200, 0, 0, 222, false, false, false, true, false, false, false)
                              if #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
-                                 if IsPedInAnyVehicle(PlayerPedId(), false) then
-                                     DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Store vehicle")
-                                 else
-                                     DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Vehicles")
-                                 end
+                                 local ped = PlayerPedId()
+                                 local policeCar = GetVehiclePedIsIn(ped, true)
+                                 local plate = GetVehicleNumberPlateText(policeCar)
+					if IsPedInAnyVehicle(ped, false) then
+					    if plate == globalPlate then
+					     DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Store vehicle")
+					    end
+					 else
+					    if not IsPedInAnyVehicle(ped, false) then
+					     DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Vehicles")
+					    end
+					 end
                                  if IsControlJustReleased(0, 38) then
                                      if IsPedInAnyVehicle(PlayerPedId(), false) then
                                          QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
@@ -498,6 +505,7 @@ function TakeOutVehicle(vehicleInfo)
         TriggerEvent("vehiclekeys:client:SetOwner", GetVehicleNumberPlateText(veh))
         TriggerServerEvent("inventory:server:addTrunkItems", GetVehicleNumberPlateText(veh), Config.CarItems)
         SetVehicleEngineOn(veh, true, true)
+	globalPlate = GetVehicleNumberPlateText(veh)
     end, coords, true)
 end
 
