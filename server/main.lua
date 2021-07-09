@@ -795,14 +795,14 @@ QBCore.Commands.Add("escort", "Escort Player", {}, false, function(source, args)
     TriggerClientEvent("police:client:EscortPlayer", source)
 end)
 
-QBCore.Commands.Add("mdt", "Open MDT (Police Only)", {}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
-    if Player.PlayerData.job.name == "police" then
-        TriggerClientEvent("police:client:toggleDatabank", source)
-    else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
-    end
-end)
+--QBCore.Commands.Add("mdt", "Open MDT (Police Only)", {}, false, function(source, args)
+--	local Player = QBCore.Functions.GetPlayer(source)
+--    if Player.PlayerData.job.name == "police" then
+--        TriggerClientEvent("police:client:toggleDatabank", source)
+--    else
+--        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+--    end
+--end)
 
 QBCore.Commands.Add("callsign", "Give Yourself A Callsign", {{name="name", help="Name of your callsign"}}, false, function(source, args)
 	local Player = QBCore.Functions.GetPlayer(source)
