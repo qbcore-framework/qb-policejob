@@ -299,6 +299,27 @@ AddEventHandler('police:server:SeizeDriverLicense', function(playerId)
     end
 end)
 
+RegisterServerEvent('police:server:SeizeWeaponLicense')
+AddEventHandler('police:server:SeizeWeaponLicense', function(playerId)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
+    if SearchedPlayer ~= nil then
+        local weaponLicense = SearchedPlayer.PlayerData.metadata["licences"]["weapon"]
+        if weaponLicense then
+            local licenses = {
+                ["driver"] = SearchedPlayer.PlayerData.metadata["licences"]["driver"],
+                ["weapon"] = false,
+                ["business"] = SearchedPlayer.PlayerData.metadata["licences"]["business"]
+            }
+            SearchedPlayer.Functions.SetMetaData("licences", licenses)
+            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "Your driving license has been confiscated..")
+        else
+            TriggerClientEvent('QBCore:Notify', src, "Can't confiscate driving license..", "error")
+        end
+    end
+end)
+
 RegisterServerEvent('police:server:RobPlayer')
 AddEventHandler('police:server:RobPlayer', function(playerId)
     local src = source
@@ -1107,6 +1128,13 @@ QBCore.Commands.Add("takedrivinglicense", "Seize Drivers License (Police Only)",
     local Player = QBCore.Functions.GetPlayer(source)
     if ((Player.PlayerData.job.name == "police") and Player.PlayerData.job.onduty) then
         TriggerClientEvent("police:client:SeizeDriverLicense", source)
+    end
+end)
+
+QBCore.Commands.Add("takeweaponlicense", "Seize Weapon License (Police Only)", {}, false, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
+    if ((Player.PlayerData.job.name == "police") and Player.PlayerData.job.onduty) then
+        TriggerClientEvent("police:client:SeizeWeaponLicense", source)
     end
 end)
 
