@@ -124,6 +124,39 @@ AddEventHandler('police:client:SeizeDriverLicense', function()
     end
 end)
 
+RegisterNetEvent('police:client:SeizeWeaponLicense')
+AddEventHandler('police:client:SeizeWeaponLicense', function()
+    local player, distance = GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerId = GetPlayerServerId(player)
+        TriggerServerEvent("police:server:SeizeWeaponLicense", playerId)
+    else
+        QBCore.Functions.Notify("No one nearby!", "error")
+    end
+end)
+
+RegisterNetEvent('police:client:SeizeBoatLicense')
+AddEventHandler('police:client:SeizeBoatLicense', function()
+    local player, distance = GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerId = GetPlayerServerId(player)
+        TriggerServerEvent("police:server:SeizeBoatLicense", playerId)
+    else
+        QBCore.Functions.Notify("No one nearby!", "error")
+    end
+end)
+
+RegisterNetEvent('police:client:SeizePlaneLicense')
+AddEventHandler('police:client:SeizePlaneLicense', function()
+    local player, distance = GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerId = GetPlayerServerId(player)
+        TriggerServerEvent("police:server:SeizePlaneLicense", playerId)
+    else
+        QBCore.Functions.Notify("No one nearby!", "error")
+    end
+end)
+
 
 RegisterNetEvent('police:client:RobPlayer')
 AddEventHandler('police:client:RobPlayer', function()

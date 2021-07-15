@@ -289,6 +289,9 @@ AddEventHandler('police:server:SeizeDriverLicense', function(playerId)
         if driverLicense then
             local licenses = {
                 ["driver"] = false,
+                ["weapon"] = SearchedPlayer.PlayerData.metadata["licences"]["weapon"],
+                ["boat"] = SearchedPlayer.PlayerData.metadata["licences"]["boat"],
+                ["plane"] = SearchedPlayer.PlayerData.metadata["licences"]["plane"],
                 ["business"] = SearchedPlayer.PlayerData.metadata["licences"]["business"]
             }
             SearchedPlayer.Functions.SetMetaData("licences", licenses)
@@ -310,12 +313,60 @@ AddEventHandler('police:server:SeizeWeaponLicense', function(playerId)
             local licenses = {
                 ["driver"] = SearchedPlayer.PlayerData.metadata["licences"]["driver"],
                 ["weapon"] = false,
+                ["boat"] = SearchedPlayer.PlayerData.metadata["licences"]["boat"],
+                ["plane"] = SearchedPlayer.PlayerData.metadata["licences"]["plane"],
                 ["business"] = SearchedPlayer.PlayerData.metadata["licences"]["business"]
             }
             SearchedPlayer.Functions.SetMetaData("licences", licenses)
-            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "Your driving license has been confiscated..")
+            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "Your weapons license has been confiscated..")
         else
-            TriggerClientEvent('QBCore:Notify', src, "Can't confiscate driving license..", "error")
+            TriggerClientEvent('QBCore:Notify', src, "Can't confiscate weapons license..", "error")
+        end
+    end
+end)
+
+RegisterServerEvent('police:server:SeizeBoatLicense')
+AddEventHandler('police:server:SeizeBoatLicense', function(playerId)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
+    if SearchedPlayer ~= nil then
+        local boatLicense = SearchedPlayer.PlayerData.metadata["licences"]["weapon"]
+        if boatLicense then
+            local licenses = {
+                ["driver"] = SearchedPlayer.PlayerData.metadata["licences"]["driver"],
+                ["weapon"] = SearchedPlayer.PlayerData.metadata["licences"]["weapon"],
+                ["boat"] = false,
+                ["plane"] = SearchedPlayer.PlayerData.metadata["licences"]["plane"],
+                ["business"] = SearchedPlayer.PlayerData.metadata["licences"]["business"]
+            }
+            SearchedPlayer.Functions.SetMetaData("licences", licenses)
+            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "Your watercraft license has been confiscated..")
+        else
+            TriggerClientEvent('QBCore:Notify', src, "Can't confiscate watercraft license..", "error")
+        end
+    end
+end)
+
+RegisterServerEvent('police:server:SeizePlaneLicense')
+AddEventHandler('police:server:SeizePlaneLicense', function(playerId)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
+    if SearchedPlayer ~= nil then
+        local planeLicense = SearchedPlayer.PlayerData.metadata["licences"]["weapon"]
+        if planeLicense then
+            local licenses = {
+                ["driver"] = SearchedPlayer.PlayerData.metadata["licences"]["driver"],
+                ["weapon"] = SearchedPlayer.PlayerData.metadata["licences"]["weapon"],
+                ["boat"] = SearchedPlayer.PlayerData.metadata["licences"]["boat"],
+                ["plane"] = false,
+                ["business"] = SearchedPlayer.PlayerData.metadata["licences"]["business"]
+            }
+            SearchedPlayer.Functions.SetMetaData("licences", licenses)
+            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "Your aircraft license has been confiscated..")
+        else
+            TriggerClientEvent('QBCore:Notify', src, "Can't confiscate aircraft license..", "error")
         end
     end
 end)
@@ -1135,6 +1186,20 @@ QBCore.Commands.Add("takeweaponlicense", "Seize Weapon License (Police Only)", {
     local Player = QBCore.Functions.GetPlayer(source)
     if ((Player.PlayerData.job.name == "police") and Player.PlayerData.job.onduty) then
         TriggerClientEvent("police:client:SeizeWeaponLicense", source)
+    end
+end)
+
+QBCore.Commands.Add("takewatercraftlicense", "Seize Watercraft License (Police Only)", {}, false, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
+    if ((Player.PlayerData.job.name == "police") and Player.PlayerData.job.onduty) then
+        TriggerClientEvent("police:client:SeizeBoatLicense", source)
+    end
+end)
+
+QBCore.Commands.Add("takeaircraftlicense", "Seize Aircraft License (Police Only)", {}, false, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
+    if ((Player.PlayerData.job.name == "police") and Player.PlayerData.job.onduty) then
+        TriggerClientEvent("police:client:SeizePlaneLicense", source)
     end
 end)
 
