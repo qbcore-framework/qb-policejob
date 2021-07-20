@@ -13,6 +13,27 @@ function DrawText3D(x, y, z, text)
     ClearDrawOrigin()
 end
 
+function Input(Titel, Placeholder, MaxLenght)
+	AddTextEntry('FMMC_KEY_TIP1', Titel)
+	DisplayOnscreenKeyboard(1, "FMMC_KEY_TIP1", "", Placeholder, "", "", "", MaxLenght)
+	blockinput = true
+
+	while UpdateOnscreenKeyboard() ~= 1 and UpdateOnscreenKeyboard() ~= 2 do
+		Citizen.Wait(0)
+	end
+		
+	if UpdateOnscreenKeyboard() ~= 2 then
+		local result = GetOnscreenKeyboardResult()
+		Citizen.Wait(500)
+		blockinput = false
+		return result --Returns the result
+	else
+		Citizen.Wait(500)
+		blockinput = false
+		return nil
+	end
+end
+
 local currentGarage = 1
 Citizen.CreateThread(function()
     while true do
@@ -52,14 +73,17 @@ Citizen.CreateThread(function()
                         if #(pos - vector3(v.x, v.y, v.z)) < 1.0 then
                             DrawText3D(v.x, v.y, v.z, "~g~E~w~ -    Evidence stash")
                             if IsControlJustReleased(0, 38) then
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", "policeevidence", {
-                                    maxweight = 4000000,
-                                    slots = 500,
-                                })
-                                TriggerEvent("inventory:client:SetCurrentStash", "policeevidence")
+                                local drawer = Input("Which drawer do you want to look at?", "", 2)
+                                if drawer ~= nil then
+                                    TriggerServerEvent("inventory:server:OpenInventory", "stash", " 1 | Drawer "..drawer, {
+                                        maxweight = 4000000,
+                                        slots = 500,
+                                    })
+                                    TriggerEvent("inventory:client:SetCurrentStash", " 1 | Drawer "..drawer)
+                                end
                             end
                         elseif #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
-                            DrawText3D(v.x, v.y, v.z, "evidence stash")
+                            DrawText3D(v.x, v.y, v.z, "Stash 1")
                         end
                     end
                 end
@@ -69,14 +93,17 @@ Citizen.CreateThread(function()
                         if #(pos - vector3(v.x, v.y, v.z)) < 1.0 then
                             DrawText3D(v.x, v.y, v.z, "~g~E~w~ - evidence stash")
                             if IsControlJustReleased(0, 38) then
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", "policeevidence2", {
-                                    maxweight = 4000000,
-                                    slots = 500,
-                                })
-                                TriggerEvent("inventory:client:SetCurrentStash", "policeevidence2")
+                                local drawer = Input("Which drawer do you want to look at?", "", 2)
+                                if drawer ~= nil then
+                                    TriggerServerEvent("inventory:server:OpenInventory", "stash", " 2 | Drawer "..drawer, {
+                                        maxweight = 4000000,
+                                        slots = 500,
+                                    })
+                                    TriggerEvent("inventory:client:SetCurrentStash", " 2 | Drawer "..drawer)
+                                end
                             end
                         elseif #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
-                            DrawText3D(v.x, v.y, v.z, "evidence stash")
+                            DrawText3D(v.x, v.y, v.z, "Stash 2")
                         end
                     end
                 end
@@ -86,14 +113,17 @@ Citizen.CreateThread(function()
                         if #(pos - vector3(v.x, v.y, v.z)) < 1.0 then
                             DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Evidence stash")
                             if IsControlJustReleased(0, 38) then
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", "policeevidence3", {
-                                    maxweight = 4000000,
-                                    slots = 500,
-                                })
-                                TriggerEvent("inventory:client:SetCurrentStash", "policeevidence3")
+                                local drawer = Input("Which drawer do you want to look at?", "", 2)
+                                if drawer ~= nil then
+                                    TriggerServerEvent("inventory:server:OpenInventory", "stash", " 3 | Drawer "..drawer, {
+                                        maxweight = 4000000,
+                                        slots = 500,
+                                    })
+                                    TriggerEvent("inventory:client:SetCurrentStash", " 3 | Drawer "..drawer)
+                                end
                             end
                         elseif #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
-                            DrawText3D(v.x, v.y, v.z, "evidence stash")
+                            DrawText3D(v.x, v.y, v.z, "Stash 3")
                         end
                     end
                 end
