@@ -52,7 +52,6 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     TriggerServerEvent("police:server:SetHandcuffStatus", false)
     TriggerServerEvent("police:server:UpdateBlips")
     TriggerServerEvent("police:server:UpdateCurrentCops")
-    TriggerServerEvent("police:server:CheckBills")
 
     if QBCore.Functions.GetPlayerData().metadata["tracker"] then
         local trackerClothingData = {outfitData = {["accessory"] = { item = 13, texture = 0}}}

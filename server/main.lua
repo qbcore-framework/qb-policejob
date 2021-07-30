@@ -15,24 +15,6 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterServerEvent('police:server:CheckBills')
-AddEventHandler('police:server:CheckBills', function()
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    exports.ghmattimysql:execute('SELECT * FROM bills WHERE citizenid=@citizenid AND type=@type', {['@citizenid'] = Player.PlayerData.citizenid, ['@type'] = 'police'}, function(result)
-        if result[1] ~= nil then
-            local totalAmount = 0
-			for k, v in pairs(result) do
-				totalAmount = totalAmount + tonumber(v.amount)
-            end
-            Player.Functions.RemoveMoney("bank", totalAmount, "paid-all-bills")
-            exports.ghmattimysql:execute('DELETE FROM bills WHERE citizenid=@citizenid AND type=@type', {['@citizenid'] = Player.PlayerData.citizenid, ['@type'] = 'police'})
-            TriggerClientEvent('police:client:sendBillingMail', src, totalAmount)
-            TriggerEvent('qb-moneysafe:server:DepositMoney', "police", totalAmount, "bills")
-		end
-	end)
-end)
-
 RegisterServerEvent('police:server:TakeOutImpound')
 AddEventHandler('police:server:TakeOutImpound', function(plate)
     local src = source       
@@ -544,16 +526,26 @@ AddEventHandler('police:server:SendTrackerLocation', function(coords, requestId)
     TriggerClientEvent("qb-phone:client:addPoliceAlert", requestId, alertData)
 end)
 
-RegisterServerEvent('police:server:SendPoliceEmergencyAlert')
+--[[ RegisterServerEvent('police:server:SendPoliceEmergencyAlert')
 AddEventHandler('police:server:SendPoliceEmergencyAlert', function(streetLabel, coords, callsign)
-    local alertData = {
-        title = "Assistance colleague",
-        coords = {x = coords.x, y = coords.y, z = coords.z},
+    local data = {
+        displayCode = 10-99,
         description = "Emergency button pressed by ".. callsign .. " at "..streetLabel,
+        isImportant = 1,
+        recipientList = {'police'},
+        length = '10000',
+        infoM = 'fa-info-circle',
+        info = 'All Units Respond',
     }
-    TriggerClientEvent("police:client:PoliceEmergencyAlert", -1, callsign, streetLabel, coords)
-    TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
-end)
+
+    local dispatchData = {
+        dispatchData = data,
+        caller = callsign,
+        coords = coords
+    }
+    TriggerEvent('wf-alerts:svNotify', dispatchData)
+    --TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
+end) ]]
 
 QBCore.Functions.CreateCallback('police:server:isPlayerDead', function(source, cb, playerId)
     local Player = QBCore.Functions.GetPlayer(playerId)
@@ -660,8 +652,8 @@ end
 
 function IsVehicleOwned(plate)
     local val = false
-	QBCore.Functions.ExecuteSql(true, "SELECT * FROM `player_vehicles` WHERE `plate` = '"..plate.."'", function(result)
-		if (result[1] ~= nil) then
+    exports.ghmattimysql:scalarSync('SELECT 1 FROM player_vehicles WHERE plate=@plate', {['@plate'] = plate}, function(result)
+		if result then
 			val = true
 		else
 			val = false
