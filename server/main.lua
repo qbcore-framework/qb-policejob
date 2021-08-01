@@ -651,15 +651,8 @@ function CreateObjectId()
 end
 
 function IsVehicleOwned(plate)
-    local val = false
-    exports.ghmattimysql:scalarSync('SELECT 1 FROM player_vehicles WHERE plate=@plate', {['@plate'] = plate}, function(result)
-		if result then
-			val = true
-		else
-			val = false
-		end
-	end)
-	return val
+    local result = exports.ghmattimysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate = @plate', {['@plate'] = plate})
+	return result
 end
 
 QBCore.Functions.CreateCallback('police:GetImpoundedVehicles', function(source, cb)
