@@ -509,8 +509,9 @@ function VehicleList(isDown)
     ped = PlayerPedId();
     MenuTitle = "Vehicles:"
     ClearMenu()
-    for k, v in pairs(Config.Vehicles) do
-        Menu.addButton(Config.Vehicles[k], "TakeOutVehicle", k, "Garage", " Engine: 100%", " Body: 100%", " Fuel: 100%")
+    local authorizedVehicles = Config.AuthorizedVehicles[QBCore.Functions.GetPlayerData().job.grade.level]
+    for k, v in pairs(authorizedVehicles) do
+        Menu.addButton(authorizedVehicles[k], "TakeOutVehicle", k, "Garage", " Engine: 100%", " Body: 100%", " Fuel: 100%")
     end
     if IsArmoryWhitelist() then
         for veh, label in pairs(Config.WhitelistedVehicles) do
