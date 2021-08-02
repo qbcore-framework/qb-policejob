@@ -708,6 +708,48 @@ QBCore.Commands.Add("spikestrip", "Place Spike Strip (Police Only)", {}, false, 
     end
 end)
 
+QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name="id", help="ID of a person"},{name="license", help="License Type"}}, true, function(source, args)
+    local source = source
+    local Player = QBCore.Functions.GetPlayer(source)
+    if Player.PlayerData.job.name == "police" then
+        if args[2] == "driver" or args[2] == "weapon" then
+            local SearchedPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
+            if SearchedPlayer ~= nil then
+                local licenseTable = SearchedPlayer.PlayerData.metadata["licences"]
+                licenseTable[args[2]] = true
+                SearchedPlayer.Functions.SetMetaData("licences", licenseTable)
+                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been granted a license", "success", 5000)
+                TriggerClientEvent('QBCore:Notify', source, "You granted a license", "success", 5000)
+            end
+        else
+            TriggerClientEvent('QBCore:Notify', source, "Invalid license type", "error")
+        end
+    else
+        TriggerClientEvent('QBCore:Notify', source, "You must be a police officer to do this", "error")
+    end
+end)
+
+QBCore.Commands.Add("revokelicense", "Grant a license to someone", {{name="id", help="ID of a person"},{name="license", help="License Type"}}, true, function(source, args)
+    local source = source
+    local Player = QBCore.Functions.GetPlayer(source)
+    if Player.PlayerData.job.name == "police" then
+        if args[2] == "driver" or args[2] == "weapon" then
+            local SearchedPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
+            if SearchedPlayer ~= nil then
+                local licenseTable = SearchedPlayer.PlayerData.metadata["licences"]
+                licenseTable[args[2]] = false
+                SearchedPlayer.Functions.SetMetaData("licences", licenseTable)
+                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You've had a license revoked", "error", 5000)
+                TriggerClientEvent('QBCore:Notify', source, "You revoked a license", "success", 5000)
+            end
+        else
+            TriggerClientEvent('QBCore:Notify', source, "Invalid license type", "error")
+        end
+    else
+        TriggerClientEvent('QBCore:Notify', source, "You must be a police officer to do this", "error")
+    end
+end)
+
 
 --[[ QBCore.Commands.Add("firepolice", "Fire An Officer (Police Only)", {{name="id", help="Player ID"}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(tonumber(args[1]))
@@ -727,6 +769,8 @@ function IsHighCommand(citizenid)
 	end
     return retval
 end
+
+
 
 QBCore.Commands.Add("pobject", "Place/Delete An Object (Police Only)", {{name="type", help="Type object you want or 'delete' to delete"}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
