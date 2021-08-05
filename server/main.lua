@@ -547,6 +547,65 @@ AddEventHandler('police:server:SendPoliceEmergencyAlert', function(streetLabel, 
     --TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
 end) ]]
 
+RegisterServerEvent('police:server:checkBank')
+AddEventHandler('police:server:checkBank', function(playerId)
+    local src = source
+    local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
+    if SearchedPlayer ~= nil then 
+        TriggerClientEvent('chat:addMessage', source, {
+        template = '<div class="chat-message success">Player has €'..SearchedPlayer.PlayerData.money["bank"]..' in his bank account.</div>',
+        })
+    end
+end)
+
+RegisterServerEvent('police:server:checkLicenses')
+AddEventHandler('police:server:checkLicenses', function(playerId)
+    local src = source
+    local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
+    if SearchedPlayer ~= nil then 
+        local licences = SearchedPlayer["PlayerData"]['metadata']['licences']
+        local str = ""
+        local index = 0
+        local max = 0
+
+        for k,v in pairs(licences) do
+            if k and v then
+                str = str .. k:gsub("^%l", string.upper) .. ', '
+            end
+        end
+        TriggerClientEvent('chat:addMessage', source, {
+            template = '<div class="chat-message success">Player Licenses: ' .. (#str == 0 and "No Licenses" or str:sub(1,#str-2)) .. '</div>',
+        })
+    end
+end)
+
+RegisterServerEvent('police:server:checkFines')
+AddEventHandler('police:server:checkFines', function(playerId)
+    local src = source
+    local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
+    if SearchedPlayer ~= nil then 
+        QBCore.Functions.ExecuteSql(false, "SELECT * FROM phone_invoices WHERE `citizenid` = '"..SearchedPlayer.PlayerData.citizenid.."' AND `society`='police'", function(invoices)
+            if #invoices == 0 then
+                TriggerClientEvent('chat:addMessage', src, {
+                    template = '<div class="chat-message server"><strong>SYSTEM:</strong> Player have no unpaid fines.</div>',
+                })
+            else
+                local str = ""
+                for i=1,#invoices do
+                    local invoice = invoices[i]
+                    str = str .. '<br>'
+                    str = str .. i .. '. ' .. invoice.title .. ' - $' .. invoice.amount
+                end
+    
+                TriggerClientEvent('chat:addMessage', src, {
+                    template = '<div class="chat-message emergency">Player Unpaid Fines: '.. str ..' </div>',
+                })
+            end
+        end)
+    end
+end)
+
+
 QBCore.Functions.CreateCallback('police:server:isPlayerDead', function(source, cb, playerId)
     local Player = QBCore.Functions.GetPlayer(playerId)
     cb(Player.PlayerData.metadata["isdead"])
