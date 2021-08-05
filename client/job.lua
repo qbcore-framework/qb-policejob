@@ -232,8 +232,23 @@ Citizen.CreateThread(function()
                             if #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
                                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Armory")
                                 if IsControlJustReleased(0, 38) then
+                                    local authorizedItems = {
+                                        label = "Police Armory",
+                                        slots = 30,
+                                        items = {}
+                                    }
+                                    local index = 1
+                                    for _, armoryItem in pairs(Config.Items.items) do
+                                        for i=1, #armoryItem.authorizedJobGrades do
+                                            if armoryItem.authorizedJobGrades[i] == PlayerJob.grade.level then
+                                                authorizedItems.items[index] = armoryItem
+                                                authorizedItems.items[index].slot = index
+                                                index = index + 1
+                                            end
+                                        end
+                                    end
                                     SetWeaponSeries()
-                                    TriggerServerEvent("inventory:server:OpenInventory", "shop", "police", Config.Items)
+                                    TriggerServerEvent("inventory:server:OpenInventory", "shop", "police", authorizedItems)
                                 end
                             elseif #(pos - vector3(v.x, v.y, v.z)) < 2.5 then
                                 DrawText3D(v.x, v.y, v.z, "Armory")
