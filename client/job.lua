@@ -232,7 +232,8 @@ Citizen.CreateThread(function()
                             if #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
                                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Armory")
                                 if IsControlJustReleased(0, 38) then
-                                    SetWeaponSeries()
+                                    SetWeaponSeries()	
+					local items = GenerateItemsForGrade(PlayerJob.grade.level)
                                     TriggerServerEvent("inventory:server:OpenInventory", "shop", "police", Config.Items)
                                 end
                             elseif #(pos - vector3(v.x, v.y, v.z)) < 2.5 then
@@ -284,6 +285,85 @@ Citizen.CreateThread(function()
         end
     end
 end)
+
+function WeaponAlreadyInArmory(items, nna)
+    for k, v in pairs(items) do
+        if v.name == nna then
+            return true
+        end
+    end
+    return false
+end
+
+function GenerateItemsForGrade(grade)
+    local playerArmoryItems = Config.Items
+    local grade = tonumber(grade) ~= nil and tonumber(grade) or 1
+    if grade > 1 then
+        if not WeaponAlreadyInArmory(playerArmoryItems.items, "weapon_smg") then
+            playerArmoryItems.items[#playerArmoryItems.items + 1] = {
+                name = "weapon_smg",
+                price = 0,
+                amount = 1,
+                info = {
+                    serie = "",                
+                    attachments = {
+                        {component = "COMPONENT_AT_SCOPE_MACRO_02", label = "1x Scope"},
+                        {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
+                    }
+                },
+                type = "weapon",
+                slot = #playerArmoryItems.items + 1,
+            }
+
+            playerArmoryItems.items[#playerArmoryItems.items + 1] = {
+                name = "smg_ammo",
+                price = 0,
+                amount = 5,
+                info = {},
+                type = "item",
+                slot = #playerArmoryItems.items + 1,
+            }
+        end
+    end
+
+    if grade > 4 then
+        if not WeaponAlreadyInArmory(playerArmoryItems.items, "weapon_carbinerifle") then
+            playerArmoryItems.items[#playerArmoryItems.items + 1] = {
+                name = "weapon_carbinerifle",
+                price = 0,
+                amount = 1,
+                info = {
+                    serie = "",
+                    attachments = {
+                        {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
+                        {component = "COMPONENT_AT_SCOPE_MEDIUM", label = "3x Scope"},
+                    }
+                },
+                type = "weapon",
+                slot = #playerArmoryItems.items + 1,
+            }
+
+            playerArmoryItems.items[#playerArmoryItems.items + 1] = {
+                name = "rifle_ammo",
+                price = 0,
+                amount = 5,
+                info = {},
+                type = "item",
+                slot = #playerArmoryItems.items + 1,
+            }
+        end
+    end
+
+    playerArmoryItems.slots = #playerArmoryItems.items
+
+    for k, v in pairs(playerArmoryItems.items) do
+        if v.type == 'weapon' then
+            playerArmoryItems.items[k].info.serie = tostring(Config.RandomInt(2) .. Config.RandomStr(3) .. Config.RandomInt(1) .. Config.RandomStr(2) .. Config.RandomInt(3) .. Config.RandomStr(4))
+        end
+    end
+
+    return playerArmoryItems
+end
 
 local inFingerprint = false
 local FingerPrintSessionId = nil
