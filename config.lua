@@ -189,12 +189,12 @@ Config.AuthorizedVehicles = {
 Config.WhitelistedVehicles = {}
 
 Config.AmmoLabels = {
-    ["AMMO_PISTOL"] = "9x19mm Parabellum kogel",
-    ["AMMO_SMG"] = "9x19mm Parabellum kogel",
-    ["AMMO_RIFLE"] = "7.62x39mm kogel",
-    ["AMMO_MG"] = "7.92x57mm Mauser kogel",
-    ["AMMO_SHOTGUN"] = "12-gauge kogel",
-    ["AMMO_SNIPER"] = "Groot caliber kogel",
+    ["AMMO_PISTOL"] = "9x19mm parabellum bullet",
+    ["AMMO_SMG"] = "9x19mm parabellum bullet",
+    ["AMMO_RIFLE"] = "7.62x39mm bullet",
+    ["AMMO_MG"] = "7.92x57mm mauser bullet",
+    ["AMMO_SHOTGUN"] = "12-gauge bullet",
+    ["AMMO_SNIPER"] = "Large caliber bullet",
 }
 
 Config.Radars = {
