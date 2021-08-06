@@ -370,13 +370,16 @@ end)
 RegisterNetEvent('police:client:ImpoundVehicle')
 AddEventHandler('police:client:ImpoundVehicle', function(fullImpound, price)
     local vehicle = QBCore.Functions.GetClosestVehicle()
+    local bodyDamage = math.ceil(GetVehicleBodyHealth(vehicle))
+    local engineDamage = math.ceil(GetVehicleEngineHealth(vehicle))
+    local totalFuel = exports['LegacyFuel']:GetFuel(vehicle)
     if vehicle ~= 0 and vehicle ~= nil then
         local ped = PlayerPedId()
         local pos = GetEntityCoords(ped)
         local vehpos = GetEntityCoords(vehicle)
         if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
             local plate = GetVehicleNumberPlateText(vehicle)
-            TriggerServerEvent("police:server:Impound", plate, fullImpound, price)
+            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
             QBCore.Functions.DeleteVehicle(vehicle)
         end
     end
