@@ -421,13 +421,6 @@ AddEventHandler('police:client:GetCuffed', function(playerId, isSoftcuff)
     end
 end)
 
-Citizen.CreateThread(function()
-    while true do
-        TriggerEvent("tokovoip_script:ToggleRadioTalk", isHandcuffed)
-        Citizen.Wait(2000)
-    end
-end)
-
 function IsTargetDead(playerId)
     local retval = false
     QBCore.Functions.TriggerCallback('police:server:isPlayerDead', function(result)
