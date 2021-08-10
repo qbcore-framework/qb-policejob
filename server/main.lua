@@ -329,15 +329,28 @@ AddEventHandler('police:server:deleteObject', function(objectId)
 end)
 
 RegisterServerEvent('police:server:Impound')
-AddEventHandler('police:server:Impound', function(plate, fullImpound, price)
+AddEventHandler('police:server:Impound', function(plate, fullImpound, price, body, engine, fuel)
     local src = source
     local price = price ~= nil and price or 0
     if IsVehicleOwned(plate) then
         if not fullImpound then
-            exports['ghmattimysql']:execute('UPDATE player_vehicles SET state = @state, depotprice = @depotprice WHERE plate = @plate', {['@state'] = 0, ['@depotprice'] = price, ['@plate'] = plate})
+            exports['ghmattimysql']:execute('UPDATE player_vehicles SET state = @state, depotprice = @depotprice, body = @body, engine = @engine, fuel = @fuel WHERE plate = @plate', {
+                ['@state'] = 0, 
+                ['@depotprice'] = price, 
+                ['@plate'] = plate,
+                ['@body'] = body, 
+                ['@engine'] = engine, 
+                ['@fuel'] = fuel
+            })
             TriggerClientEvent('QBCore:Notify', src, "Vehicle taken into depot for $"..price.."!")
         else
-            exports['ghmattimysql']:execute('UPDATE player_vehicles SET state = @state WHERE plate = @plate', {['@state'] = 2, ['@plate'] = plate})
+            exports['ghmattimysql']:execute('UPDATE player_vehicles SET state = @state, body = @body, engine = @engine, fuel = @fuel WHERE plate = @plate', {
+                ['@state'] = 2, 
+                ['@plate'] = plate,
+                ['@body'] = body, 
+                ['@engine'] = engine, 
+                ['@fuel'] = fuel
+            })
             TriggerClientEvent('QBCore:Notify', src, "Vehicle completely seized!")
         end
     end
