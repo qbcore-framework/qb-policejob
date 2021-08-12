@@ -153,7 +153,7 @@ local DutyBlips = {}
 RegisterNetEvent('police:client:UpdateBlips')
 AddEventHandler('police:client:UpdateBlips', function(players)
     if PlayerJob ~= nil and (PlayerJob.name == 'police' or PlayerJob.name == 'ambulance' or PlayerJob.name == 'doctor') and onDuty then
-        if DutyBlips ~= nil then 
+        if DutyBlips ~= nil then
             for k, v in pairs(DutyBlips) do
                 RemoveBlip(v)
             end
@@ -164,6 +164,8 @@ AddEventHandler('police:client:UpdateBlips', function(players)
                 local id = GetPlayerFromServerId(data.source)
                 if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= PlayerPedId() then
                     CreateDutyBlips(id, data.label, data.job)
+                else
+                    CreateDutyBlipsByCoords(id, data.label, data.job, data.location)
                 end
             end
         end
@@ -188,10 +190,38 @@ function CreateDutyBlips(playerId, playerLabel, playerJob)
         BeginTextCommandSetBlipName('STRING')
         AddTextComponentString(playerLabel)
         EndTextCommandSetBlipName(blip)
-		
+
 		table.insert(DutyBlips, blip)
 	end
 end
+
+
+function CreateDutyBlipsByCoords(playerId, playerLabel, playerJob, playerLocation)
+
+  if GetPlayerPed(playerId) == PlayerPedId() then
+    --DO NOTHING, I HOPE
+  else
+
+		blip = AddBlipForCoord(playerLocation.x, playerLocation.y , playerLocation.z);
+		SetBlipSprite(blip, 1)
+		ShowHeadingIndicatorOnBlip(blip, true)
+		SetBlipRotation(blip, math.ceil(playerLocation.w))
+        SetBlipScale(blip, 1.0)
+        if playerJob == "police" then
+            SetBlipColour(blip, 38)
+        else
+            SetBlipColour(blip, 5)
+        end
+        SetBlipAsShortRange(blip, true)
+        BeginTextCommandSetBlipName('STRING')
+        AddTextComponentString(playerLabel)
+        EndTextCommandSetBlipName(blip)
+
+		table.insert(DutyBlips, blip)
+  end
+
+end
+
 
 RegisterNetEvent('police:client:SendPoliceEmergencyAlert')
 AddEventHandler('police:client:SendPoliceEmergencyAlert', function()
