@@ -975,7 +975,7 @@ QBCore.Commands.Add("plateinfo", "Run A Plate (Police Only)", {{name="plate", he
     end
 end)
 
-QBCore.Commands.Add("depot", "Impound With Price (Police Only)", {{name="prijs", help="Price for how much the person has to pay (may be empty)"}}, false, function(source, args)
+QBCore.Commands.Add("depot", "Impound With Price (Police Only)", {{name="price", help="Price for how much the person has to pay (may be empty)"}}, false, function(source, args)
 	local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:ImpoundVehicle", source, false, tonumber(args[1]))
@@ -1071,7 +1071,7 @@ QBCore.Commands.Add("911a", "Send an anonymous report to emergency services (giv
     end
 end)
 
-QBCore.Commands.Add("911r", "Send a message back to a alert", {{name="id", help="ID of the alert"}, {name="bericht", help="Message you want to send"}}, true, function(source, args)
+QBCore.Commands.Add("911r", "Send a message back to a alert", {{name="id", help="ID of the alert"}, {name="message", help="Message you want to send"}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
     local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
     table.remove(args, 1)
