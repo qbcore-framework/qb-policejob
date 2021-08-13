@@ -297,22 +297,41 @@ end)
 
 RegisterServerEvent('police:server:UpdateBlips')
 AddEventHandler('police:server:UpdateBlips', function()
-    local src = source
-    local dutyPlayers = {}
-    for k, v in pairs(QBCore.Functions.GetPlayers()) do
-        local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
-            if ((Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" or Player.PlayerData.job.name == "doctor") and Player.PlayerData.job.onduty) then
-                table.insert(dutyPlayers, {
-                    source = Player.PlayerData.source,
-                    label = Player.PlayerData.metadata["callsign"],
-                    job = Player.PlayerData.job.name,
-                })
-            end
-        end
-    end
-    TriggerClientEvent("police:client:UpdateBlips", -1, dutyPlayers)
+	--KEEP FOR REF BUT NOT NEEDED ANYMORE.
 end)
+
+Citizen.CreateThread(function()
+    while true do
+      Citizen.Wait(5000);
+
+      UpdateBlips(source);
+    end
+end)
+
+function UpdateBlips(source)
+
+  local src = source
+  local dutyPlayers = {}
+  for k, v in pairs(QBCore.Functions.GetPlayers()) do
+      local Player = QBCore.Functions.GetPlayer(v)
+      if Player ~= nil then
+          if ((Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" or Player.PlayerData.job.name == "doctor") and Player.PlayerData.job.onduty) then
+              
+	      local coords = GetEntityCoords(GetPlayerPed(Player.PlayerData.source))
+              local heading = GetEntityHeading(GetPlayerPed(Player.PlayerData.source))
+
+              table.insert(dutyPlayers, {
+                  source = Player.PlayerData.source,
+                  label = Player.PlayerData.metadata["callsign"],
+                  job = Player.PlayerData.job.name,
+                  location = {x=coords.x,y=coords.y,z=coords.z,w=heading},
+              })
+          end
+      end
+  end
+  TriggerClientEvent("police:client:UpdateBlips", -1, dutyPlayers)
+
+end
 
 RegisterServerEvent('police:server:spawnObject')
 AddEventHandler('police:server:spawnObject', function(type)
