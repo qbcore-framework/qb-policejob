@@ -76,7 +76,6 @@ Police Job for QB-Core Framework :police_officer:
 ## Installation
 ### Manual
 - Download the script and put it in the `[qb]` directory.
-- Import `qb-policejob.sql` in your database
 - Add the following code to your server.cfg/resouces.cfg
 ```
 ensure qb-core
