@@ -152,7 +152,9 @@ end)
 local DutyBlips = {}
 RegisterNetEvent('police:client:UpdateBlips')
 AddEventHandler('police:client:UpdateBlips', function(players)
+
     if PlayerJob ~= nil and (PlayerJob.name == 'police' or PlayerJob.name == 'ambulance' or PlayerJob.name == 'doctor') and onDuty then
+
         if DutyBlips ~= nil then 
             for k, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -162,22 +164,27 @@ AddEventHandler('police:client:UpdateBlips', function(players)
         if players ~= nil then
             for k, data in pairs(players) do
                 local id = GetPlayerFromServerId(data.source)
-                if NetworkIsPlayerActive(id) and GetPlayerPed(id) ~= PlayerPedId() then
-                    CreateDutyBlips(id, data.label, data.job)
-                end
+                CreateDutyBlips(id, data.label, data.job, data.location)
+
             end
         end
-	end
+    end
 end)
 
-function CreateDutyBlips(playerId, playerLabel, playerJob)
-	local ped = GetPlayerPed(playerId)
-	local blip = GetBlipFromEntity(ped)
-	if not DoesBlipExist(blip) then
-		blip = AddBlipForEntity(ped)
-		SetBlipSprite(blip, 1)
-		ShowHeadingIndicatorOnBlip(blip, true)
-		SetBlipRotation(blip, math.ceil(GetEntityHeading(ped)))
+function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
+    local ped = GetPlayerPed(playerId)
+    local blip = GetBlipFromEntity(ped)
+
+    if not DoesBlipExist(blip) then
+        
+        if NetworkIsPlayerActive(playerId) then
+            blip = AddBlipForEntity(ped)
+        else
+            blip = AddBlipForCoord(playerLocation.x, playerLocation.y, playerLocation.z)
+        end
+        SetBlipSprite(blip, 1)
+        ShowHeadingIndicatorOnBlip(blip, true)
+        SetBlipRotation(blip, math.ceil(playerLocation.w))
         SetBlipScale(blip, 1.0)
         if playerJob == "police" then
             SetBlipColour(blip, 38)
@@ -188,9 +195,14 @@ function CreateDutyBlips(playerId, playerLabel, playerJob)
         BeginTextCommandSetBlipName('STRING')
         AddTextComponentString(playerLabel)
         EndTextCommandSetBlipName(blip)
-		
-		table.insert(DutyBlips, blip)
-	end
+        
+        table.insert(DutyBlips, blip)
+    end
+
+    if GetBlipFromEntity(PlayerPedId()) == blip then
+        --Ensure we remove our own blip.
+        RemoveBlip(blip)
+    end
 end
 
 RegisterNetEvent('police:client:SendPoliceEmergencyAlert')
