@@ -302,15 +302,14 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-      Citizen.Wait(5000);
+      Citizen.Wait(5000)
 
-      UpdateBlips(source);
+      UpdateBlips()
     end
 end)
 
-function UpdateBlips(source)
+function UpdateBlips()
 
-  local src = source
   local dutyPlayers = {}
   for k, v in pairs(QBCore.Functions.GetPlayers()) do
       local Player = QBCore.Functions.GetPlayer(v)
