@@ -29,6 +29,10 @@ Config.Objects = {
     ["schotten"] = {model = `prop_snow_sign_road_06g`, freeze = true},
     ["tent"] = {model = `prop_gazebo_03`, freeze = true},
     ["light"] = {model = `prop_worklight_03b`, freeze = true},
+    ["chair"] = {model = `prop_chair_08`, freeze = true},
+    ["chairs"] = {model = `prop_chair_pile_01`, freeze = true},
+    ["table"] = {model = `prop_table_03`, freeze = true},
+    ["monitor"] = {model = `des_tvsmash_root`, freeze = true},
 }
 
 Config.Locations = {
@@ -226,6 +230,13 @@ Config.CarItems = {
         info = {},
         type = "item",
         slot = 3,
+    },
+    [4] = {
+        name = "weapon_fireextinguisher",
+        amount = 1,
+        info = {},
+        type = "weapon",
+        slot = 4,
     },
 }
 
