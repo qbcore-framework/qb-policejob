@@ -1241,3 +1241,39 @@ RegisterServerEvent('police:server:SyncSpikes')
 AddEventHandler('police:server:SyncSpikes', function(table)
     TriggerClientEvent('police:client:SyncSpikes', -1, table)
 end)
+
+--- onesync infinty blip and add item for callsign radar For more realism
+local Blips = {}
+
+RegisterServerEvent("qb-policejob:server:updateBlips")
+AddEventHandler("qb-policejob:server:updateBlips", function()
+    local players = QBCore.Functions.GetPlayers()
+    Blips = {}
+    for k, v in pairs(players) do
+        local player = QBCore.Functions.GetPlayer(v)
+        local radar = player.Functions.GetItemByName('radar') ~= nil and true or false
+        if radar == true then
+            local callsign = player.PlayerData.metadata["callsign"] ~= nil and player.PlayerData.metadata["callsign"] or "Police"
+            if player.PlayerData.job.name == "police" and player.PlayerData.job.onduty then
+                table.insert(Blips, {v, 'police', callsign})
+            elseif player.PlayerData.job.name == "ambulance" and player.PlayerData.job.onduty then
+                table.insert(Blips, {v, 'ambulance', callsign})
+            end
+        end
+    end
+    TriggerClientEvent('qb-policejob:client:updateBlips', -1, Blips)
+end)
+
+QBCore.Commands.Add("setsign", "Set your callsign (call number)", {{name="name", help="Name of your callsign"}}, true, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
+    if Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == 'ambulance' then
+        Player.Functions.SetMetaData("callsign", table.concat(args, " "))
+    end
+end)
+
+CreateThread(function()
+    while true do
+        TriggerEvent("qb-policejob:server:updateBlips")
+        Wait(25000)
+    end
+end)
