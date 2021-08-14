@@ -313,7 +313,8 @@ RegisterNetEvent('police:client:showFingerprintId')
 AddEventHandler('police:client:showFingerprintId', function(fid)
     SendNUIMessage({
         type = "updateFingerprintId",
-        fingerprintId = fid
+        fingerprintId = fid,
+	name = name
     })
     PlaySound(-1, "Event_Start_Text", "GTAO_FM_Events_Soundset", 0, 0, 1)
 end)
