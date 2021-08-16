@@ -69,11 +69,11 @@ AddEventHandler('police:server:SetPlayerOutVehicle', function(playerId)
     local Player = QBCore.Functions.GetPlayer(source)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if EscortPlayer ~= nil then
-        if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] then
+        --if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] then
             TriggerClientEvent("police:client:SetOutVehicle", EscortPlayer.PlayerData.source)
-        else
-            TriggerClientEvent('chatMessage', src, "SYSTEM", "error", "Person is not dead or cuffed!")
-        end
+        ---else
+            ---TriggerClientEvent('chatMessage', src, "SYSTEM", "error", "Person is not dead or cuffed!")
+        ---end
     end
 end)
 
@@ -83,11 +83,11 @@ AddEventHandler('police:server:PutPlayerInVehicle', function(playerId)
     local Player = QBCore.Functions.GetPlayer(source)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if EscortPlayer ~= nil then
-        if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] then
+        ---if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] then
             TriggerClientEvent("police:client:PutInVehicle", EscortPlayer.PlayerData.source)
-        else
-            TriggerClientEvent('chatMessage', src, "SYSTEM", "error", "Person is not dead or cuffed!")
-        end
+        --else
+            --TriggerClientEvent('chatMessage', src, "SYSTEM", "error", "Person is not dead or cuffed!")
+        --end
     end
 end)
 
