@@ -92,7 +92,7 @@ AddEventHandler('police:client:ActiveCamera', function(cameraId)
         SetFocusArea(firstCamx, firstCamy, firstCamz, firstCamx, firstCamy, firstCamz)
         ChangeSecurityCamera(firstCamx, firstCamy, firstCamz, firstCamr)
         currentCameraIndex = a
-        currentCameraIndexIndex = 1
+        currentCameraIndexIndex = cameraId
         DoScreenFadeIn(250)
     elseif cameraId == 0 then
         DoScreenFadeOut(250)
