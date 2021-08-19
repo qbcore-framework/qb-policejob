@@ -1241,3 +1241,8 @@ RegisterServerEvent('police:server:SyncSpikes')
 AddEventHandler('police:server:SyncSpikes', function(table)
     TriggerClientEvent('police:client:SyncSpikes', -1, table)
 end)
+
+RegisterServerEvent("police:server:unmaskGranted")
+AddEventHandler("police:server:unmaskGranted", function(player)
+    TriggerClientEvent('police:client:unmaskAccepted', player)
+end)
