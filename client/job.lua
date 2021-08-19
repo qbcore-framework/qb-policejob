@@ -406,6 +406,36 @@ AddEventHandler('police:client:CheckStatus', function()
     end)
 end)
 
+RegisterNetEvent('police:client:unmask')
+AddEventHandler('police:client:unmask', function()
+	local t, distance = GetClosestPlayer()
+    if (distance ~= -1 and distance < 5) then
+        if not IsPedInVehicle(t,GetVehiclePedIsIn(t, false),false) then
+			TriggerServerEvent("police:server:unmaskGranted", GetPlayerServerId(t))
+			AnimSet = "mp_missheist_ornatebank"
+			AnimationOn = "stand_cash_in_bag_intro"
+			AnimationOff = "stand_cash_in_bag_intro"
+			loadAnimDict( AnimSet )
+			TaskPlayAnim( PlayerPedId(), AnimSet, AnimationOn, 8.0, -8, -1, 49, 0, 0, 0, 0 )
+			Citizen.Wait(500)
+			ClearPedTasks(PlayerPedId())						
+		end
+	else
+		TriggerEvent("QBCore:Notify", "No player near you", "error")
+	end
+end)
+
+RegisterNetEvent('police:client:unmaskAccepted')
+AddEventHandler('police:client:unmaskAccepted', function()
+    TriggerEvent('clothing:setupCommandsData')
+    loadAnimDict("missheist_agency2ahelmet")
+    TaskPlayAnim(PlayerPedId(), "missheist_agency2ahelmet", "take_off_helmet_stand", 4.0, 3.0, -1, 49, 1.0, 0, 0, 0 )
+    Wait(800)
+    SetPedComponentVariation(PlayerPedId(), 1, -1, -1, -1)
+    ClearPedProp(PlayerPedId(), 0)
+    ClearPedTasks(PlayerPedId())
+end)
+
 function MenuImpound()
     ped = PlayerPedId();
     MenuTitle = "Impounded"
