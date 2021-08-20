@@ -56,11 +56,6 @@ Citizen.CreateThread(function()
                                 TriggerServerEvent("QBCore:ToggleDuty")
                                 TriggerServerEvent("police:server:UpdateBlips")
                                 TriggerEvent('qb-policealerts:ToggleDuty', onDuty)
-                                if onDuty then
-                                    exports["rp-radio"]:GivePlayerAccessToFrequencies(1, 2)
-                                else
-                                    exports["rp-radio"]:RemovePlayerAccessToFrequencies(1, 2)
-                                end
                             end
                         elseif #(pos - vector3(v.x, v.y, v.z)) < 2.5 then
                             DrawText3D(v.x, v.y, v.z, "on/off duty")
