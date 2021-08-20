@@ -206,6 +206,8 @@ Citizen.CreateThread(function()
                                     else
                                         local coords = Config.Locations["helicopter"][k]
                                         QBCore.Functions.SpawnVehicle(Config.Helicopter, function(veh)
+				            SetVehicleLivery(veh , 0)
+					    SetVehicleMod(veh, 0, 48)
                                             SetVehicleNumberPlateText(veh, "ZULU"..tostring(math.random(1000, 9999)))
                                             SetEntityHeading(veh, coords.w)
                                             exports['LegacyFuel']:SetFuel(veh, 100.0)
