@@ -35,7 +35,8 @@ function Input(Titel, Placeholder, MaxLenght)
 end
 
 local currentGarage = 1
-Citizen.CreateThread(function()
+Citizen.CreateThread(function()	
+    SetCarItemsInfo()
     while true do
         Citizen.Wait(1)
         if isLoggedIn then
