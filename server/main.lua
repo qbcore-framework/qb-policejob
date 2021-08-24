@@ -584,7 +584,8 @@ AddEventHandler('police:server:checkFines', function(playerId)
     local src = source
     local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
     if SearchedPlayer ~= nil then 
-        QBCore.Functions.ExecuteSql(false, "SELECT * FROM phone_invoices WHERE `citizenid` = '"..SearchedPlayer.PlayerData.citizenid.."' AND `society`='police'", function(invoices)
+       -- QBCore.Functions.ExecuteSql(false, "SELECT * FROM phone_invoices WHERE `citizenid` = '"..SearchedPlayer.PlayerData.citizenid.."' AND `society`='police'", function(invoices)
+	QBCore.Functions.ExecuteSql(false, "SELECT * FROM phone_invoices WHERE `citizenid` = '"..SearchedPlayer.PlayerData.citizenid.."' AND `society`='police'", function(invoices) 
             if #invoices == 0 then
                 TriggerClientEvent('chat:addMessage', src, {
                     template = '<div class="chat-message server"><strong>SYSTEM:</strong> Player have no unpaid fines.</div>',
