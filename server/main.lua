@@ -579,6 +579,34 @@ AddEventHandler('police:server:checkLicenses', function(playerId)
     end
 end)
 
+QBCore.Commands.Add('checkfines', 'Check player fines (Emergancy Only).', {{name = 'id', help = 'Player ID'}}, true, function(source, args)
+    local src = source
+    local id = tonumber(args[1])
+	if id then
+		local xPlayer = QBCore.Functions.GetPlayer(id)
+		local xOther = QBCore.Functions.GetPlayer(src)
+        
+        if xPlayer and xOther and xOther.PlayerData.job.name == 'police' then
+			local distance = xPlayer.PlayerData.metadata["inlaststand"] and 3.0 or 10.0
+			if #(GetEntityCoords(GetPlayerPed(src)) - GetEntityCoords(GetPlayerPed(id))) < distance then
+				exports.ghmattimysql:executeSync(false, "SELECT * FROM `phone_invoices` WHERE `citizenid` = '" .. xPlayer.PlayerData.citizenid .. "'", function(result)
+                    if result[1] ~= nil then
+                        TriggerClientEvent('QBCore:Notify', src, "This person has " .. #result .. " unpaid fines.", "success")
+                    else
+                        TriggerClientEvent('QBCore:Notify', src, "This person has no unpaid fines.", "success")
+                    end
+                end)
+			else
+				TriggerClientEvent('QBCore:Notify', src, "You are too far away.", "error")
+			end
+		else
+			TriggerClientEvent('QBCore:Notify', src, "This command is for officers only!", "error")
+		end
+	else
+		TriggerClientEvent('QBCore:Notify', src, "Wrong ID.", "error")
+	end
+end)
+
 RegisterServerEvent('police:server:checkFines')
 AddEventHandler('police:server:checkFines', function(playerId)
     local src = source
