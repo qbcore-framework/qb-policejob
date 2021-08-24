@@ -90,6 +90,39 @@ AddEventHandler('police:client:PutInVehicle', function()
     end
 end)
 
+RegisterNetEvent('police:client:checkBank')
+AddEventHandler('police:client:checkBank', function()
+    local player, distance = GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerId = GetPlayerServerId(player)
+        TriggerServerEvent("police:server:checkBank", playerId)
+    else
+        QBCore.Functions.Notify("No one around!", "error")
+    end
+end)
+
+RegisterNetEvent('police:client:checkLicenses')
+AddEventHandler('police:client:checkLicenses', function()
+    local player, distance = GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerId = GetPlayerServerId(player)
+        TriggerServerEvent("police:server:checkLicenses", playerId)
+    else
+        QBCore.Functions.Notify("No one around!", "error")
+    end
+end)
+
+RegisterNetEvent('police:client:checkFines')
+AddEventHandler('police:client:checkFines', function()
+    local player, distance = GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerId = GetPlayerServerId(player)
+        TriggerServerEvent("police:server:checkFines", playerId)
+    else
+        QBCore.Functions.Notify("No one around!", "error")
+    end
+end)
+
 RegisterNetEvent('police:client:SearchPlayer')
 AddEventHandler('police:client:SearchPlayer', function()
     local player, distance = GetClosestPlayer()
