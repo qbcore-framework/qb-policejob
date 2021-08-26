@@ -1,5 +1,3 @@
-
-
 const CameraApp = new Vue({
     el: "#camcontainer",
 
@@ -102,7 +100,7 @@ Databank.Close = function() {
     $(".databank-container").css("display", "none");
     $(".tablet-frame").css("display", "none");
     $(".databank-bg").css("display", "none");
-    $.post("https://qb-policejob/closeDatabank", JSON.stringify({}));
+    $.post(`https://${GetParentResourceName()}/closeDatabank`, JSON.stringify({}));
 }
 
 Fingerprint.Open = function() {
@@ -112,7 +110,7 @@ Fingerprint.Open = function() {
 
 Fingerprint.Close = function() {
     $(".fingerprint-container").fadeOut(150);
-    $.post('https://qb-policejob/closeFingerprint');
+    $.post(`https://${GetParentResourceName()}/closeFingerprint`);
 }
 
 Fingerprint.Update = function(data) {
@@ -120,7 +118,7 @@ Fingerprint.Update = function(data) {
 }
 
 $(document).on('click', '.take-fingerprint', function(){
-    $.post('https://qb-policejob/doFingerScan');
+    $.post(`https://${GetParentResourceName()}/doFingerScan`);
 })
 
 document.onreadystatechange = () => {
