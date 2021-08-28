@@ -742,7 +742,7 @@ end)
 QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name="id", help="ID of a person"},{name="license", help="License Type"}}, true, function(source, args)
     local source = source
     local Player = QBCore.Functions.GetPlayer(source)
-    if Player.PlayerData.job.name == "police" then
+    if Player.PlayerData.job.name == "police" and Player.PlayerData.job.grade.level >= 2 then
         if args[2] == "driver" or args[2] == "weapon" then
             local SearchedPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
             if SearchedPlayer ~= nil then
@@ -756,14 +756,14 @@ QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name="id", h
             TriggerClientEvent('QBCore:Notify', source, "Invalid license type", "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, "You must be a police officer to do this", "error")
+        TriggerClientEvent('QBCore:Notify', source, "You must be a Sergeant to grant licenses!", "error")
     end
 end)
 
 QBCore.Commands.Add("revokelicense", "Grant a license to someone", {{name="id", help="ID of a person"},{name="license", help="License Type"}}, true, function(source, args)
     local source = source
     local Player = QBCore.Functions.GetPlayer(source)
-    if Player.PlayerData.job.name == "police" then
+    if Player.PlayerData.job.name == "police" and Player.PlayerData.job.grade.level >= 2 then
         if args[2] == "driver" or args[2] == "weapon" then
             local SearchedPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
             if SearchedPlayer ~= nil then
@@ -777,7 +777,7 @@ QBCore.Commands.Add("revokelicense", "Grant a license to someone", {{name="id", 
             TriggerClientEvent('QBCore:Notify', source, "Invalid license type", "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, "You must be a police officer to do this", "error")
+        TriggerClientEvent('QBCore:Notify', source, "You must be a Sergeant to revoke licenses!", "error")
     end
 end)
 
