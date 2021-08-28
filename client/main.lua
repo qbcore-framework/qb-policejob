@@ -46,7 +46,6 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     isLoggedIn = true
     PlayerJob = QBCore.Functions.GetPlayerData().job
-    onDuty = QBCore.Functions.GetPlayerData().job.onduty
     isHandcuffed = false
     TriggerServerEvent("QBCore:Server:SetMetaData", "ishandcuffed", false)
     TriggerServerEvent("police:server:SetHandcuffStatus", false)
@@ -55,13 +54,13 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
 
     if QBCore.Functions.GetPlayerData().metadata["tracker"] then
         local trackerClothingData = {outfitData = {["accessory"] = { item = 13, texture = 0}}}
-        TriggerEvent('qb-clothing:client:loadOutfit', trackerClothingData)
     else
         local trackerClothingData = {outfitData = {["accessory"]   = { item = -1, texture = 0}}}
-        TriggerEvent('qb-clothing:client:loadOutfit', trackerClothingData)
     end
+	TriggerEvent('qb-clothing:client:loadOutfit', trackerClothingData)
 
     if (PlayerJob ~= nil) and PlayerJob.name ~= "police" then
+	onDuty = QBCore.Functions.GetPlayerData().job.onduty
         if DutyBlips ~= nil then 
             for k, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -136,10 +135,15 @@ AddEventHandler('QBCore:Client:OnPlayerUnload', function()
     TriggerServerEvent("police:server:SetHandcuffStatus", false)
     TriggerServerEvent("police:server:UpdateCurrentCops")
     isLoggedIn = false
-    isHandcuffed = false
-    isEscorted = false
-    onDuty = false
-    ClearPedTasks(PlayerPedId())
+	if isHandcuffed then
+    		isHandcuffed = false
+	end
+	if isEscorted then
+    		isEscorted = false
+	end
+	if onDuty then
+    		onDuty = false
+	end
     DetachEntity(PlayerPedId(), true, false)
     if DutyBlips ~= nil then 
         for k, v in pairs(DutyBlips) do
