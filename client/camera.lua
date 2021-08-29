@@ -1,6 +1,5 @@
 local cameraActive = false
 local currentCameraIndex = 0
-local currentCameraIndexIndex = 0
 local createdCamera = 0
 
 Citizen.CreateThread(function()
@@ -37,7 +36,7 @@ Citizen.CreateThread(function()
             ---------------------------------------------------------------------------
             -- CAMERA ROTATION CONTROLS
             ---------------------------------------------------------------------------
-            if Config.SecurityCameras.cameras[currentCameraIndexIndex].canRotate then
+            if Config.SecurityCameras.cameras[currentCameraIndex].canRotate then
                 local getCameraRot = GetCamRot(createdCamera, 2)
 
                 -- ROTATE UP
@@ -91,8 +90,7 @@ AddEventHandler('police:client:ActiveCamera', function(cameraId)
         local firstCamr = Config.SecurityCameras.cameras[cameraId].r
         SetFocusArea(firstCamx, firstCamy, firstCamz, firstCamx, firstCamy, firstCamz)
         ChangeSecurityCamera(firstCamx, firstCamy, firstCamz, firstCamr)
-        currentCameraIndex = a
-        currentCameraIndexIndex = cameraId
+        currentCameraIndex = cameraId
         DoScreenFadeIn(250)
     elseif cameraId == 0 then
         DoScreenFadeOut(250)
