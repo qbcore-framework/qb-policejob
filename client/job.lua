@@ -554,16 +554,12 @@ function TakeOutVehicle(vehicleInfo)
 	props['modTurbo'] = true
 	props['dirtLevel'] = 0
 	props['windowTint'] = 3
-	QBCore.Functions.SetVehicleProperties = function(vehicle, props)
-	SetVehicleExtraColours(vehicle, 0)
-	SetVehicleLivery(vehicle, 0)
-	SetVehicleExtra(vehicle, 1, 0)
-	SetVehicleExtra(vehicle, 2, 0)
-	SetVehicleExtra(vehicle, 3, 0)
-	SetVehicleExtra(vehicle, 4, 0)
-	SetVehicleExtra(vehicle, 5, 0)
-	SetVehicleExtra(vehicle, 6, 0)
-	SetVehicleExtra(vehicle, 7, 0)				
+	QBCore.Functions.SetVehicleProperties(veh, props)
+	SetVehicleExtraColours(veh, 0)
+	SetVehicleLivery(veh, 0)
+	for i = 1, 9, 1 do 
+		SetVehicleExtra(veh, i, 0)
+	end		
         exports['LegacyFuel']:SetFuel(veh, 100.0)
         closeMenuFull()
         TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
