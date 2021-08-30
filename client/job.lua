@@ -539,11 +539,31 @@ end
 
 function TakeOutVehicle(vehicleInfo)
     local coords = Config.Locations["vehicle"][currentGarage]
+	local props = {}
 
     QBCore.Functions.SpawnVehicle(vehicleInfo, function(veh)
 	SetCarItemsInfo()
         SetVehicleNumberPlateText(veh, "PLZI"..tostring(math.random(1000, 9999)))
         SetEntityHeading(veh, coords.w)
+	props = {}
+	props['modEngine'] = 2
+	props['modTransmission'] = 2
+	props['modSuspension'] = 3
+	props['modArmor'] = 4
+	props['modBrakes'] = 2
+	props['modTurbo'] = true
+	props['dirtLevel'] = 0
+	props['windowTint'] = 3
+	QBCore.Functions.SetVehicleProperties = function(vehicle, props)
+	SetVehicleExtraColours(vehicle, 0)
+	SetVehicleLivery(vehicle, 0)
+	SetVehicleExtra(vehicle, 1, 0)
+	SetVehicleExtra(vehicle, 2, 0)
+	SetVehicleExtra(vehicle, 3, 0)
+	SetVehicleExtra(vehicle, 4, 0)
+	SetVehicleExtra(vehicle, 5, 0)
+	SetVehicleExtra(vehicle, 6, 0)
+	SetVehicleExtra(vehicle, 7, 0)				
         exports['LegacyFuel']:SetFuel(veh, 100.0)
         closeMenuFull()
         TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
