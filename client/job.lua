@@ -544,6 +544,21 @@ function TakeOutVehicle(vehicleInfo)
 	SetCarItemsInfo()
         SetVehicleNumberPlateText(veh, "PLZI"..tostring(math.random(1000, 9999)))
         SetEntityHeading(veh, coords.w)
+	props = {}
+	props.modEngine = 2
+	props.modTransmission = 2
+	props.modSuspension = 3
+	props.modArmor = 4
+	props.modBrakes = 2
+	props.modTurbo = true
+	props.dirtLevel = 0
+	props.windowTint = 3
+	QBCore.Functions.SetVehicleProperties(veh, props)
+	SetVehicleExtraColours(veh, 0)
+	SetVehicleLivery(veh, 0)
+	for i = 1, 9, 1 do 
+    		SetVehicleExtra(veh, i, 0)
+        end			
         exports['LegacyFuel']:SetFuel(veh, 100.0)
         closeMenuFull()
         TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
