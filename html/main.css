@@ -1,21 +1,4 @@
-/*-------------------------------------------------------------------------
-
-    Wraith Radar System - v1.01
-    Created by WolfKnight
-
-    Just a word of warning, I'm not the best at CSS structure, so this 
-	could probably be 10x better, but fuck it. 
-	
-
-	Plate Reader added by Ascaped (Uses css grids instead)
-    
--------------------------------------------------------------------------*/
-
-@font-face {
-	font-family: "Digital-7";
-	src: url( "digital-7.regular.ttf" );
-}
-
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
 
 .databank-container {
 	display:none!important;
@@ -44,7 +27,7 @@
 }
 
 #policeradar .antennalabel {
-	font-family: Verdana;
+	font-family: 'Poppins', sans-serif;
 	font-size: 14px;
 	font-weight: bold;
 	text-align: center;
@@ -65,7 +48,7 @@
 }
 
 #policeradar .logo {
-	font-family: Verdana;
+	font-family: 'Poppins', sans-serif;
 	font-size: 17px;
 	font-weight: bold;
 	bottom: 15px;
@@ -100,7 +83,7 @@
 }
 
 #policeradar .typecontainer .text {
-	font-family: Verdana;
+	font-family: 'Poppins', sans-serif;
 	font-size: 10px;
 	line-height: 27px;
 	margin-left: 13px;
@@ -140,7 +123,7 @@
 }
 
 #policeradar .container .label {
-	font-family: Verdana;
+	font-family: 'Poppins', sans-serif;
 	font-weight: bold;
 	font-size: 10px;
 	text-align: center;
@@ -158,7 +141,7 @@
 }
 
 #policeradar .container .speedsourcecontainer .text {
-	font-family: "Digital-7";
+	font-family: 'Poppins', sans-serif;
 	font-size: 58px;
 	line-height: 58px;
 	width: 100%;
@@ -192,7 +175,7 @@
 }
 
 #policeradar .container .speedfastcontainer .text {
-	font-family: "Digital-7";
+	font-family: 'Poppins', sans-serif;
 	font-size: 50px;
 	line-height: 50px;
 	width: 100%;
@@ -229,11 +212,11 @@
 }
 
 #policeradarrc .label {
-	font-family: Verdana;
+	font-family: 'Poppins', sans-serif;
 }
 
 #policeradarrc .container {
-	font-family: Verdana;
+	font-family: 'Poppins', sans-serif;
 	align-items: center;
 }
 
@@ -340,7 +323,7 @@
 #platereader .pReader {
 	display: grid;
 	grid-area: pReader;
-	font-family: "Verdana";
+	font-family: 'Poppins', sans-serif;
 	font-weight: bold;
 	font-size: 20px;
 	letter-spacing: 2px;
@@ -352,7 +335,7 @@
 	width: 100%;
 	height: 100%;
 	background-color: black;
-	font-family: Verdana;
+	font-family: 'Poppins', sans-serif;
 	font-weight: bold;
 	font-size: 10px;
 	text-align: center;
