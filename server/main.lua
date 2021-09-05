@@ -15,6 +15,7 @@ Citizen.CreateThread(function()
     end
 end)
 
+
 RegisterServerEvent('police:server:TakeOutImpound')
 AddEventHandler('police:server:TakeOutImpound', function(plate)
     local src = source       
@@ -372,14 +373,6 @@ AddEventHandler('police:server:Impound', function(plate, fullImpound, price, bod
             TriggerClientEvent('QBCore:Notify', src, "Vehicle completely seized!")
         end
     end
-end)
-
-RegisterServerEvent('police:server:TakeOutImpound')
-AddEventHandler('police:server:TakeOutImpound', function(plate)
-    local src = source       
-    exports['ghmattimysql']:execute('UPDATE player_vehicles SET state = @state WHERE plate = @plate', {['@state'] = 0, ['@plate'] = plate})
-    TriggerClientEvent('QBCore:Notify', src, "Vehicle is taken out of Impound!")
-      
 end)
 
 RegisterServerEvent('evidence:server:UpdateStatus')
