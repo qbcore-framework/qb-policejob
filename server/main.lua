@@ -1,9 +1,9 @@
 local Plates = {}
-cuffedPlayers = {}
-PlayerStatus = {}
-Casings = {}
-BloodDrops = {}
-FingerDrops = {}
+local cuffedPlayers = {}
+local PlayerStatus = {}
+local Casings = {}
+local BloodDrops = {}
+local FingerDrops = {}
 local Objects = {}
 
 
