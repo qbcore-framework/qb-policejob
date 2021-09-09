@@ -1,12 +1,11 @@
-isLoggedIn = true
-
-isHandcuffed = false
-cuffType = 1
-isEscorted = false
-draggerId = 0
-PlayerJob = {}
-onDuty = false
-databankOpen = false
+local isLoggedIn = true
+local isHandcuffed = false
+local cuffType = 1
+local isEscorted = false
+local draggerId = 0
+local PlayerJob = {}
+local onDuty = false
+local databankOpen = false
 
 Citizen.CreateThread(function()
     for k, station in pairs(Config.Locations["stations"]) do
