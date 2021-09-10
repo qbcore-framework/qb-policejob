@@ -55,7 +55,6 @@ Citizen.CreateThread(function()
                                 TriggerServerEvent("police:server:UpdateCurrentCops")
                                 TriggerServerEvent("QBCore:ToggleDuty")
                                 TriggerServerEvent("police:server:UpdateBlips")
-                                TriggerEvent('qb-policealerts:ToggleDuty', onDuty)
                             end
                         elseif #(pos - vector3(v.x, v.y, v.z)) < 2.5 then
                             DrawText3D(v.x, v.y, v.z, "on/off duty")
