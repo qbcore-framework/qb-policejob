@@ -166,75 +166,6 @@ AddEventHandler('police:server:FlaggedPlateTriggered', function(camId, plate, st
 	end
 end)
 
-RegisterServerEvent('police:server:PoliceAlertMessage')
-AddEventHandler('police:server:PoliceAlertMessage', function(title, streetLabel, coords)
-    local src = source
-
-    for k, v in pairs(QBCore.Functions.GetPlayers()) do
-        local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
-            if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
-                TriggerClientEvent("police:client:PoliceAlertMessage", v, title, streetLabel, coords)
-            elseif Player.Functions.GetItemByName("radioscanner") ~= nil and math.random(1, 100) <= 50 then
-                TriggerClientEvent("police:client:PoliceAlertMessage", v, title, streetLabel, coords)
-            end
-        end
-    end
-end)
-
-RegisterServerEvent('police:server:GunshotAlert')
-AddEventHandler('police:server:GunshotAlert', function(streetLabel, isAutomatic, fromVehicle, coords, vehicleInfo)
-    local src = source
-
-    for k, v in pairs(QBCore.Functions.GetPlayers()) do
-        local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
-            if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
-                TriggerClientEvent("police:client:GunShotAlert", Player.PlayerData.source, streetLabel, isAutomatic, fromVehicle, coords, vehicleInfo)
-            elseif Player.Functions.GetItemByName("radioscanner") ~= nil and math.random(1, 100) <= 50 then
-                TriggerClientEvent("police:client:GunShotAlert", Player.PlayerData.source, streetLabel, isAutomatic, fromVehicle, coords, vehicleInfo)
-            end
-        end
-    end
-end)
-
-RegisterServerEvent('police:server:VehicleCall')
-AddEventHandler('police:server:VehicleCall', function(pos, msg, alertTitle, streetLabel, modelPlate, modelName)
-    local src = source
-    local alertData = {
-        title = "Vehicle theft",
-        coords = {x = pos.x, y = pos.y, z = pos.z},
-        description = msg,
-    }
-    TriggerClientEvent("police:client:VehicleCall", -1, pos, alertTitle, streetLabel, modelPlate, modelName)
-    TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
-end)
-
-RegisterServerEvent('police:server:HouseRobberyCall')
-AddEventHandler('police:server:HouseRobberyCall', function(coords, message, gender, streetLabel)
-    local src = source
-    local alertData = {
-        title = "Burglary",
-        coords = {x = coords.x, y = coords.y, z = coords.z},
-        description = message,
-    }
-    TriggerClientEvent("police:client:HouseRobberyCall", -1, coords, message, gender, streetLabel)
-    TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
-end)
-
-RegisterServerEvent('police:server:SendEmergencyMessage')
-AddEventHandler('police:server:SendEmergencyMessage', function(coords, message)
-    local src = source
-    local MainPlayer = QBCore.Functions.GetPlayer(src)
-    local alertData = {
-        title = "911 alert - "..MainPlayer.PlayerData.charinfo.firstname .. " " .. MainPlayer.PlayerData.charinfo.lastname .. " ("..src..")",
-        coords = {x = coords.x, y = coords.y, z = coords.z},
-        description = message,
-    }
-    TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
-    TriggerClientEvent('police:server:SendEmergencyMessageCheck', -1, MainPlayer, message, coords)
-end)
-
 RegisterServerEvent('police:server:SearchPlayer')
 AddEventHandler('police:server:SearchPlayer', function(playerId)
     local src = source
@@ -550,27 +481,6 @@ AddEventHandler('police:server:SendTrackerLocation', function(coords, requestId)
     TriggerClientEvent("qb-phone:client:addPoliceAlert", requestId, alertData)
 end)
 
---[[ RegisterServerEvent('police:server:SendPoliceEmergencyAlert')
-AddEventHandler('police:server:SendPoliceEmergencyAlert', function(streetLabel, coords, callsign)
-    local data = {
-        displayCode = 10-99,
-        description = "Emergency button pressed by ".. callsign .. " at "..streetLabel,
-        isImportant = 1,
-        recipientList = {'police'},
-        length = '10000',
-        infoM = 'fa-info-circle',
-        info = 'All Units Respond',
-    }
-
-    local dispatchData = {
-        dispatchData = data,
-        caller = callsign,
-        coords = coords
-    }
-    TriggerEvent('wf-alerts:svNotify', dispatchData)
-    --TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
-end) ]]
-
 QBCore.Functions.CreateCallback('police:server:isPlayerDead', function(source, cb, playerId)
     local Player = QBCore.Functions.GetPlayer(playerId)
     cb(Player.PlayerData.metadata["isdead"])
@@ -848,15 +758,6 @@ QBCore.Commands.Add("escort", "Escort Player", {}, false, function(source, args)
 	local Player = QBCore.Functions.GetPlayer(source)
     TriggerClientEvent("police:client:EscortPlayer", source)
 end)
-
---QBCore.Commands.Add("mdt", "Open MDT (Police Only)", {}, false, function(source, args)
---	local Player = QBCore.Functions.GetPlayer(source)
---    if Player.PlayerData.job.name == "police" then
---        TriggerClientEvent("police:client:toggleDatabank", source)
---    else
---        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
---    end
---end)
 
 QBCore.Commands.Add("callsign", "Give Yourself A Callsign", {{name="name", help="Name of your callsign"}}, false, function(source, args)
 	local Player = QBCore.Functions.GetPlayer(source)
