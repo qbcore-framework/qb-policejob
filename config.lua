@@ -81,6 +81,8 @@ Config.ArmoryWhitelist = {}
 
 Config.Helicopter = "POLMAV"
 
+Config.BailJob = 250
+
 Config.SecurityCameras = {
     hideradar = false,
     cameras = {
