@@ -1011,8 +1011,8 @@ QBCore.Commands.Add("paytow", "Pay Tow Driver (Police, EMS Only)", {{name="id", 
         local OtherPlayer = QBCore.Functions.GetPlayer(playerId)
         if OtherPlayer ~= nil then
             if OtherPlayer.PlayerData.job.name == "tow" then
-                OtherPlayer.Functions.AddMoney("bank", 500, "police-tow-paid")
-                TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "SYSTEM", "warning", "You received $ 500 for your service!")
+                OtherPlayer.Functions.AddMoney("bank", Config.BailJob, "police-tow-paid")
+                TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "SYSTEM", "warning", "You received $ 250 for your service!")
                 TriggerClientEvent('QBCore:Notify', source, 'You paid a bergnet worker')
             else
                 TriggerClientEvent('QBCore:Notify', source, 'Person is not a bergnet worker', "error")
@@ -1030,8 +1030,8 @@ QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{name="id",
         local OtherPlayer = QBCore.Functions.GetPlayer(playerId)
         if OtherPlayer ~= nil then
             if OtherPlayer.PlayerData.job.name == "lawyer" then
-                OtherPlayer.Functions.AddMoney("bank", 500, "police-lawyer-paid")
-                TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "SYSTEM", "warning", "You received $ 500 for your pro bono case!")
+                OtherPlayer.Functions.AddMoney("bank", Config.BailJob, "police-lawyer-paid")
+                TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "SYSTEM", "warning", "You received $ 250 for your pro bono case!")
                 TriggerClientEvent('QBCore:Notify', source, 'You paid a lawyer')
             else
                 TriggerClientEvent('QBCore:Notify', source, 'Person is not a lawyer', "error")
