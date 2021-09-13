@@ -376,8 +376,15 @@ AddEventHandler('police:client:ImpoundVehicle', function(fullImpound, price)
         local vehpos = GetEntityCoords(vehicle)
         if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
             local plate = GetVehicleNumberPlateText(vehicle)
-            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
-            QBCore.Functions.DeleteVehicle(vehicle)
+			TaskStartScenarioInPlace(ped, 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', 0, true)
+			QBCore.Functions.Progressbar("impoundvehicle", "Impound Vehicle", math.random(4000, 5000), false, true, {}, {}, {}, {}, function() -- Done
+				ClearPedTasks(PlayerPedId())
+				TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
+				QBCore.Functions.DeleteVehicle(vehicle)
+			end, function() -- Cancel
+				ClearPedTasks(PlayerPedId())
+				QBCore.Functions.Notify("Canceled..", "error")
+			end)
         end
     end
 end)
