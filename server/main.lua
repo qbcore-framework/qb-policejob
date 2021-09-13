@@ -6,21 +6,19 @@ local BloodDrops = {}
 local FingerDrops = {}
 local Objects = {}
 
-
 Citizen.CreateThread(function()
-    while true do 
+    while true do
         Citizen.Wait(1000 * 60 * 10)
         local curCops = GetCurrentCops()
         TriggerClientEvent("police:SetCopCount", -1, curCops)
     end
 end)
 
-
 RegisterServerEvent('police:server:TakeOutImpound')
 AddEventHandler('police:server:TakeOutImpound', function(plate)
-    local src = source       
-    exports.oxmysql:execute('UPDATE player_vehicles SET state = @state WHERE plate = @plate', {['@state'] = 0, ['@plate'] = plate})
-    TriggerClientEvent('QBCore:Notify', src, "Vehicle is taken out of Impound!")  
+    local src = source
+    exports.oxmysql:execute('UPDATE player_vehicles SET state = ? WHERE plate  = ?', {0, plate})
+    TriggerClientEvent('QBCore:Notify', src, "Vehicle is taken out of Impound!")
 end)
 
 RegisterServerEvent('police:server:CuffPlayer')
@@ -30,7 +28,8 @@ AddEventHandler('police:server:CuffPlayer', function(playerId, isSoftcuff)
     local CuffedPlayer = QBCore.Functions.GetPlayer(playerId)
     if CuffedPlayer ~= nil then
         if Player.Functions.GetItemByName("handcuffs") ~= nil or Player.PlayerData.job.name == "police" then
-            TriggerClientEvent("police:client:GetCuffed", CuffedPlayer.PlayerData.source, Player.PlayerData.source, isSoftcuff)           
+            TriggerClientEvent("police:client:GetCuffed", CuffedPlayer.PlayerData.source, Player.PlayerData.source,
+                isSoftcuff)
         end
     end
 end)
@@ -41,7 +40,10 @@ AddEventHandler('police:server:EscortPlayer', function(playerId)
     local Player = QBCore.Functions.GetPlayer(source)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if EscortPlayer ~= nil then
-        if (Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" or Player.PlayerData.job.name == "doctor") or (EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or EscortPlayer.PlayerData.metadata["inlaststand"]) then
+        if (Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" or
+            Player.PlayerData.job.name == "doctor") or
+            (EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or
+                EscortPlayer.PlayerData.metadata["inlaststand"]) then
             TriggerClientEvent("police:client:GetEscorted", EscortPlayer.PlayerData.source, Player.PlayerData.source)
         else
             TriggerClientEvent('chatMessage', src, "SYSTEM", "error", "Person is not dead or cuffed!")
@@ -55,9 +57,12 @@ AddEventHandler('police:server:KidnapPlayer', function(playerId)
     local Player = QBCore.Functions.GetPlayer(source)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if EscortPlayer ~= nil then
-        if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or EscortPlayer.PlayerData.metadata["inlaststand"] then
-            TriggerClientEvent("police:client:GetKidnappedTarget", EscortPlayer.PlayerData.source, Player.PlayerData.source)
-            TriggerClientEvent("police:client:GetKidnappedDragger", Player.PlayerData.source, EscortPlayer.PlayerData.source)
+        if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or
+            EscortPlayer.PlayerData.metadata["inlaststand"] then
+            TriggerClientEvent("police:client:GetKidnappedTarget", EscortPlayer.PlayerData.source,
+                Player.PlayerData.source)
+            TriggerClientEvent("police:client:GetKidnappedDragger", Player.PlayerData.source,
+                EscortPlayer.PlayerData.source)
         else
             TriggerClientEvent('chatMessage', src, "SYSTEM", "error", "Person is not dead or cuffed!")
         end
@@ -100,7 +105,7 @@ AddEventHandler('police:server:BillPlayer', function(playerId, price)
     if Player.PlayerData.job.name == "police" then
         if OtherPlayer ~= nil then
             OtherPlayer.Functions.RemoveMoney("bank", price, "paid-bills")
-            TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, "You received a fine of $"..price)
+            TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, "You received a fine of $" .. price)
         end
     end
 end)
@@ -111,7 +116,9 @@ AddEventHandler('police:server:JailPlayer', function(playerId, time)
     local Player = QBCore.Functions.GetPlayer(src)
     local OtherPlayer = QBCore.Functions.GetPlayer(playerId)
     local currentDate = os.date("*t")
-    if currentDate.day == 31 then currentDate.day = 30 end
+    if currentDate.day == 31 then
+        currentDate.day = 30
+    end
 
     if Player.PlayerData.job.name == "police" then
         if OtherPlayer ~= nil then
@@ -121,24 +128,24 @@ AddEventHandler('police:server:JailPlayer', function(playerId, time)
                 ["date"] = currentDate
             })
             TriggerClientEvent("police:client:SendToJail", OtherPlayer.PlayerData.source, time)
-            TriggerClientEvent('QBCore:Notify', src, "You sent the person to prison for "..time.." months")
+            TriggerClientEvent('QBCore:Notify', src, "You sent the person to prison for " .. time .. " months")
         end
     end
 end)
 
 RegisterServerEvent('police:server:SetHandcuffStatus')
 AddEventHandler('police:server:SetHandcuffStatus', function(isHandcuffed)
-	local src = source
-	local Player = QBCore.Functions.GetPlayer(src)
-	if Player ~= nil then
-		Player.Functions.SetMetaData("ishandcuffed", isHandcuffed)
-	end
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if Player ~= nil then
+        Player.Functions.SetMetaData("ishandcuffed", isHandcuffed)
+    end
 end)
 
 RegisterServerEvent('heli:spotlight')
 AddEventHandler('heli:spotlight', function(state)
-	local serverID = source
-	TriggerClientEvent('heli:spotlight', -1, serverID, state)
+    local serverID = source
+    TriggerClientEvent('heli:spotlight', -1, serverID, state)
 end)
 
 RegisterServerEvent('police:server:FlaggedPlateTriggered')
@@ -152,7 +159,7 @@ AddEventHandler('police:server:FlaggedPlateTriggered', function(camId, plate, st
                     TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
                         camId = camId,
                         plate = plate,
-                        streetLabel = street1.. " "..street2,
+                        streetLabel = street1 .. " " .. street2
                     }, blipSettings)
                 else
                     TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
@@ -163,7 +170,7 @@ AddEventHandler('police:server:FlaggedPlateTriggered', function(camId, plate, st
                 end
             end
         end
-	end
+    end
 end)
 
 RegisterServerEvent('police:server:PoliceAlertMessage')
@@ -172,7 +179,7 @@ AddEventHandler('police:server:PoliceAlertMessage', function(title, streetLabel,
 
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
+        if Player ~= nil then
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                 TriggerClientEvent("police:client:PoliceAlertMessage", v, title, streetLabel, coords)
             elseif Player.Functions.GetItemByName("radioscanner") ~= nil and math.random(1, 100) <= 50 then
@@ -188,11 +195,13 @@ AddEventHandler('police:server:GunshotAlert', function(streetLabel, isAutomatic,
 
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
+        if Player ~= nil then
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
-                TriggerClientEvent("police:client:GunShotAlert", Player.PlayerData.source, streetLabel, isAutomatic, fromVehicle, coords, vehicleInfo)
+                TriggerClientEvent("police:client:GunShotAlert", Player.PlayerData.source, streetLabel, isAutomatic,
+                    fromVehicle, coords, vehicleInfo)
             elseif Player.Functions.GetItemByName("radioscanner") ~= nil and math.random(1, 100) <= 50 then
-                TriggerClientEvent("police:client:GunShotAlert", Player.PlayerData.source, streetLabel, isAutomatic, fromVehicle, coords, vehicleInfo)
+                TriggerClientEvent("police:client:GunShotAlert", Player.PlayerData.source, streetLabel, isAutomatic,
+                    fromVehicle, coords, vehicleInfo)
             end
         end
     end
@@ -203,8 +212,12 @@ AddEventHandler('police:server:VehicleCall', function(pos, msg, alertTitle, stre
     local src = source
     local alertData = {
         title = "Vehicle theft",
-        coords = {x = pos.x, y = pos.y, z = pos.z},
-        description = msg,
+        coords = {
+            x = pos.x,
+            y = pos.y,
+            z = pos.z
+        },
+        description = msg
     }
     TriggerClientEvent("police:client:VehicleCall", -1, pos, alertTitle, streetLabel, modelPlate, modelName)
     TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
@@ -215,8 +228,12 @@ AddEventHandler('police:server:HouseRobberyCall', function(coords, message, gend
     local src = source
     local alertData = {
         title = "Burglary",
-        coords = {x = coords.x, y = coords.y, z = coords.z},
-        description = message,
+        coords = {
+            x = coords.x,
+            y = coords.y,
+            z = coords.z
+        },
+        description = message
     }
     TriggerClientEvent("police:client:HouseRobberyCall", -1, coords, message, gender, streetLabel)
     TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
@@ -227,9 +244,14 @@ AddEventHandler('police:server:SendEmergencyMessage', function(coords, message)
     local src = source
     local MainPlayer = QBCore.Functions.GetPlayer(src)
     local alertData = {
-        title = "911 alert - "..MainPlayer.PlayerData.charinfo.firstname .. " " .. MainPlayer.PlayerData.charinfo.lastname .. " ("..src..")",
-        coords = {x = coords.x, y = coords.y, z = coords.z},
-        description = message,
+        title = "911 alert - " .. MainPlayer.PlayerData.charinfo.firstname .. " " ..
+            MainPlayer.PlayerData.charinfo.lastname .. " (" .. src .. ")",
+        coords = {
+            x = coords.x,
+            y = coords.y,
+            z = coords.z
+        },
+        description = message
     }
     TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
     TriggerClientEvent('police:server:SendEmergencyMessageCheck', -1, MainPlayer, message, coords)
@@ -239,8 +261,9 @@ RegisterServerEvent('police:server:SearchPlayer')
 AddEventHandler('police:server:SearchPlayer', function(playerId)
     local src = source
     local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
-    if SearchedPlayer ~= nil then 
-        TriggerClientEvent('chatMessage', source, "SYSTEM", "warning", "Person has $"..SearchedPlayer.PlayerData.money["cash"]..",- on him..")
+    if SearchedPlayer ~= nil then
+        TriggerClientEvent('chatMessage', source, "SYSTEM", "warning",
+            "Person has $" .. SearchedPlayer.PlayerData.money["cash"] .. ",- on him..")
         TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You are being searched..")
     end
 end)
@@ -250,10 +273,10 @@ AddEventHandler('police:server:SeizeCash', function(playerId)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
-    if SearchedPlayer ~= nil then 
+    if SearchedPlayer ~= nil then
         local moneyAmount = SearchedPlayer.PlayerData.money["cash"]
         local info = {
-            cash = moneyAmount,
+            cash = moneyAmount
         }
         SearchedPlayer.Functions.RemoveMoney("cash", moneyAmount, "police-cash-seized")
         Player.Functions.AddItem("moneybag", 1, false, info)
@@ -275,7 +298,8 @@ AddEventHandler('police:server:SeizeDriverLicense', function(playerId)
                 ["business"] = SearchedPlayer.PlayerData.metadata["licences"]["business"]
             }
             SearchedPlayer.Functions.SetMetaData("licences", licenses)
-            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "Your driving license has been confiscated..")
+            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source,
+                "Your driving license has been confiscated..")
         else
             TriggerClientEvent('QBCore:Notify', src, "Can't confiscate driving license..", "error")
         end
@@ -287,49 +311,55 @@ AddEventHandler('police:server:RobPlayer', function(playerId)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
-    if SearchedPlayer ~= nil then 
+    if SearchedPlayer ~= nil then
         local money = SearchedPlayer.PlayerData.money["cash"]
         Player.Functions.AddMoney("cash", money, "police-player-robbed")
         SearchedPlayer.Functions.RemoveMoney("cash", money, "police-player-robbed")
-        TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been robbed of $"..money)
-	TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, "You have stolen $"..money)
+        TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been robbed of $" .. money)
+        TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, "You have stolen $" .. money)
     end
 end)
 
 RegisterServerEvent('police:server:UpdateBlips')
 AddEventHandler('police:server:UpdateBlips', function()
-	--KEEP FOR REF BUT NOT NEEDED ANYMORE.
+    -- KEEP FOR REF BUT NOT NEEDED ANYMORE.
 end)
 
 Citizen.CreateThread(function()
     while true do
-      Citizen.Wait(5000)
+        Citizen.Wait(5000)
 
-      UpdateBlips()
+        UpdateBlips()
     end
 end)
 
 function UpdateBlips()
 
-  local dutyPlayers = {}
-  for k, v in pairs(QBCore.Functions.GetPlayers()) do
-      local Player = QBCore.Functions.GetPlayer(v)
-      if Player ~= nil then
-          if ((Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" or Player.PlayerData.job.name == "doctor") and Player.PlayerData.job.onduty) then
-              
-	      local coords = GetEntityCoords(GetPlayerPed(Player.PlayerData.source))
-              local heading = GetEntityHeading(GetPlayerPed(Player.PlayerData.source))
+    local dutyPlayers = {}
+    for k, v in pairs(QBCore.Functions.GetPlayers()) do
+        local Player = QBCore.Functions.GetPlayer(v)
+        if Player ~= nil then
+            if ((Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" or
+                Player.PlayerData.job.name == "doctor") and Player.PlayerData.job.onduty) then
 
-              table.insert(dutyPlayers, {
-                  source = Player.PlayerData.source,
-                  label = Player.PlayerData.metadata["callsign"],
-                  job = Player.PlayerData.job.name,
-                  location = {x=coords.x,y=coords.y,z=coords.z,w=heading},
-              })
-          end
-      end
-  end
-  TriggerClientEvent("police:client:UpdateBlips", -1, dutyPlayers)
+                local coords = GetEntityCoords(GetPlayerPed(Player.PlayerData.source))
+                local heading = GetEntityHeading(GetPlayerPed(Player.PlayerData.source))
+
+                table.insert(dutyPlayers, {
+                    source = Player.PlayerData.source,
+                    label = Player.PlayerData.metadata["callsign"],
+                    job = Player.PlayerData.job.name,
+                    location = {
+                        x = coords.x,
+                        y = coords.y,
+                        z = coords.z,
+                        w = heading
+                    }
+                })
+            end
+        end
+    end
+    TriggerClientEvent("police:client:UpdateBlips", -1, dutyPlayers)
 
 end
 
@@ -353,23 +383,14 @@ AddEventHandler('police:server:Impound', function(plate, fullImpound, price, bod
     local price = price ~= nil and price or 0
     if IsVehicleOwned(plate) then
         if not fullImpound then
-            exports.oxmysql:execute('UPDATE player_vehicles SET state = @state, depotprice = @depotprice, body = @body, engine = @engine, fuel = @fuel WHERE plate = @plate', {
-                ['@state'] = 0, 
-                ['@depotprice'] = price, 
-                ['@plate'] = plate,
-                ['@body'] = body, 
-                ['@engine'] = engine, 
-                ['@fuel'] = fuel
-            })
-            TriggerClientEvent('QBCore:Notify', src, "Vehicle taken into depot for $"..price.."!")
+            exports.oxmysql:execute(
+                'UPDATE player_vehicles SET state = ?, depotprice = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
+                {0, price, body, engine, fuel, plate})
+            TriggerClientEvent('QBCore:Notify', src, "Vehicle taken into depot for $" .. price .. "!")
         else
-            exports.oxmysql:execute('UPDATE player_vehicles SET state = @state, body = @body, engine = @engine, fuel = @fuel WHERE plate = @plate', {
-                ['@state'] = 2, 
-                ['@plate'] = plate,
-                ['@body'] = body, 
-                ['@engine'] = engine, 
-                ['@fuel'] = fuel
-            })
+            exports.oxmysql:execute(
+                'UPDATE player_vehicles SET state = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
+                {2, body, engine, fuel, plate})
             TriggerClientEvent('QBCore:Notify', src, "Vehicle completely seized!")
         end
     end
@@ -385,7 +406,10 @@ RegisterServerEvent('evidence:server:CreateBloodDrop')
 AddEventHandler('evidence:server:CreateBloodDrop', function(citizenid, bloodtype, coords)
     local src = source
     local bloodId = CreateBloodId()
-    BloodDrops[bloodId] = {dna = citizenid, bloodtype = bloodtype}
+    BloodDrops[bloodId] = {
+        dna = citizenid,
+        bloodtype = bloodtype
+    }
     TriggerClientEvent("evidence:client:AddBlooddrop", -1, bloodId, citizenid, bloodtype, coords)
 end)
 
@@ -400,7 +424,7 @@ end)
 
 RegisterServerEvent('evidence:server:ClearBlooddrops')
 AddEventHandler('evidence:server:ClearBlooddrops', function(blooddropList)
-    if blooddropList ~= nil and next(blooddropList) ~= nil then 
+    if blooddropList ~= nil and next(blooddropList) ~= nil then
         for k, v in pairs(blooddropList) do
             TriggerClientEvent("evidence:client:RemoveBlooddrop", -1, v)
             BloodDrops[v] = nil
@@ -445,10 +469,10 @@ AddEventHandler('evidence:server:CreateCasing', function(weapon, coords)
     local casingId = CreateCasingId()
     local weaponInfo = QBCore.Shared.Weapons[weapon]
     local serieNumber = nil
-    if weaponInfo ~= nil then 
+    if weaponInfo ~= nil then
         local weaponItem = Player.Functions.GetItemByName(weaponInfo["name"])
         if weaponItem ~= nil then
-            if weaponItem.info ~= nil and  weaponItem.info ~= "" then 
+            if weaponItem.info ~= nil and weaponItem.info ~= "" then
                 serieNumber = weaponItem.info.serie
             end
         end
@@ -456,13 +480,12 @@ AddEventHandler('evidence:server:CreateCasing', function(weapon, coords)
     TriggerClientEvent("evidence:client:AddCasing", -1, casingId, weapon, coords, serieNumber)
 end)
 
-
 RegisterServerEvent('police:server:UpdateCurrentCops')
 AddEventHandler('police:server:UpdateCurrentCops', function()
     local amount = 0
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
+        if Player ~= nil then
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                 amount = amount + 1
             end
@@ -473,7 +496,7 @@ end)
 
 RegisterServerEvent('evidence:server:ClearCasings')
 AddEventHandler('evidence:server:ClearCasings', function(casingList)
-    if casingList ~= nil and next(casingList) ~= nil then 
+    if casingList ~= nil and next(casingList) ~= nil then
         for k, v in pairs(casingList) do
             TriggerClientEvent("evidence:client:RemoveCasing", -1, v)
             Casings[v] = nil
@@ -523,12 +546,15 @@ AddEventHandler('police:server:SetTracker', function(targetId)
     if TrackerMeta then
         Target.Functions.SetMetaData("tracker", false)
         TriggerClientEvent('QBCore:Notify', targetId, 'Your anklet is taken off.', 'error', 5000)
-        TriggerClientEvent('QBCore:Notify', source, 'You took off an ankle bracelet from '..Target.PlayerData.charinfo.firstname.." "..Target.PlayerData.charinfo.lastname, 'error', 5000)
+        TriggerClientEvent('QBCore:Notify', source,
+            'You took off an ankle bracelet from ' .. Target.PlayerData.charinfo.firstname .. " " ..
+                Target.PlayerData.charinfo.lastname, 'error', 5000)
         TriggerClientEvent('police:client:SetTracker', targetId, false)
     else
         Target.Functions.SetMetaData("tracker", true)
         TriggerClientEvent('QBCore:Notify', targetId, 'You put on an ankle strap.', 'error', 5000)
-        TriggerClientEvent('QBCore:Notify', source, 'You put on an ankle strap to '..Target.PlayerData.charinfo.firstname.." "..Target.PlayerData.charinfo.lastname, 'error', 5000)
+        TriggerClientEvent('QBCore:Notify', source, 'You put on an ankle strap to ' ..
+            Target.PlayerData.charinfo.firstname .. " " .. Target.PlayerData.charinfo.lastname, 'error', 5000)
         TriggerClientEvent('police:client:SetTracker', targetId, true)
     end
 end)
@@ -538,11 +564,17 @@ AddEventHandler('police:server:SendTrackerLocation', function(coords, requestId)
     local Target = QBCore.Functions.GetPlayer(source)
     local TrackerMeta = Target.PlayerData.metadata["tracker"]
 
-    local msg = "The location of "..Target.PlayerData.charinfo.firstname.." "..Target.PlayerData.charinfo.lastname.." is marked on your map."
+    local msg =
+        "The location of " .. Target.PlayerData.charinfo.firstname .. " " .. Target.PlayerData.charinfo.lastname ..
+            " is marked on your map."
 
     local alertData = {
         title = "Anklet location",
-        coords = {x = coords.x, y = coords.y, z = coords.z},
+        coords = {
+            x = coords.x,
+            y = coords.y,
+            z = coords.z
+        },
         description = msg
     }
 
@@ -579,13 +611,13 @@ end)
 QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(source, cb, playerId)
     local Player = QBCore.Functions.GetPlayer(playerId)
     local statList = {}
-	if Player ~= nil then
+    if Player ~= nil then
         if PlayerStatus[Player.PlayerData.source] ~= nil and next(PlayerStatus[Player.PlayerData.source]) ~= nil then
             for k, v in pairs(PlayerStatus[Player.PlayerData.source]) do
                 table.insert(statList, PlayerStatus[Player.PlayerData.source][k].text)
             end
         end
-	end
+    end
     cb(statList)
 end)
 
@@ -593,10 +625,13 @@ QBCore.Functions.CreateCallback('police:IsSilencedWeapon', function(source, cb, 
     local Player = QBCore.Functions.GetPlayer(source)
     local itemInfo = Player.Functions.GetItemByName(QBCore.Shared.Weapons[weapon]["name"])
     local retval = false
-    if itemInfo ~= nil then 
-        if itemInfo.info ~= nil and itemInfo.info.attachments ~= nil then 
+    if itemInfo ~= nil then
+        if itemInfo.info ~= nil and itemInfo.info.attachments ~= nil then
             for k, v in pairs(itemInfo.info.attachments) do
-                if itemInfo.info.attachments[k].component == "COMPONENT_AT_AR_SUPP_02" or itemInfo.info.attachments[k].component == "COMPONENT_AT_AR_SUPP" or itemInfo.info.attachments[k].component == "COMPONENT_AT_PI_SUPP_02" or itemInfo.info.attachments[k].component == "COMPONENT_AT_PI_SUPP" then
+                if itemInfo.info.attachments[k].component == "COMPONENT_AT_AR_SUPP_02" or
+                    itemInfo.info.attachments[k].component == "COMPONENT_AT_AR_SUPP" or
+                    itemInfo.info.attachments[k].component == "COMPONENT_AT_PI_SUPP_02" or
+                    itemInfo.info.attachments[k].component == "COMPONENT_AT_PI_SUPP" then
                     retval = true
                 end
             end
@@ -609,12 +644,13 @@ QBCore.Functions.CreateCallback('police:GetDutyPlayers', function(source, cb)
     local dutyPlayers = {}
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
-            if ((Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance") and Player.PlayerData.job.onduty) then
+        if Player ~= nil then
+            if ((Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance") and
+                Player.PlayerData.job.onduty) then
                 table.insert(dutyPlayers, {
                     source = Player.PlayerData.source,
                     label = Player.PlayerData.metadata["callsign"],
-                    job = Player.PlayerData.job.name,
+                    job = Player.PlayerData.job.name
                 })
             end
         end
@@ -624,64 +660,64 @@ end)
 
 function CreateBloodId()
     if BloodDrops ~= nil then
-		local bloodId = math.random(10000, 99999)
-		while BloodDrops[caseId] ~= nil do
-			bloodId = math.random(10000, 99999)
-		end
-		return bloodId
-	else
-		local bloodId = math.random(10000, 99999)
-		return bloodId
-	end
+        local bloodId = math.random(10000, 99999)
+        while BloodDrops[caseId] ~= nil do
+            bloodId = math.random(10000, 99999)
+        end
+        return bloodId
+    else
+        local bloodId = math.random(10000, 99999)
+        return bloodId
+    end
 end
 
 function CreateFingerId()
     if FingerDrops ~= nil then
-		local fingerId = math.random(10000, 99999)
-		while FingerDrops[caseId] ~= nil do
-			fingerId = math.random(10000, 99999)
-		end
-		return fingerId
-	else
-		local fingerId = math.random(10000, 99999)
-		return fingerId
-	end
+        local fingerId = math.random(10000, 99999)
+        while FingerDrops[caseId] ~= nil do
+            fingerId = math.random(10000, 99999)
+        end
+        return fingerId
+    else
+        local fingerId = math.random(10000, 99999)
+        return fingerId
+    end
 end
 
 function CreateCasingId()
     if Casings ~= nil then
-		local caseId = math.random(10000, 99999)
-		while Casings[caseId] ~= nil do
-			caseId = math.random(10000, 99999)
-		end
-		return caseId
-	else
-		local caseId = math.random(10000, 99999)
-		return caseId
-	end
+        local caseId = math.random(10000, 99999)
+        while Casings[caseId] ~= nil do
+            caseId = math.random(10000, 99999)
+        end
+        return caseId
+    else
+        local caseId = math.random(10000, 99999)
+        return caseId
+    end
 end
 
 function CreateObjectId()
     if Objects ~= nil then
-		local objectId = math.random(10000, 99999)
-		while Objects[caseId] ~= nil do
-			objectId = math.random(10000, 99999)
-		end
-		return objectId
-	else
-		local objectId = math.random(10000, 99999)
-		return objectId
-	end
+        local objectId = math.random(10000, 99999)
+        while Objects[caseId] ~= nil do
+            objectId = math.random(10000, 99999)
+        end
+        return objectId
+    else
+        local objectId = math.random(10000, 99999)
+        return objectId
+    end
 end
 
 function IsVehicleOwned(plate)
-    local result = exports.oxmysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate = @plate', {['@plate'] = plate})
+    local result = exports.oxmysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
     return result
 end
 
 QBCore.Functions.CreateCallback('police:GetImpoundedVehicles', function(source, cb)
     local vehicles = {}
-    exports.oxmysql:fetch('SELECT * FROM player_vehicles WHERE state = @state', {['@state'] = 2}, function(result)
+    exports.oxmysql:fetch('SELECT * FROM player_vehicles WHERE state = ?', {2}, function(result)
         if result[1] ~= nil then
             vehicles = result
         end
@@ -701,16 +737,16 @@ end)
 
 QBCore.Functions.CreateCallback('police:GetCops', function(source, cb)
     local amount = 0
-    
+
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
+        if Player ~= nil then
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                 amount = amount + 1
             end
         end
     end
-	cb(amount)
+    cb(amount)
 end)
 
 --[[ QBCore.Commands.Add("setpolice", "Hire An Officer (Police Only)", {{name="id", help="Player ID"}}, true, function(source, args)
@@ -725,14 +761,20 @@ end) ]]
 
 QBCore.Commands.Add("spikestrip", "Place Spike Strip (Police Only)", {}, false, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
-    if Player ~= nil then 
+    if Player ~= nil then
         if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
             TriggerClientEvent('police:client:SpawnSpikeStrip', source)
         end
     end
 end)
 
-QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name="id", help="ID of a person"},{name="license", help="License Type"}}, true, function(source, args)
+QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{
+    name = "id",
+    help = "ID of a person"
+}, {
+    name = "license",
+    help = "License Type"
+}}, true, function(source, args)
     local source = source
     local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.grade.level >= 2 then
@@ -742,7 +784,8 @@ QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name="id", h
                 local licenseTable = SearchedPlayer.PlayerData.metadata["licences"]
                 licenseTable[args[2]] = true
                 SearchedPlayer.Functions.SetMetaData("licences", licenseTable)
-                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been granted a license", "success", 5000)
+                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been granted a license",
+                    "success", 5000)
                 TriggerClientEvent('QBCore:Notify', source, "You granted a license", "success", 5000)
             end
         else
@@ -753,7 +796,13 @@ QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name="id", h
     end
 end)
 
-QBCore.Commands.Add("revokelicense", "Revoke a license from someone", {{name="id", help="ID of a person"},{name="license", help="License Type"}}, true, function(source, args)
+QBCore.Commands.Add("revokelicense", "Revoke a license from someone", {{
+    name = "id",
+    help = "ID of a person"
+}, {
+    name = "license",
+    help = "License Type"
+}}, true, function(source, args)
     local source = source
     local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.grade.level >= 2 then
@@ -763,7 +812,8 @@ QBCore.Commands.Add("revokelicense", "Revoke a license from someone", {{name="id
                 local licenseTable = SearchedPlayer.PlayerData.metadata["licences"]
                 licenseTable[args[2]] = false
                 SearchedPlayer.Functions.SetMetaData("licences", licenseTable)
-                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You've had a license revoked", "error", 5000)
+                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You've had a license revoked",
+                    "error", 5000)
                 TriggerClientEvent('QBCore:Notify', source, "You revoked a license", "success", 5000)
             end
         else
@@ -773,7 +823,6 @@ QBCore.Commands.Add("revokelicense", "Revoke a license from someone", {{name="id
         TriggerClientEvent('QBCore:Notify', source, "You must be a Sergeant to revoke licenses!", "error")
     end
 end)
-
 
 --[[ QBCore.Commands.Add("firepolice", "Fire An Officer (Police Only)", {{name="id", help="Player ID"}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(tonumber(args[1]))
@@ -788,15 +837,16 @@ end) ]]
 function IsHighCommand(citizenid)
     local retval = false
     local Player = QBCore.Functions.GetPlayerByCitizenId(citizenid)
-	if Player.PlayerData.job.grade.level >= 3 then
-    	    retval = true
-	end
+    if Player.PlayerData.job.grade.level >= 3 then
+        retval = true
+    end
     return retval
 end
 
-
-
-QBCore.Commands.Add("pobject", "Place/Delete An Object (Police Only)", {{name="type", help="Type object you want or 'delete' to delete"}}, true, function(source, args)
+QBCore.Commands.Add("pobject", "Place/Delete An Object (Police Only)", {{
+    name = "type",
+    help = "Type object you want or 'delete' to delete"
+}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
     local type = args[1]:lower()
     if Player.PlayerData.job.name == "police" then
@@ -819,7 +869,7 @@ QBCore.Commands.Add("pobject", "Place/Delete An Object (Police Only)", {{name="t
 end)
 
 QBCore.Commands.Add("cuff", "Cuff Player (Police Only)", {}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:CuffPlayer", source)
     else
@@ -827,14 +877,19 @@ QBCore.Commands.Add("cuff", "Cuff Player (Police Only)", {}, false, function(sou
     end
 end)
 
-QBCore.Commands.Add("palert", "Make a police alert", {{name="alert", help="The Police alert"}}, false, function(source, args)
+QBCore.Commands.Add("palert", "Make a police alert", {{
+    name = "alert",
+    help = "The Police alert"
+}}, false, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
-    
+
     if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
         if args[1] ~= nil then
             local msg = table.concat(args, " ")
             TriggerClientEvent("chatMessage", -1, "POLICE ALERT", "error", msg)
-            TriggerEvent("qb-log:server:CreateLog", "palert", "Police alert", "blue", "**"..GetPlayerName(source).."** (CitizenID: "..Player.PlayerData.citizenid.." | ID: "..source..") **Alert:** " ..msg, false)
+            TriggerEvent("qb-log:server:CreateLog", "palert", "Police alert", "blue",
+                "**" .. GetPlayerName(source) .. "** (CitizenID: " .. Player.PlayerData.citizenid .. " | ID: " .. source ..
+                    ") **Alert:** " .. msg, false)
             TriggerClientEvent('police:PlaySound', -1)
         else
             TriggerClientEvent('chatMessage', source, "SYSTEM", "error", "You must enter message!")
@@ -845,26 +900,29 @@ QBCore.Commands.Add("palert", "Make a police alert", {{name="alert", help="The P
 end)
 
 QBCore.Commands.Add("escort", "Escort Player", {}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+    local Player = QBCore.Functions.GetPlayer(source)
     TriggerClientEvent("police:client:EscortPlayer", source)
 end)
 
---QBCore.Commands.Add("mdt", "Open MDT (Police Only)", {}, false, function(source, args)
+-- QBCore.Commands.Add("mdt", "Open MDT (Police Only)", {}, false, function(source, args)
 --	local Player = QBCore.Functions.GetPlayer(source)
 --    if Player.PlayerData.job.name == "police" then
 --        TriggerClientEvent("police:client:toggleDatabank", source)
 --    else
 --        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
 --    end
---end)
+-- end)
 
-QBCore.Commands.Add("callsign", "Give Yourself A Callsign", {{name="name", help="Name of your callsign"}}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+QBCore.Commands.Add("callsign", "Give Yourself A Callsign", {{
+    name = "name",
+    help = "Name of your callsign"
+}}, false, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
     Player.Functions.SetMetaData("callsign", table.concat(args, " "))
 end)
 
 QBCore.Commands.Add("clearcasings", "Clear Area of Casings (Police Only)", {}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("evidence:client:ClearCasingsInArea", source)
     else
@@ -872,8 +930,14 @@ QBCore.Commands.Add("clearcasings", "Clear Area of Casings (Police Only)", {}, f
     end
 end)
 
-QBCore.Commands.Add("jail", "Jail Player (Police Only)", {{name="id", help="Player ID"},{name="time", help="Time they have to be in jail"}}, true, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+QBCore.Commands.Add("jail", "Jail Player (Police Only)", {{
+    name = "id",
+    help = "Player ID"
+}, {
+    name = "time",
+    help = "Time they have to be in jail"
+}}, true, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         local playerId = tonumber(args[1])
         local time = tonumber(args[2])
@@ -887,8 +951,11 @@ QBCore.Commands.Add("jail", "Jail Player (Police Only)", {{name="id", help="Play
     end
 end)
 
-QBCore.Commands.Add("unjail", "Unjail Player (Police Only)", {{name="id", help="Player ID"}}, true, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+QBCore.Commands.Add("unjail", "Unjail Player (Police Only)", {{
+    name = "id",
+    help = "Player ID"
+}}, true, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         local playerId = tonumber(args[1])
         TriggerClientEvent("prison:client:UnjailPerson", playerId)
@@ -898,7 +965,7 @@ QBCore.Commands.Add("unjail", "Unjail Player (Police Only)", {{name="id", help="
 end)
 
 QBCore.Commands.Add("clearblood", "Clear The Area of Blood (Police Only)", {}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("evidence:client:ClearBlooddropsInArea", source)
     else
@@ -907,7 +974,7 @@ QBCore.Commands.Add("clearblood", "Clear The Area of Blood (Police Only)", {}, f
 end)
 
 QBCore.Commands.Add("seizecash", "Seize Cash (Police Only)", {}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
         TriggerClientEvent("police:client:SeizeCash", source)
     else
@@ -916,7 +983,7 @@ QBCore.Commands.Add("seizecash", "Seize Cash (Police Only)", {}, false, function
 end)
 
 QBCore.Commands.Add("sc", "Soft Cuff (Police Only)", {}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:CuffPlayerSoft", source)
     else
@@ -924,8 +991,11 @@ QBCore.Commands.Add("sc", "Soft Cuff (Police Only)", {}, false, function(source,
     end
 end)
 
-QBCore.Commands.Add("cam", "View Security Camera (Police Only)", {{name="camid", help="Camera ID"}}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+QBCore.Commands.Add("cam", "View Security Camera (Police Only)", {{
+    name = "camid",
+    help = "Camera ID"
+}}, false, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:ActiveCamera", source, tonumber(args[1]))
     else
@@ -933,9 +1003,15 @@ QBCore.Commands.Add("cam", "View Security Camera (Police Only)", {{name="camid",
     end
 end)
 
-QBCore.Commands.Add("flagplate", "Flag A Plate (Police Only)", {{name="plate", help="License"}, {name="reason", help="Reason of flagging the vehicle"}}, true, function(source, args)
+QBCore.Commands.Add("flagplate", "Flag A Plate (Police Only)", {{
+    name = "plate",
+    help = "License"
+}, {
+    name = "reason",
+    help = "Reason of flagging the vehicle"
+}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
-    
+
     if Player.PlayerData.job.name == "police" then
         local reason = {}
         for i = 2, #args, 1 do
@@ -945,19 +1021,23 @@ QBCore.Commands.Add("flagplate", "Flag A Plate (Police Only)", {{name="plate", h
             isflagged = true,
             reason = table.concat(reason, " ")
         }
-        TriggerClientEvent('QBCore:Notify', source, "Vehicle ("..args[1]:upper()..") is flagged for: "..table.concat(reason, " "))
+        TriggerClientEvent('QBCore:Notify', source,
+            "Vehicle (" .. args[1]:upper() .. ") is flagged for: " .. table.concat(reason, " "))
     else
         TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
     end
 end)
 
-QBCore.Commands.Add("unflagplate", "Unflag A Plate (Police Only)", {{name="plate", help="License plate"}}, true, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+QBCore.Commands.Add("unflagplate", "Unflag A Plate (Police Only)", {{
+    name = "plate",
+    help = "License plate"
+}}, true, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         if Plates ~= nil and Plates[args[1]:upper()] ~= nil then
             if Plates[args[1]:upper()].isflagged then
                 Plates[args[1]:upper()].isflagged = false
-                TriggerClientEvent('QBCore:Notify', source, "Vehicle ("..args[1]:upper()..") is unflagged")
+                TriggerClientEvent('QBCore:Notify', source, "Vehicle (" .. args[1]:upper() .. ") is unflagged")
             else
                 TriggerClientEvent('chatMessage', source, "REPORTING ROOM", "error", "Vehicle is not flagged!")
             end
@@ -969,12 +1049,16 @@ QBCore.Commands.Add("unflagplate", "Unflag A Plate (Police Only)", {{name="plate
     end
 end)
 
-QBCore.Commands.Add("plateinfo", "Run A Plate (Police Only)", {{name="plate", help="License plate"}}, true, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+QBCore.Commands.Add("plateinfo", "Run A Plate (Police Only)", {{
+    name = "plate",
+    help = "License plate"
+}}, true, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         if Plates ~= nil and Plates[args[1]:upper()] ~= nil then
             if Plates[args[1]:upper()].isflagged then
-                TriggerClientEvent('chatMessage', source, "REPORTING ROOM", "normal", "Vehicle ("..args[1]:upper()..") has been flagged for: "..Plates[args[1]:upper()].reason)
+                TriggerClientEvent('chatMessage', source, "REPORTING ROOM", "normal", "Vehicle (" .. args[1]:upper() ..
+                    ") has been flagged for: " .. Plates[args[1]:upper()].reason)
             else
                 TriggerClientEvent('chatMessage', source, "SYSTEM", "error", "Vehicle is not flagged!")
             end
@@ -986,8 +1070,11 @@ QBCore.Commands.Add("plateinfo", "Run A Plate (Police Only)", {{name="plate", he
     end
 end)
 
-QBCore.Commands.Add("depot", "Impound With Price (Police Only)", {{name="price", help="Price for how much the person has to pay (may be empty)"}}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+QBCore.Commands.Add("depot", "Impound With Price (Police Only)", {{
+    name = "price",
+    help = "Price for how much the person has to pay (may be empty)"
+}}, false, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:ImpoundVehicle", source, false, tonumber(args[1]))
     else
@@ -996,7 +1083,7 @@ QBCore.Commands.Add("depot", "Impound With Price (Police Only)", {{name="price",
 end)
 
 QBCore.Commands.Add("impound", "Impound A Vehicle (Police Only)", {}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:ImpoundVehicle", source, true)
     else
@@ -1004,15 +1091,19 @@ QBCore.Commands.Add("impound", "Impound A Vehicle (Police Only)", {}, false, fun
     end
 end)
 
-QBCore.Commands.Add("paytow", "Pay Tow Driver (Police, EMS Only)", {{name="id", help="ID of the player"}}, true, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+QBCore.Commands.Add("paytow", "Pay Tow Driver (Police, EMS Only)", {{
+    name = "id",
+    help = "ID of the player"
+}}, true, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" then
         local playerId = tonumber(args[1])
         local OtherPlayer = QBCore.Functions.GetPlayer(playerId)
         if OtherPlayer ~= nil then
             if OtherPlayer.PlayerData.job.name == "tow" then
                 OtherPlayer.Functions.AddMoney("bank", 500, "police-tow-paid")
-                TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "SYSTEM", "warning", "You received $ 500 for your service!")
+                TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "SYSTEM", "warning",
+                    "You received $ 500 for your service!")
                 TriggerClientEvent('QBCore:Notify', source, 'You paid a bergnet worker')
             else
                 TriggerClientEvent('QBCore:Notify', source, 'Person is not a bergnet worker', "error")
@@ -1023,15 +1114,19 @@ QBCore.Commands.Add("paytow", "Pay Tow Driver (Police, EMS Only)", {{name="id", 
     end
 end)
 
-QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{name="id", help="ID of the player"}}, true, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{
+    name = "id",
+    help = "ID of the player"
+}}, true, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "judge" then
         local playerId = tonumber(args[1])
         local OtherPlayer = QBCore.Functions.GetPlayer(playerId)
         if OtherPlayer ~= nil then
             if OtherPlayer.PlayerData.job.name == "lawyer" then
                 OtherPlayer.Functions.AddMoney("bank", 500, "police-lawyer-paid")
-                TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "SYSTEM", "warning", "You received $ 500 for your pro bono case!")
+                TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "SYSTEM", "warning",
+                    "You received $ 500 for your pro bono case!")
                 TriggerClientEvent('QBCore:Notify', source, 'You paid a lawyer')
             else
                 TriggerClientEvent('QBCore:Notify', source, 'Person is not a lawyer', "error")
@@ -1043,7 +1138,7 @@ QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{name="id",
 end)
 
 QBCore.Commands.Add("radar", "Enable Police Radar (Police Only)", {}, false, function(source, args)
-	local Player = QBCore.Functions.GetPlayer(source)
+    local Player = QBCore.Functions.GetPlayer(source)
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("wk:toggleRadar", source)
     else
@@ -1053,24 +1148,32 @@ end)
 
 QBCore.Functions.CreateUseableItem("handcuffs", function(source, item)
     local Player = QBCore.Functions.GetPlayer(source)
-	if Player.Functions.GetItemBySlot(item.slot) ~= nil then
+    if Player.Functions.GetItemBySlot(item.slot) ~= nil then
         TriggerClientEvent("police:client:CuffPlayerSoft", source)
     end
 end)
 
-QBCore.Commands.Add("911", "Send a report to emergency services", {{name="message", help="Message you want to send"}}, true, function(source, args)
+QBCore.Commands.Add("911", "Send a report to emergency services", {{
+    name = "message",
+    help = "Message you want to send"
+}}, true, function(source, args)
     local message = table.concat(args, " ")
     local Player = QBCore.Functions.GetPlayer(source)
 
     if Player.Functions.GetItemByName("phone") ~= nil then
         TriggerClientEvent("police:client:SendEmergencyMessage", source, message)
-        TriggerEvent("qb-log:server:CreateLog", "911", "911 alert", "blue", "**"..GetPlayerName(source).."** (CitizenID: "..Player.PlayerData.citizenid.." | ID: "..source..") **Alert:** " ..message, false)
+        TriggerEvent("qb-log:server:CreateLog", "911", "911 alert", "blue",
+            "**" .. GetPlayerName(source) .. "** (CitizenID: " .. Player.PlayerData.citizenid .. " | ID: " .. source ..
+                ") **Alert:** " .. message, false)
     else
         TriggerClientEvent('QBCore:Notify', source, 'You dont have a phone', 'error')
     end
 end)
 
-QBCore.Commands.Add("911a", "Send an anonymous report to emergency services (gives no location)", {{name="message", help="Message you want to send"}}, true, function(source, args)
+QBCore.Commands.Add("911a", "Send an anonymous report to emergency services (gives no location)", {{
+    name = "message",
+    help = "Message you want to send"
+}}, true, function(source, args)
     local message = table.concat(args, " ")
     local Player = QBCore.Functions.GetPlayer(source)
 
@@ -1082,7 +1185,13 @@ QBCore.Commands.Add("911a", "Send an anonymous report to emergency services (giv
     end
 end)
 
-QBCore.Commands.Add("911r", "Send a message back to a alert", {{name="id", help="ID of the alert"}, {name="message", help="Message you want to send"}}, true, function(source, args)
+QBCore.Commands.Add("911r", "Send a message back to a alert", {{
+    name = "id",
+    help = "ID of the alert"
+}, {
+    name = "message",
+    help = "Message you want to send"
+}}, true, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
     local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
     table.remove(args, 1)
@@ -1091,8 +1200,9 @@ QBCore.Commands.Add("911r", "Send a message back to a alert", {{name="id", help=
     if (Player.PlayerData.job.name == "ambulance" or Player.PlayerData.job.name == "doctor") then
         Prefix = "AMBULANCE"
     end
-    if OtherPlayer ~= nil then 
-        TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "("..Prefix..") " ..Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname, "error", message)
+    if OtherPlayer ~= nil then
+        TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "(" .. Prefix .. ") " ..
+            Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname, "error", message)
         TriggerClientEvent("police:client:EmergencySound", OtherPlayer.PlayerData.source)
         TriggerClientEvent("police:client:CallAnim", source)
     end
@@ -1108,51 +1218,54 @@ QBCore.Commands.Add("anklet", "Attach Tracking Anklet (Police Only)", {}, false,
     end
 end)
 
-QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{"csn", "CSN of the person"}}, true, function(source, args)
-    local Player = QBCore.Functions.GetPlayer(source)
-    
-    if Player.PlayerData.job.name == "police" then
-        if args[1] ~= nil then
-            local citizenid = args[1]
-            local Target = QBCore.Functions.GetPlayerByCitizenId(citizenid)
+QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{"csn", "CSN of the person"}}, true,
+    function(source, args)
+        local Player = QBCore.Functions.GetPlayer(source)
 
-            if Target ~= nil then
-                if Target.PlayerData.metadata["tracker"] then
-                    TriggerClientEvent("police:client:SendTrackerLocation", Target.PlayerData.source, source)
-                else
-                    TriggerClientEvent('QBCore:Notify', source, 'This person doesn\'t have an anklet on.', 'error')
+        if Player.PlayerData.job.name == "police" then
+            if args[1] ~= nil then
+                local citizenid = args[1]
+                local Target = QBCore.Functions.GetPlayerByCitizenId(citizenid)
+
+                if Target ~= nil then
+                    if Target.PlayerData.metadata["tracker"] then
+                        TriggerClientEvent("police:client:SendTrackerLocation", Target.PlayerData.source, source)
+                    else
+                        TriggerClientEvent('QBCore:Notify', source, 'This person doesn\'t have an anklet on.', 'error')
+                    end
                 end
             end
+        else
+            TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
         end
-    else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
-    end
-end)
+    end)
 
-QBCore.Commands.Add("removeanklet", "Remove Tracking Anklet (Police Only)", {{"bsn", "BSN of person"}}, true, function(source, args)
-    local Player = QBCore.Functions.GetPlayer(source)
-    
-    if Player.PlayerData.job.name == "police" then
-        if args[1] ~= nil then
-            local citizenid = args[1]
-            local Target = QBCore.Functions.GetPlayerByCitizenId(citizenid)
+QBCore.Commands.Add("removeanklet", "Remove Tracking Anklet (Police Only)", {{"bsn", "BSN of person"}}, true,
+    function(source, args)
+        local Player = QBCore.Functions.GetPlayer(source)
 
-            if Target ~= nil then
-                if Target.PlayerData.metadata["tracker"] then
-                    TriggerClientEvent("police:client:SendTrackerLocation", Target.PlayerData.source, source)
-                else
-                    TriggerClientEvent('QBCore:Notify', source, 'This person does not have an anklet', 'error')
+        if Player.PlayerData.job.name == "police" then
+            if args[1] ~= nil then
+                local citizenid = args[1]
+                local Target = QBCore.Functions.GetPlayerByCitizenId(citizenid)
+
+                if Target ~= nil then
+                    if Target.PlayerData.metadata["tracker"] then
+                        TriggerClientEvent("police:client:SendTrackerLocation", Target.PlayerData.source, source)
+                    else
+                        TriggerClientEvent('QBCore:Notify', source, 'This person does not have an anklet', 'error')
+                    end
                 end
             end
+        else
+            TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
         end
-    else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
-    end
-end)
+    end)
 
 QBCore.Commands.Add("ebutton", "Respond To A Call (Police, EMS, Mechanic Only)", {}, false, function(source, args)
     local Player = QBCore.Functions.GetPlayer(source)
-    if ((Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" or Player.PlayerData.job.name == "doctor") and Player.PlayerData.job.onduty) then
+    if ((Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" or
+        Player.PlayerData.job.name == "doctor") and Player.PlayerData.job.onduty) then
         TriggerClientEvent("police:client:SendPoliceEmergencyAlert", source)
     end
 end)
@@ -1164,24 +1277,26 @@ QBCore.Commands.Add("takedrivinglicense", "Seize Drivers License (Police Only)",
     end
 end)
 
-QBCore.Commands.Add("takedna", "Take a DNA sanple from a person (empty evidence bag needed) (Police Only)", {{"id", "ID of the person"}}, true, function(source, args)
-    local Player = QBCore.Functions.GetPlayer(source)
-    local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
-    if ((Player.PlayerData.job.name == "police") and Player.PlayerData.job.onduty) and OtherPlayer ~= nil then
-        if Player.Functions.RemoveItem("empty_evidence_bag", 1) then
-            local info = {
-                label = "DNA Sample",
-                type = "dna",
-                dnalabel = DnaHash(OtherPlayer.PlayerData.citizenid),
-            }
-            if Player.Functions.AddItem("filled_evidence_bag", 1, false, info) then
-                TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items["filled_evidence_bag"], "add")
+QBCore.Commands.Add("takedna", "Take a DNA sanple from a person (empty evidence bag needed) (Police Only)",
+    {{"id", "ID of the person"}}, true, function(source, args)
+        local Player = QBCore.Functions.GetPlayer(source)
+        local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
+        if ((Player.PlayerData.job.name == "police") and Player.PlayerData.job.onduty) and OtherPlayer ~= nil then
+            if Player.Functions.RemoveItem("empty_evidence_bag", 1) then
+                local info = {
+                    label = "DNA Sample",
+                    type = "dna",
+                    dnalabel = DnaHash(OtherPlayer.PlayerData.citizenid)
+                }
+                if Player.Functions.AddItem("filled_evidence_bag", 1, false, info) then
+                    TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items["filled_evidence_bag"],
+                        "add")
+                end
+            else
+                TriggerClientEvent('QBCore:Notify', source, "You must have an empty evidence bag with you", "error")
             end
-        else
-            TriggerClientEvent('QBCore:Notify', source, "You must have an empty evidence bag with you", "error")
         end
-    end
-end)
+    end)
 
 QBCore.Functions.CreateUseableItem("moneybag", function(source, item)
     local Player = QBCore.Functions.GetPlayer(source)
@@ -1200,7 +1315,7 @@ function GetCurrentCops()
     local amount = 0
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
+        if Player ~= nil then
             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
                 amount = amount + 1
             end
@@ -1213,10 +1328,10 @@ QBCore.Functions.CreateCallback('police:server:IsPoliceForcePresent', function(s
     local retval = false
     for k, v in pairs(QBCore.Functions.GetPlayers()) do
         local Player = QBCore.Functions.GetPlayer(v)
-        if Player ~= nil then 
+        if Player ~= nil then
             if Player.PlayerData.job.name == "police" and Player.PlayerData.job.grade.level >= 2 then
-	    	retval = true
-	    	break
+                retval = true
+                break
             end
         end
     end
@@ -1225,8 +1340,8 @@ end)
 
 function DnaHash(s)
     local h = string.gsub(s, ".", function(c)
-		return string.format("%02x", string.byte(c))
-	end)
+        return string.format("%02x", string.byte(c))
+    end)
     return h
 end
 
