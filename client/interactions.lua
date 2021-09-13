@@ -451,17 +451,3 @@ function GetCuffedAnimation(playerId)
 	TaskPlayAnim(PlayerPedId(), "mp_arrest_paired", "crook_p2_back_right", 3.0, 3.0, -1, 32, 0, 0, 0, 0)
 	Citizen.Wait(2500)
 end
-
--- Citizen.CreateThread(function()
-    -- local ped = PlayerPedId()
-    -- ClearPedTasks(ped)
-    -- local lib = "get_up@injured@prone_to_common"
-    -- local anim = "shakehead_add"
-    -- local timeout = 4933
-    -- local myid = GetPlayerServerId(PlayerId())
-
-    -- if myid == 1 then
-        -- loadAnimDict(lib)
-        -- TaskPlayAnim(ped, lib, anim, 3.0, 3.0, -1, 3, 0, 0, 0, 0)
-    -- end
--- end)

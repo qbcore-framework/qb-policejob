@@ -1,7 +1,3 @@
--- FiveM Heli Cam by mraes
--- Version 1.3 2017-06-12
-
--- config
 local fov_max = 80.0
 local fov_min = 10.0 -- max zoom level (smaller fov is more zoom)
 local zoomspeed = 2.0 -- camera zoom speed
@@ -299,19 +295,6 @@ function RenderVehicleInfo(vehicle)
 		street = streetLabel,
 	})
 end
-
--- function HandleSpotlight(cam)
--- if IsControlJustPressed(0, toggle_spotlight) then
-	-- PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
-	-- spotlight_state = not spotlight_state
--- end
--- if spotlight_state then
-	-- local rotation = GetCamRot(cam, 2)
-	-- local forward_vector = RotAnglesToVec(rotation)
-	-- local camcoords = GetCamCoord(cam)
-	-- DrawSpotLight(camcoords, forward_vector, 255, 255, 255, 300.0, 10.0, 0.0, 2.0, 1.0)
--- end
--- end
 
 function RotAnglesToVec(rot) -- input vector3
 	local z = math.rad(rot.z)

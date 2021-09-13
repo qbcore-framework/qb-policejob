@@ -13,16 +13,16 @@ StatusList = {
 	["heavyalcohol"] = "Smells very much like alcohol",
 }
 
-CurrentStatusList = {}
-Casings = {}
-CasingsNear = {}
-CurrentCasing = nil
-Blooddrops = {}
-BlooddropsNear = {}
-CurrentBlooddrop = nil
-Fingerprints = {}
-FingerprintsNear = {}
-CurrentFingerprint = 0
+local CurrentStatusList = {}
+local Casings = {}
+local CasingsNear = {}
+local CurrentCasing = nil
+local Blooddrops = {}
+local BlooddropsNear = {}
+local CurrentBlooddrop = nil
+local Fingerprints = {}
+local FingerprintsNear = {}
+local CurrentFingerprint = 0
 
 RegisterNetEvent('evidence:client:SetStatus')
 AddEventHandler('evidence:client:SetStatus', function(statusId, time)
@@ -170,10 +170,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
---[[
-	Gunpowder Status when shooting
-]]
-Citizen.CreateThread(function()
+Citizen.CreateThread(function() --Gunpowder Status when shooting
 	while true do
 		Citizen.Wait(1)
 		if IsPedShooting(PlayerPedId()) or IsPedDoingDriveby(PlayerPedId()) then
@@ -268,10 +265,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
---[[
-	Bullet Casings stuff
-]]
-Citizen.CreateThread(function()
+Citizen.CreateThread(function() --Bullet Casings stuff
 	while true do
 		Citizen.Wait(10)
 		if isLoggedIn then 
