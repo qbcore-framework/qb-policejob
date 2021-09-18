@@ -105,6 +105,7 @@ AddEventHandler('police:server:BillPlayer', function(playerId, price)
     if Player.PlayerData.job.name == "police" then
         if OtherPlayer ~= nil then
             OtherPlayer.Functions.RemoveMoney("bank", price, "paid-bills")
+            TriggerEvent('qb-bossmenu:server:addAccountMoney', "police", price)
             TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, "You received a fine of $" .. price)
         end
     end
