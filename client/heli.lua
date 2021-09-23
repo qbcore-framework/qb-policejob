@@ -89,7 +89,7 @@ Citizen.CreateThread(function()
 								PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 								ChangeVision()
 							end
-			
+							local zoomvalue = 0
 							if locked_on_vehicle then
 								if DoesEntityExist(locked_on_vehicle) then
 									PointCamAtEntity(cam, locked_on_vehicle, 0.0, 0.0, 0.0, true)
@@ -98,7 +98,7 @@ Citizen.CreateThread(function()
 										locked_on_vehicle = nil
 										local rot = GetCamRot(cam, 2) -- All this because I can't seem to get the camera unlocked from the entity
 										local fov = GetCamFov(cam)
-										local old cam = cam
+										local old_cam = cam
 										DestroyCam(old_cam, false)
 										cam = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
 										AttachCamToEntity(cam, heli, 0.0,0.0,-1.5, true)
@@ -119,7 +119,7 @@ Citizen.CreateThread(function()
 									locked_on_vehicle = nil -- Cam will auto unlock when entity doesn't exist anyway
 								end
 							else
-								local zoomvalue = (1.0/(fov_max-fov_min))*(fov-fov_min)
+								zoomvalue = (1.0/(fov_max-fov_min))*(fov-fov_min)
 								CheckInputRotation(cam, zoomvalue)
 								vehicle_detected = GetVehicleInView(cam)
 								if DoesEntityExist(vehicle_detected) then
