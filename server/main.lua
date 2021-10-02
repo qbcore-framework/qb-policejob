@@ -594,7 +594,6 @@ AddEventHandler('police:server:SendPoliceEmergencyAlert', function(streetLabel, 
         infoM = 'fa-info-circle',
         info = 'All Units Respond',
     }
-
     local dispatchData = {
         dispatchData = data,
         caller = callsign,
@@ -865,7 +864,7 @@ QBCore.Commands.Add("pobject", "Place/Delete An Object (Police Only)", {{
             TriggerClientEvent("police:client:deleteObject", source)
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -874,7 +873,7 @@ QBCore.Commands.Add("cuff", "Cuff Player (Police Only)", {}, false, function(sou
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:CuffPlayer", source)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -896,7 +895,7 @@ QBCore.Commands.Add("palert", "Make a police alert", {{
             TriggerClientEvent('chatMessage', source, "SYSTEM", "error", "You must enter message!")
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -910,7 +909,7 @@ end)
 --    if Player.PlayerData.job.name == "police" then
 --        TriggerClientEvent("police:client:toggleDatabank", source)
 --    else
---        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+--        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
 --    end
 -- end)
 
@@ -927,7 +926,7 @@ QBCore.Commands.Add("clearcasings", "Clear Area of Casings (Police Only)", {}, f
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("evidence:client:ClearCasingsInArea", source)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -948,7 +947,7 @@ QBCore.Commands.Add("jail", "Jail Player (Police Only)", {{
             TriggerClientEvent('chatMessage', source, "SYSTEM", "error", "Time must be higher then 0")
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -961,7 +960,7 @@ QBCore.Commands.Add("unjail", "Unjail Player (Police Only)", {{
         local playerId = tonumber(args[1])
         TriggerClientEvent("prison:client:UnjailPerson", playerId)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -970,7 +969,7 @@ QBCore.Commands.Add("clearblood", "Clear The Area of Blood (Police Only)", {}, f
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("evidence:client:ClearBlooddropsInArea", source)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -979,7 +978,7 @@ QBCore.Commands.Add("seizecash", "Seize Cash (Police Only)", {}, false, function
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
         TriggerClientEvent("police:client:SeizeCash", source)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -988,7 +987,7 @@ QBCore.Commands.Add("sc", "Soft Cuff (Police Only)", {}, false, function(source,
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:CuffPlayerSoft", source)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1000,7 +999,7 @@ QBCore.Commands.Add("cam", "View Security Camera (Police Only)", {{
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:ActiveCamera", source, tonumber(args[1]))
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1025,7 +1024,7 @@ QBCore.Commands.Add("flagplate", "Flag A Plate (Police Only)", {{
         TriggerClientEvent('QBCore:Notify', source,
             "Vehicle (" .. args[1]:upper() .. ") is flagged for: " .. table.concat(reason, " "))
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1046,7 +1045,7 @@ QBCore.Commands.Add("unflagplate", "Unflag A Plate (Police Only)", {{
             TriggerClientEvent('chatMessage', source, "SYSTEM", "error", "Vehicle is not flagged!")
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1067,7 +1066,7 @@ QBCore.Commands.Add("plateinfo", "Run A Plate (Police Only)", {{
             TriggerClientEvent('chatMessage', source, "SYSTEM", "error", "Vehicle is not flagged!")
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1079,7 +1078,7 @@ QBCore.Commands.Add("depot", "Impound With Price (Police Only)", {{
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:ImpoundVehicle", source, false, tonumber(args[1]))
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1088,7 +1087,7 @@ QBCore.Commands.Add("impound", "Impound A Vehicle (Police Only)", {}, false, fun
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:ImpoundVehicle", source, true)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1111,7 +1110,7 @@ QBCore.Commands.Add("paytow", "Pay Tow Driver (Police, EMS Only)", {{
             end
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1134,7 +1133,7 @@ QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{
             end
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1143,7 +1142,7 @@ QBCore.Commands.Add("radar", "Enable Police Radar (Police Only)", {}, false, fun
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("wk:toggleRadar", source)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1215,7 +1214,7 @@ QBCore.Commands.Add("anklet", "Attach Tracking Anklet (Police Only)", {}, false,
     if Player.PlayerData.job.name == "police" then
         TriggerClientEvent("police:client:CheckDistance", source)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+        TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
     end
 end)
 
@@ -1237,7 +1236,7 @@ QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{
                 end
             end
         else
-            TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+            TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
         end
     end)
 
@@ -1259,7 +1258,7 @@ QBCore.Commands.Add("removeanklet", "Remove Tracking Anklet (Police Only)", {{"b
                 end
             end
         else
-            TriggerClientEvent('QBCore:Notify', source, 'For Emergency Services Only', 'error')
+            TriggerClientEvent('QBCore:Notify', source, 'This command is for officers only!', 'error')
         end
     end)
 
