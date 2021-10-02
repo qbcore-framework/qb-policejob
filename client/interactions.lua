@@ -191,6 +191,17 @@ AddEventHandler('police:client:JailPlayer', function()
     end
 end)
 
+RegisterNetEvent('police:client:checkFines')
+AddEventHandler('police:client:checkFines', function()
+    local player, distance = GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerId = GetPlayerServerId(player)
+        TriggerServerEvent("police:server:checkFines", playerId)
+    else
+        QBCore.Functions.Notify("No one nearby!", "error")
+    end
+end)
+
 RegisterNetEvent('police:client:BillPlayer')
 AddEventHandler('police:client:BillPlayer', function()
     local player, distance = GetClosestPlayer()
