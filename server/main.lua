@@ -1154,20 +1154,73 @@ QBCore.Functions.CreateUseableItem("handcuffs", function(source, item)
     end
 end)
 
-QBCore.Commands.Add("911", "Send a report to emergency services", {{
-    name = "message",
-    help = "Message you want to send"
-}}, true, function(source, args)
-    local message = table.concat(args, " ")
-    local Player = QBCore.Functions.GetPlayer(source)
+local policeTimeouts = {}
+local emsTimeouts = {}
+local policeCalls = {}
+local emsCalls = {}
 
-    if Player.Functions.GetItemByName("phone") ~= nil then
-        TriggerClientEvent("police:client:SendEmergencyMessage", source, message)
-        TriggerEvent("qb-log:server:CreateLog", "911", "911 alert", "blue",
-            "**" .. GetPlayerName(source) .. "** (CitizenID: " .. Player.PlayerData.citizenid .. " | ID: " .. source ..
-                ") **Alert:** " .. message, false)
+QBCore.Commands.Add('911', 'Send emergancy signal to Police.', {{name = 'firstname', help = 'First Name'}, {name = 'lastname', help = 'Last Name'}, {name = 'content', help = 'Message Content'}}, true, function(source, args)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+	if not Player.PlayerData.metadata["ishandcuffed"] then
+    if policeTimeouts[src] == nil or policeTimeouts[src] == true then
+        CreateThread(function()
+            policeTimeouts[src] = false
+            Wait(60000)
+            policeTimeouts[src] = true
+        end)
+        local item = Player.Functions.GetItemByName('phone')
+        if item ~= nil and item.amount > 0 then
+            local id =#policeCalls+1
+            policeTimeouts[src] = GetGameTimer()
+
+            local coords = GetEntityCoords(GetPlayerPed(src))
+            local name = args[1] .. ' ' .. args[2]
+            
+            table.remove(args, 1)
+            table.remove(args, 1)
+            local message = table.concat(args, ' ')
+
+            policeCalls[id] = { name = name, message = message, source = src }
+
+            TriggerClientEvent('police:client:createBlip', -1, 'police', coords, name, message, id, src)
+            TriggerClientEvent('police:client:called', src)
+			TriggerEvent("qb-log:server:CreateLog", "911", "911 alert", "blue", "**" .. GetPlayerName(src) .. "** (CitizenID: " .. name .. " | ID: " .. src .. ") **Alert:** " .. message, false)
+        else
+            TriggerClientEvent('QBCore:Notify', src, "You dont have phone.", "error")
+        end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'You dont have a phone', 'error')
+        TriggerClientEvent('QBCore:Notify', src, "Please wait till your next message.", "error")
+		end
+	else
+		TriggerClientEvent('QBCore:Notify', src, "You cant do that while cuffed!", "error")
+	end
+end)
+
+QBCore.Commands.Add('911r', 'Reply to 911 call. (Police Only)', {{name = 'id', help = 'Call #ID'}, {name = 'content', help = 'Message Content'}}, true, function(source, args)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+
+    if Player.PlayerData.job.name == 'police' then
+        local item = Player.Functions.GetItemByName('phone')
+        if item ~= nil and item.amount > 0 then
+            local id = tonumber(args[1])
+            table.remove(args, 1)
+            local message = table.concat(args, ' ')
+            if policeCalls[id] then
+                if not policeCalls[id].reply then
+                    policeCalls[id].reply = true
+                    TriggerClientEvent('police:client:called', src)
+                    TriggerClientEvent('police:client:reply', -1, 'police', id, message,Player.PlayerData.charinfo.firstname:sub(1,1) .. '. ' .. Player.PlayerData.charinfo.lastname, policeCalls[id].source)
+                else
+                    TriggerClientEvent('QBCore:Notify', src, "Message already replied.", "error")
+                end
+            else
+                TriggerClientEvent('QBCore:Notify', src, "Invaild call #ID.", "error")
+            end
+        else
+            TriggerClientEvent('QBCore:Notify', src, "You dont have phone.", "error")
+        end
     end
 end)
 
@@ -1180,32 +1233,71 @@ QBCore.Commands.Add("911a", "Send an anonymous report to emergency services (giv
 
     if Player.Functions.GetItemByName("phone") ~= nil then
         TriggerClientEvent("police:client:CallAnim", source)
-        TriggerClientEvent('police:client:Send112AMessage', -1, message)
+        TriggerClientEvent('police:client:called', -1, message)
     else
         TriggerClientEvent('QBCore:Notify', source, 'You dont have a phone', 'error')
     end
 end)
 
-QBCore.Commands.Add("911r", "Send a message back to a alert", {{
-    name = "id",
-    help = "ID of the alert"
-}, {
-    name = "message",
-    help = "Message you want to send"
-}}, true, function(source, args)
-    local Player = QBCore.Functions.GetPlayer(source)
-    local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
-    table.remove(args, 1)
-    local message = table.concat(args, " ")
-    local Prefix = "POLICE"
-    if (Player.PlayerData.job.name == "ambulance" or Player.PlayerData.job.name == "doctor") then
-        Prefix = "AMBULANCE"
+QBCore.Commands.Add('997', 'Send emergancy signal to EMS.', {{name = 'firstname', help = 'First Name'}, {name = 'lastname', help = 'Last Name'}, {name = 'content', help = 'Message Content'}}, true, function(source, args)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+
+    if emsTimeouts[src] == nil or emsTimeouts[src] == true then
+        CreateThread(function()
+            emsTimeouts[src] = false
+            Wait(60000)
+            emsTimeouts[src] = true
+        end)
+        local item = Player.Functions.GetItemByName('phone')
+        if item ~= nil and item.amount > 0 then
+            local id =#emsCalls+1
+            emsTimeouts[src] = GetGameTimer()
+
+            local coords = GetEntityCoords(GetPlayerPed(src))
+            local name = args[1] .. ' ' .. args[2]
+
+            table.remove(args, 1)
+            table.remove(args, 1)
+            local message = table.concat(args, ' ')
+
+            emsCalls[id] = { name = name, message = message, source = src }
+
+            TriggerClientEvent('police:client:createBlip', -1, 'ems', coords, name, message, id, src)
+            TriggerClientEvent('police:client:called', src)
+			TriggerEvent("qb-log:server:CreateLog", "911", "911 alert", "blue", "**" .. GetPlayerName(src) .. "** (CitizenID: " .. name .. " | ID: " .. src .. ") **Alert:** " .. message, false)
+        else
+            TriggerClientEvent('QBCore:Notify', src, "You dont have phone.", "error")
+        end
+    else
+        TriggerClientEvent('QBCore:Notify', src, "Please wait till your next message.", "error")
     end
-    if OtherPlayer ~= nil then
-        TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "(" .. Prefix .. ") " ..
-            Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname, "error", message)
-        TriggerClientEvent("police:client:EmergencySound", OtherPlayer.PlayerData.source)
-        TriggerClientEvent("police:client:CallAnim", source)
+end)
+
+QBCore.Commands.Add('997r', 'Reply to 997 call. (Police Only)', {{name = 'id', help = 'Call #ID'}, {name = 'content', help = 'Message Content'}}, true, function(source, args)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+
+    if Player.PlayerData.job.name == 'ambulance' then
+        local item = Player.Functions.GetItemByName('phone')
+        if item ~= nil and item.amount > 0 then
+            local id = tonumber(args[1])
+            table.remove(args, 1)
+            local message = table.concat(args, ' ')
+            if emsCalls[id] then
+                if not emsCalls[id].reply then
+                    emsCalls[id].reply = true
+                    TriggerClientEvent('police:client:called', src)
+                    TriggerClientEvent('police:client:reply', -1, 'ems', id, message,Player.PlayerData.charinfo.firstname:sub(1,1) .. '. ' .. Player.PlayerData.charinfo.lastname, emsCalls[id].source)
+                else
+                    TriggerClientEvent('QBCore:Notify', src, "Message already replied.", "error")
+                end
+            else
+                TriggerClientEvent('QBCore:Notify', src, "Invaild call #ID.", "error")
+            end
+        else
+            TriggerClientEvent('QBCore:Notify', src, "You dont have phone.", "error")
+        end
     end
 end)
 
