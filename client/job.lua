@@ -396,7 +396,7 @@ CreateThread(function()
                     if #(pos - v) < 1.0 then
                         DrawText3D(v.x, v.y, v.z, "~g~E~w~ -    Evidence stash")
                         if IsControlJustReleased(0, 38) then
-                            local drawer = Input("Which drawer do you want to look at?", "", 2)
+                            local drawer = Input("Which drawer do you want to look at?", "", 8)
                             if drawer then
                                 TriggerServerEvent("inventory:server:OpenInventory", "stash", " 1 | Drawer "..drawer, {
                                     maxweight = 4000000,
@@ -417,7 +417,7 @@ CreateThread(function()
                     if #(pos - v) < 1.0 then
                         DrawText3D(v.x, v.y, v.z, "~g~E~w~ - evidence stash")
                         if IsControlJustReleased(0, 38) then
-                            local drawer = Input("Which drawer do you want to look at?", "", 2)
+                            local drawer = Input("Which drawer do you want to look at?", "", 8)
                             if drawer then
                                 TriggerServerEvent("inventory:server:OpenInventory", "stash", " 2 | Drawer "..drawer, {
                                     maxweight = 4000000,
@@ -438,7 +438,7 @@ CreateThread(function()
                     if #(pos - v) < 1.0 then
                         DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Evidence stash")
                         if IsControlJustReleased(0, 38) then
-                            local drawer = Input("Which drawer do you want to look at?", "", 2)
+                            local drawer = Input("Which drawer do you want to look at?", "", 8)
                             if drawer then
                                 TriggerServerEvent("inventory:server:OpenInventory", "stash", " 3 | Drawer "..drawer, {
                                     maxweight = 4000000,
