@@ -11,7 +11,7 @@ local toggle_lock_on = 22 -- control id to lock onto a vehicle with the camera. 
 
 -- Script starts here
 local helicam = false
-local polmav_hash = GetHashKey("polmav")
+local polmav_hash = `polmav`
 local fov = (fov_max+fov_min)*0.5
 local vision_state = 0 -- 0 is normal, 1 is nightmode, 2 is thermal vision
 
@@ -22,15 +22,130 @@ local scanValue = 0
 local vehicle_detected = nil
 local locked_on_vehicle = nil
 
+-- Functions
+
+local function IsPlayerInPolmav()
+	local lPed = PlayerPedId()
+	local vehicle = GetVehiclePedIsIn(lPed)
+	return IsVehicleModel(vehicle, polmav_hash)
+end
+
+local function IsHeliHighEnough(heli)
+	return GetEntityHeightAboveGround(heli) > 1.5
+end
+
+local function ChangeVision()
+	if vision_state == 0 then
+		SetNightvision(true)
+		vision_state = 1
+	elseif vision_state == 1 then
+		SetNightvision(false)
+		SetSeethrough(true)
+		vision_state = 2
+	else
+		SetSeethrough(false)
+		vision_state = 0
+	end
+end
+
+local function HideHUDThisFrame()
+	HideHelpTextThisFrame()
+	HideHudAndRadarThisFrame()
+	HideHudComponentThisFrame(19) -- weapon wheel
+	HideHudComponentThisFrame(1) -- Wanted Stars
+	HideHudComponentThisFrame(2) -- Weapon icon
+	HideHudComponentThisFrame(3) -- Cash
+	HideHudComponentThisFrame(4) -- MP CASH
+	HideHudComponentThisFrame(13) -- Cash Change
+	HideHudComponentThisFrame(11) -- Floating Help Text
+	HideHudComponentThisFrame(12) -- more floating help text
+	HideHudComponentThisFrame(15) -- Subtitle Text
+	HideHudComponentThisFrame(18) -- Game Stream
+end
+
+local function CheckInputRotation(cam, zoomvalue)
+	local rightAxisX = GetDisabledControlNormal(0, 220)
+	local rightAxisY = GetDisabledControlNormal(0, 221)
+	local rotation = GetCamRot(cam, 2)
+	if rightAxisX ~= 0.0 or rightAxisY ~= 0.0 then
+		new_z = rotation.z + rightAxisX*-1.0*(speed_ud)*(zoomvalue+0.1)
+		new_x = math.max(math.min(20.0, rotation.x + rightAxisY*-1.0*(speed_lr)*(zoomvalue+0.1)), -89.5) -- Clamping at top (cant see top of heli) and at bottom (doesn't glitch out in -90deg)
+		SetCamRot(cam, new_x, 0.0, new_z, 2)
+	end
+end
+
+local function HandleZoom(cam)
+	if IsControlJustPressed(0,241) then -- Scrollup
+		fov = math.max(fov - zoomspeed, fov_min)
+	end
+	if IsControlJustPressed(0,242) then
+		fov = math.min(fov + zoomspeed, fov_max) -- ScrollDown		
+	end
+	local current_fov = GetCamFov(cam)
+	if math.abs(fov-current_fov) < 0.1 then -- the difference is too small, just set the value directly to avoid unneeded updates to FOV of order 10^-5
+		fov = current_fov
+	end
+	SetCamFov(cam, current_fov + (fov - current_fov)*0.05) -- Smoothing of camera zoom
+end
+
+local function RotAnglesToVec(rot) -- input vector3
+	local z = math.rad(rot.z)
+	local x = math.rad(rot.x)
+	local num = math.abs(math.cos(x))
+	return vector3(-math.sin(z)*num, math.cos(z)*num, math.sin(x))
+end
+
+local function GetVehicleInView(cam)
+	local coords = GetCamCoord(cam)
+	local forward_vector = RotAnglesToVec(GetCamRot(cam, 2))
+	--DrawLine(coords, coords+(forward_vector*100.0), 255,0,0,255) -- debug line to show LOS of cam
+	local rayhandle = CastRayPointToPoint(coords, coords+(forward_vector*400.0), 10, GetVehiclePedIsIn(PlayerPedId()), 0)
+	local _, _, _, _, entityHit = GetRaycastResult(rayhandle)
+	if entityHit>0 and IsEntityAVehicle(entityHit) then
+		return entityHit
+	else
+		return nil
+	end
+end
+
+local function RenderVehicleInfo(vehicle)
+	local pos = GetEntityCoords(vehicle)
+	local model = GetEntityModel(vehicle)
+	local vehname = GetLabelText(GetDisplayNameFromVehicleModel(model))
+	local licenseplate = GetVehicleNumberPlateText(vehicle)
+	local speed = math.ceil(GetEntitySpeed(vehicle) * 3.6)
+	local street1, street2 = GetStreetNameAtCoord(pos.x, pos.y, pos.z, Citizen.ResultAsInteger(), Citizen.ResultAsInteger())
+	local streetLabel = GetStreetNameFromHashKey(street1)
+	if street2 ~= 0 then 
+		streetLabel = streetLabel .. " | " .. GetStreetNameFromHashKey(street2)
+	end
+	SendNUIMessage({
+		type = "heliupdateinfo",
+		model = vehname,
+		plate = licenseplate,
+		speed = speed,
+		street = streetLabel,
+	})
+end
+
+-- Events
+
+RegisterNetEvent('heli:spotlight', function(serverID, state)
+	local heli = GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(serverID)), false)
+	SetVehicleSearchlight(heli, state, false)
+end)
+
+-- Threads
+
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		if isLoggedIn then
+		if LocalPlayer.state['isLoggedIn'] then
 			if PlayerJob.name == 'police' and onDuty then
 				if IsPlayerInPolmav() then
 					local lPed = PlayerPedId()
 					local heli = GetVehiclePedIsIn(lPed)
-					
+
 					if IsHeliHighEnough(heli) then
 						if IsControlJustPressed(0, toggle_helicam) then -- Toggle Helicam
 							PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
@@ -39,7 +154,7 @@ Citizen.CreateThread(function()
 								type = "heliopen",
 							})
 						end
-						
+
 						if IsControlJustPressed(0, toggle_rappel) then -- Initiate rappel
 							if GetPedInVehicleSeat(heli, 1) == lPed or GetPedInVehicleSeat(heli, 2) == lPed then
 								PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
@@ -47,13 +162,13 @@ Citizen.CreateThread(function()
 							end
 						end
 					end
-					
+
 					if IsControlJustPressed(0, toggle_spotlight) and GetPedInVehicleSeat(heli, -1) == lPed or GetPedInVehicleSeat(heli, 0) == lPed then
 						spotlight_state = not spotlight_state
 						TriggerServerEvent("heli:spotlight", spotlight_state)
 						PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 					end
-		
+
 					if helicam then
 						SetTimecycleModifier("heliGunCam")
 						SetTimecycleModifierStrength(0.3)
@@ -89,7 +204,7 @@ Citizen.CreateThread(function()
 								PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 								ChangeVision()
 							end
-			
+
 							if locked_on_vehicle then
 								if DoesEntityExist(locked_on_vehicle) then
 									PointCamAtEntity(cam, locked_on_vehicle, 0.0, 0.0, 0.0, true)
@@ -178,7 +293,7 @@ Citizen.CreateThread(function()
 					end
 					Citizen.Wait(10)
 				end
-			elseif isScanned and not isScanning and locked_on_vehicle ~= nil then
+			elseif isScanned and not isScanning and locked_on_vehicle then
 				scanValue = 100
 				RenderVehicleInfo(locked_on_vehicle)
 				isScanning = false
@@ -192,113 +307,3 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
-RegisterNetEvent('heli:spotlight')
-AddEventHandler('heli:spotlight', function(serverID, state)
-	local heli = GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(serverID)), false)
-	SetVehicleSearchlight(heli, state, false)
-end)
-
-function IsPlayerInPolmav()
-	local lPed = PlayerPedId()
-	local vehicle = GetVehiclePedIsIn(lPed)
-	return IsVehicleModel(vehicle, polmav_hash)
-end
-
-function IsHeliHighEnough(heli)
-	return GetEntityHeightAboveGround(heli) > 1.5
-end
-
-function ChangeVision()
-	if vision_state == 0 then
-		SetNightvision(true)
-		vision_state = 1
-	elseif vision_state == 1 then
-		SetNightvision(false)
-		SetSeethrough(true)
-		vision_state = 2
-	else
-		SetSeethrough(false)
-		vision_state = 0
-	end
-end
-
-function HideHUDThisFrame()
-	HideHelpTextThisFrame()
-	HideHudAndRadarThisFrame()
-	HideHudComponentThisFrame(19) -- weapon wheel
-	HideHudComponentThisFrame(1) -- Wanted Stars
-	HideHudComponentThisFrame(2) -- Weapon icon
-	HideHudComponentThisFrame(3) -- Cash
-	HideHudComponentThisFrame(4) -- MP CASH
-	HideHudComponentThisFrame(13) -- Cash Change
-	HideHudComponentThisFrame(11) -- Floating Help Text
-	HideHudComponentThisFrame(12) -- more floating help text
-	HideHudComponentThisFrame(15) -- Subtitle Text
-	HideHudComponentThisFrame(18) -- Game Stream
-end
-
-function CheckInputRotation(cam, zoomvalue)
-	local rightAxisX = GetDisabledControlNormal(0, 220)
-	local rightAxisY = GetDisabledControlNormal(0, 221)
-	local rotation = GetCamRot(cam, 2)
-	if rightAxisX ~= 0.0 or rightAxisY ~= 0.0 then
-		new_z = rotation.z + rightAxisX*-1.0*(speed_ud)*(zoomvalue+0.1)
-		new_x = math.max(math.min(20.0, rotation.x + rightAxisY*-1.0*(speed_lr)*(zoomvalue+0.1)), -89.5) -- Clamping at top (cant see top of heli) and at bottom (doesn't glitch out in -90deg)
-		SetCamRot(cam, new_x, 0.0, new_z, 2)
-	end
-end
-
-function HandleZoom(cam)
-	if IsControlJustPressed(0,241) then -- Scrollup
-		fov = math.max(fov - zoomspeed, fov_min)
-	end
-	if IsControlJustPressed(0,242) then
-		fov = math.min(fov + zoomspeed, fov_max) -- ScrollDown		
-	end
-	local current_fov = GetCamFov(cam)
-	if math.abs(fov-current_fov) < 0.1 then -- the difference is too small, just set the value directly to avoid unneeded updates to FOV of order 10^-5
-		fov = current_fov
-	end
-	SetCamFov(cam, current_fov + (fov - current_fov)*0.05) -- Smoothing of camera zoom
-end
-
-function GetVehicleInView(cam)
-	local coords = GetCamCoord(cam)
-	local forward_vector = RotAnglesToVec(GetCamRot(cam, 2))
-	--DrawLine(coords, coords+(forward_vector*100.0), 255,0,0,255) -- debug line to show LOS of cam
-	local rayhandle = CastRayPointToPoint(coords, coords+(forward_vector*400.0), 10, GetVehiclePedIsIn(PlayerPedId()), 0)
-	local _, _, _, _, entityHit = GetRaycastResult(rayhandle)
-	if entityHit>0 and IsEntityAVehicle(entityHit) then
-		return entityHit
-	else
-		return nil
-	end
-end
-
-function RenderVehicleInfo(vehicle)
-	local pos = GetEntityCoords(vehicle)
-	local model = GetEntityModel(vehicle)
-	local vehname = GetLabelText(GetDisplayNameFromVehicleModel(model))
-	local licenseplate = GetVehicleNumberPlateText(vehicle)
-	local speed = math.ceil(GetEntitySpeed(vehicle) * 3.6)
-	local street1, street2 = GetStreetNameAtCoord(pos.x, pos.y, pos.z, Citizen.ResultAsInteger(), Citizen.ResultAsInteger())
-	local streetLabel = GetStreetNameFromHashKey(street1)
-	if street2 ~= 0 then 
-		streetLabel = streetLabel .. " | " .. GetStreetNameFromHashKey(street2)
-	end
-	SendNUIMessage({
-		type = "heliupdateinfo",
-		model = vehname,
-		plate = licenseplate,
-		speed = speed,
-		street = streetLabel,
-	})
-end
-
-function RotAnglesToVec(rot) -- input vector3
-	local z = math.rad(rot.z)
-	local x = math.rad(rot.x)
-	local num = math.abs(math.cos(x))
-	return vector3(-math.sin(z)*num, math.cos(z)*num, math.sin(x))
-end

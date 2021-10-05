@@ -1,6 +1,5 @@
-RegisterNetEvent('police:client:CheckDistance')
-AddEventHandler('police:client:CheckDistance', function()
-    local player, distance = GetClosestPlayer()
+RegisterNetEvent('police:client:CheckDistance', function()
+    local player, distance = QBCore.Functions.GetClosestPlayer()
     if player ~= -1 and distance < 2.5 then
         local playerId = GetPlayerServerId(player)
         TriggerServerEvent("police:server:SetTracker", playerId)
@@ -9,8 +8,7 @@ AddEventHandler('police:client:CheckDistance', function()
     end
 end)
 
-RegisterNetEvent('police:client:SetTracker')
-AddEventHandler('police:client:SetTracker', function(bool)
+RegisterNetEvent('police:client:SetTracker', function(bool)
     local trackerClothingData = {
         outfitData = {
             ["accessory"]   = { item = -1, texture = 0},  -- Nek / Das
@@ -28,18 +26,16 @@ AddEventHandler('police:client:SetTracker', function(bool)
     end
 end)
 
-RegisterNetEvent('police:client:SendTrackerLocation')
-AddEventHandler('police:client:SendTrackerLocation', function(requestId)
+RegisterNetEvent('police:client:SendTrackerLocation', function(requestId)
     local ped = PlayerPedId()
     local coords = GetEntityCoords(ped)
 
     TriggerServerEvent('police:server:SendTrackerLocation', coords, requestId)
 end)
 
-RegisterNetEvent('police:client:TrackerMessage')
-AddEventHandler('police:client:TrackerMessage', function(msg, coords)
+RegisterNetEvent('police:client:TrackerMessage', function(msg, coords)
     PlaySound(-1, "Lose_1st", "GTAO_FM_Events_Soundset", 0, 0, 1)
-    TriggerEvent("chatMessage", "911-ALERT", "error", msg)
+    QBCore.Functions.Notify(msg, 'police')
     local transG = 250
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
     SetBlipSprite(blip, 458)

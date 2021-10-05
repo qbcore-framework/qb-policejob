@@ -1,7 +1,57 @@
-local ObjectList = {}
+-- Variables
 
-RegisterNetEvent('police:client:spawnCone')
-AddEventHandler('police:client:spawnCone', function()
+local ObjectList = {}
+local SpawnedSpikes = {}
+local spikemodel = `P_ld_stinger_s`
+local spikesSpawned = false
+local ClosestSpike = nil
+
+local SpikeConfig = {
+    MaxSpikes = 5
+}
+
+-- Functions
+
+local function GetClosestPoliceObject()
+    local pos = GetEntityCoords(PlayerPedId(), true)
+    local current = nil
+    local dist = nil
+
+    for id, data in pairs(ObjectList) do
+        local dist2 = #(pos - vector3(ObjectList[id].coords.x, ObjectList[id].coords.y, ObjectList[id].coords.z))
+        if current then
+            if dist2 < dist then
+                current = id
+                dist = dist2
+            end
+        else
+            dist = dist2
+            current = id
+        end
+    end
+    return current, dist
+end
+
+function GetClosestSpike()
+    local pos = GetEntityCoords(PlayerPedId(), true)
+    local current = nil
+
+    for id, data in pairs(SpawnedSpikes) do
+        if current then
+            if #(pos - vector3(SpawnedSpikes[id].coords.x, SpawnedSpikes[id].coords.y, SpawnedSpikes[id].coords.z)) < dist then
+                current = id
+            end
+        else
+            dist = #(pos - vector3(SpawnedSpikes[id].coords.x, SpawnedSpikes[id].coords.y, SpawnedSpikes[id].coords.z))
+            current = id
+        end
+    end
+    ClosestSpike = current
+end
+
+-- Events
+
+RegisterNetEvent('police:client:spawnCone', function()
     QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
@@ -20,8 +70,7 @@ AddEventHandler('police:client:spawnCone', function()
     end)
 end)
 
-RegisterNetEvent('police:client:spawnBarier')
-AddEventHandler('police:client:spawnBarier', function()
+RegisterNetEvent('police:client:spawnBarier', function()
     QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
@@ -40,8 +89,7 @@ AddEventHandler('police:client:spawnBarier', function()
     end)
 end)
 
-RegisterNetEvent('police:client:spawnSchotten')
-AddEventHandler('police:client:spawnSchotten', function()
+RegisterNetEvent('police:client:spawnSchotten', function()
     QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
@@ -60,8 +108,7 @@ AddEventHandler('police:client:spawnSchotten', function()
     end)
 end)
 
-RegisterNetEvent('police:client:spawnTent')
-AddEventHandler('police:client:spawnTent', function()
+RegisterNetEvent('police:client:spawnTent', function()
     QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
@@ -80,8 +127,7 @@ AddEventHandler('police:client:spawnTent', function()
     end)
 end)
 
-RegisterNetEvent('police:client:spawnLight')
-AddEventHandler('police:client:spawnLight', function()
+RegisterNetEvent('police:client:spawnLight', function()
     local coords = GetEntityCoords(PlayerPedId())
     QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
         disableMovement = true,
@@ -101,8 +147,7 @@ AddEventHandler('police:client:spawnLight', function()
     end)
 end)
 
-RegisterNetEvent('police:client:deleteObject')
-AddEventHandler('police:client:deleteObject', function()
+RegisterNetEvent('police:client:deleteObject', function()
     local objectId, dist = GetClosestPoliceObject()
     if dist < 5.0 then
         QBCore.Functions.Progressbar("remove_object", "Removing object..", 2500, false, true, {
@@ -124,15 +169,13 @@ AddEventHandler('police:client:deleteObject', function()
     end
 end)
 
-RegisterNetEvent('police:client:removeObject')
-AddEventHandler('police:client:removeObject', function(objectId)
+RegisterNetEvent('police:client:removeObject', function(objectId)
     NetworkRequestControlOfEntity(ObjectList[objectId].object)
     DeleteObject(ObjectList[objectId].object)
     ObjectList[objectId] = nil
 end)
 
-RegisterNetEvent('police:client:spawnObject')
-AddEventHandler('police:client:spawnObject', function(objectId, type, player)
+RegisterNetEvent('police:client:spawnObject', function(objectId, type, player)
     local coords = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(player)))
     local heading = GetEntityHeading(GetPlayerPed(GetPlayerFromServerId(player)))
     local forward = GetEntityForwardVector(PlayerPedId())
@@ -152,69 +195,11 @@ AddEventHandler('police:client:spawnObject', function(objectId, type, player)
     }
 end)
 
-function GetClosestPoliceObject()
-    local pos = GetEntityCoords(PlayerPedId(), true)
-    local current = nil
-    local dist = nil
-
-    for id, data in pairs(ObjectList) do
-        local dist2 = #(pos - vector3(ObjectList[id].coords.x, ObjectList[id].coords.y, ObjectList[id].coords.z))
-        if current ~= nil then
-            if dist2 < dist then
-                current = id
-                dist = dist2
-            end
-        else
-            dist = dist2
-            current = id
-        end
-    end
-    return current, dist
-end
-
-local SpikeConfig = {
-    MaxSpikes = 5
-}
-local SpawnedSpikes = {}
-local spikemodel = "P_ld_stinger_s"
-local nearSpikes = false
-local spikesSpawned = false
-local ClosestSpike = nil
-
-Citizen.CreateThread(function()
-    while true do
-
-        if isLoggedIn then
-            GetClosestSpike()
-        end
-
-        Citizen.Wait(500)
-    end
-end)
-
-function GetClosestSpike()
-    local pos = GetEntityCoords(PlayerPedId(), true)
-    local current = nil
-
-    for id, data in pairs(SpawnedSpikes) do
-        if current ~= nil then
-            if #(pos - vector3(SpawnedSpikes[id].coords.x, SpawnedSpikes[id].coords.y, SpawnedSpikes[id].coords.z)) < dist then
-                current = id
-            end
-        else
-            dist = #(pos - vector3(SpawnedSpikes[id].coords.x, SpawnedSpikes[id].coords.y, SpawnedSpikes[id].coords.z))
-            current = id
-        end
-    end
-    ClosestSpike = current
-end
-
-RegisterNetEvent('police:client:SpawnSpikeStrip')
-AddEventHandler('police:client:SpawnSpikeStrip', function()
+RegisterNetEvent('police:client:SpawnSpikeStrip', function()
     if #SpawnedSpikes + 1 < SpikeConfig.MaxSpikes then
         if PlayerJob.name == "police" and PlayerJob.onduty then
             local spawnCoords = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 2.0, 0.0)
-            local spike = CreateObject(GetHashKey(spikemodel), spawnCoords.x, spawnCoords.y, spawnCoords.z, 1, 1, 1)
+            local spike = CreateObject(spikemodel, spawnCoords.x, spawnCoords.y, spawnCoords.z, 1, 1, 1)
             local netid = NetworkGetNetworkIdFromEntity(spike)
             SetNetworkIdExistsOnAllMachines(netid, true)
             SetNetworkIdCanMigrate(netid, false)
@@ -237,15 +222,25 @@ AddEventHandler('police:client:SpawnSpikeStrip', function()
     end
 end)
 
-RegisterNetEvent('police:client:SyncSpikes')
-AddEventHandler('police:client:SyncSpikes', function(table)
+RegisterNetEvent('police:client:SyncSpikes', function(table)
     SpawnedSpikes = table
+end)
+
+-- Threads
+
+Citizen.CreateThread(function()
+    while true do
+        if LocalPlayer.state['isLoggedIn'] then
+            GetClosestSpike()
+        end
+        Citizen.Wait(500)
+    end
 end)
 
 Citizen.CreateThread(function()
     while true do
-        if isLoggedIn then
-            if ClosestSpike ~= nil then
+        if LocalPlayer.state['isLoggedIn'] then
+            if ClosestSpike then
                 local tires = {
                     {bone = "wheel_lf", index = 0},
                     {bone = "wheel_rf", index = 1},
@@ -258,7 +253,7 @@ Citizen.CreateThread(function()
                 for a = 1, #tires do
                     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
                     local tirePos = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, tires[a].bone))
-                    local spike = GetClosestObjectOfType(tirePos.x, tirePos.y, tirePos.z, 15.0, GetHashKey(spikemodel), 1, 1, 1)
+                    local spike = GetClosestObjectOfType(tirePos.x, tirePos.y, tirePos.z, 15.0, spikemodel, 1, 1, 1)
                     local spikePos = GetEntityCoords(spike, false)
                     local distance = Vdist(tirePos.x, tirePos.y, tirePos.z, spikePos.x, spikePos.y, spikePos.z)
 
@@ -277,8 +272,8 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        if isLoggedIn then
-            if ClosestSpike ~= nil then
+        if LocalPlayer.state['isLoggedIn'] then
+            if ClosestSpike then
                 local ped = PlayerPedId()
                 local pos = GetEntityCoords(ped)
                 local dist = #(pos - vector3(SpawnedSpikes[ClosestSpike].coords.x, SpawnedSpikes[ClosestSpike].coords.y, SpawnedSpikes[ClosestSpike].coords.z))
