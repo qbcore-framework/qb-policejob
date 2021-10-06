@@ -62,7 +62,7 @@ end
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     local player = QBCore.Functions.GetPlayerData()
     PlayerJob = player.job
-    onDuty = player.onduty
+    onDuty = player.job.onduty
     isHandcuffed = false
     TriggerServerEvent("QBCore:Server:SetMetaData", "ishandcuffed", false)
     TriggerServerEvent("police:server:SetHandcuffStatus", false)
