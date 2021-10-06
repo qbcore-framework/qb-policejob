@@ -138,6 +138,11 @@ RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     end
 end)
 
+RegisterNetEvent('QBCore:Client:SetDuty', function(duty)
+    onDuty = duty
+    TriggerServerEvent('police:server:UpdateCurrentCops')
+end)
+
 RegisterNetEvent('police:client:sendBillingMail', function(amount)
     SetTimeout(math.random(2500, 4000), function()
         local gender = "Mr."
