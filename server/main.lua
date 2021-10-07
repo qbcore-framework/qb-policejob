@@ -74,7 +74,7 @@ QBCore.Commands.Add("pobject", "Place/Delete An Object (Police Only)", {{name = 
         elseif type == "barier" then
             TriggerClientEvent("police:client:spawnBarier", src)
         elseif type == "schotten" then
-            TriggerClientEvent("police:client:spawnSchotten", src)
+            TriggerClientEvent("police:client:spawnStopSign", src)
         elseif type == "tent" then
             TriggerClientEvent("police:client:spawnTent", src)
         elseif type == "light" then
