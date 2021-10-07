@@ -89,7 +89,7 @@ RegisterNetEvent('police:client:spawnBarier', function()
     end)
 end)
 
-RegisterNetEvent('police:client:spawnSchotten', function()
+RegisterNetEvent('police:client:spawnStopSign', function()
     QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
@@ -101,7 +101,7 @@ RegisterNetEvent('police:client:spawnSchotten', function()
         flags = 16,
     }, {}, {}, function() -- Done
         StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        TriggerServerEvent("police:server:spawnObject", "schotten")
+        TriggerServerEvent("police:server:spawnObject", "stopsign")
     end, function() -- Cancel
         StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
         QBCore.Functions.Notify("Canceled..", "error")
