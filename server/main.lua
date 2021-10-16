@@ -447,7 +447,7 @@ end)
 QBCore.Functions.CreateUseableItem("handcuffs", function(source, item)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    if Player.Functions.GetItemByName(item) then
+    if Player.Functions.GetItemByName(item.name) then
         TriggerClientEvent("police:client:CuffPlayerSoft", src)
     end
 end)
@@ -455,7 +455,7 @@ end)
 QBCore.Functions.CreateUseableItem("moneybag", function(source, item)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    if Player.Functions.GetItemByName(item) then
+    if Player.Functions.GetItemByName(item.name) then
         if item.info and item.info ~= "" then
             if Player.PlayerData.job.name ~= "police" then
                 if Player.Functions.RemoveItem("moneybag", 1, item.slot) then
