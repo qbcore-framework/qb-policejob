@@ -20,7 +20,7 @@ QBCore.Commands.Add("spikestrip", "Place Spike Strip (Police Only)", {}, false, 
     end
 end)
 
-QBCore.Commands.Add("grantlicense", "Grant a weapon license to someone", {{name = "id", help = "ID of a person"}, {name = "license", help = "License Type"}}, true, function(source, args)
+QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name = "id", help = "ID of a person"}, {name = "license", help = "License Type"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.grade.level >= 2 then
@@ -30,15 +30,15 @@ QBCore.Commands.Add("grantlicense", "Grant a weapon license to someone", {{name 
                 local licenseTable = SearchedPlayer.PlayerData.metadata["licences"]
                 licenseTable[args[2]] = true
                 SearchedPlayer.Functions.SetMetaData("licences", licenseTable)
-                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been granted a weapon license.",
+                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been granted a license.",
                     "success", 5000)
-                TriggerClientEvent('QBCore:Notify', src, "You granted a weapon license.", "success", 5000)
+                TriggerClientEvent('QBCore:Notify', src, "You granted a license.", "success", 5000)
             end
         else
             TriggerClientEvent('QBCore:Notify', src, "Invalid License Type", "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, "You must be a Sergeant to grant weapon licenses.", "error")
+        TriggerClientEvent('QBCore:Notify', src, "You must be a Sergeant to grant licenses.", "error")
     end
 end)
 
