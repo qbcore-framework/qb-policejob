@@ -566,7 +566,7 @@ QBCore.Functions.CreateCallback('police:server:isPlayerDead', function(source, c
     cb(Player.PlayerData.metadata["isdead"])
 end)
 
-QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(source, cb, playerId)
+QBCore.Functions.CreateCallback('police:server:GetPlayerStatus', function(source, cb, playerId)
     local Player = QBCore.Functions.GetPlayer(playerId)
     local statList = {}
     if Player then
@@ -579,7 +579,7 @@ QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(source, cb, p
     cb(statList)
 end)
 
-QBCore.Functions.CreateCallback('police:IsSilencedWeapon', function(source, cb, weapon)
+QBCore.Functions.CreateCallback('police:server:IsSilencedWeapon', function(source, cb, weapon)
     local Player = QBCore.Functions.GetPlayer(source)
     local itemInfo = Player.Functions.GetItemByName(QBCore.Shared.Weapons[weapon]["name"])
     local retval = false
@@ -598,7 +598,7 @@ QBCore.Functions.CreateCallback('police:IsSilencedWeapon', function(source, cb, 
     cb(retval)
 end)
 
-QBCore.Functions.CreateCallback('police:GetDutyPlayers', function(source, cb)
+QBCore.Functions.CreateCallback('police:server:GetDutyPlayers', function(source, cb)
     local dutyPlayers = {}
     local players = QBCore.Functions.GetQBPlayers()
     for k, v in pairs(players) do
@@ -613,7 +613,7 @@ QBCore.Functions.CreateCallback('police:GetDutyPlayers', function(source, cb)
     cb(dutyPlayers)
 end)
 
-QBCore.Functions.CreateCallback('police:GetImpoundedVehicles', function(source, cb)
+QBCore.Functions.CreateCallback('police:server:GetImpoundedVehicles', function(source, cb)
     local vehicles = {}
     exports.oxmysql:fetch('SELECT * FROM player_vehicles WHERE state = ?', {2}, function(result)
         if result[1] then
@@ -623,7 +623,7 @@ QBCore.Functions.CreateCallback('police:GetImpoundedVehicles', function(source, 
     end)
 end)
 
-QBCore.Functions.CreateCallback('police:IsPlateFlagged', function(source, cb, plate)
+QBCore.Functions.CreateCallback('police:server:IsPlateFlagged', function(source, cb, plate)
     local retval = false
     if Plates and Plates[plate] then
         if Plates[plate].isflagged then
@@ -633,7 +633,7 @@ QBCore.Functions.CreateCallback('police:IsPlateFlagged', function(source, cb, pl
     cb(retval)
 end)
 
-QBCore.Functions.CreateCallback('police:GetCops', function(source, cb)
+QBCore.Functions.CreateCallback('police:server:GetCops', function(source, cb)
     local amount = 0
     local players = QBCore.Functions.GetQBPlayers()
     for k, v in pairs(players) do
