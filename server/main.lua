@@ -1178,10 +1178,6 @@ RegisterNetEvent('police:server:checkFines', function(playerId)
     end
 end)
 
-RegisterNetEvent('police:server:SyncSpikes', function(table)
-    TriggerClientEvent('police:client:SyncSpikes', -1, table)
-end)
-
 -- Threads
 
 Citizen.CreateThread(function()
