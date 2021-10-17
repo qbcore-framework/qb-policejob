@@ -317,6 +317,34 @@ QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{name = "id
     end
 end)
 
+QBCore.Commands.Add('checkfines', 'Check player fines (Emergancy Only).', {{name = 'id', help = 'Player ID'}}, true, function(source, args)
+    local src = source
+    local id = tonumber(args[1])
+	if id then
+		local Player = QBCore.Functions.GetPlayer(id)
+		local OtherPlayer = QBCore.Functions.GetPlayer(src)
+
+        if Player and OtherPlayer and OtherPlayer.PlayerData.job.name == 'police' then
+			local distance = Player.PlayerData.metadata["inlaststand"] and 3.0 or 10.0
+			if #(GetEntityCoords(GetPlayerPed(src)) - GetEntityCoords(GetPlayerPed(id))) < distance then
+				exports.oxmysql:execute('SELECT * FROM phone_invoices WHERE citizenid = ?', {Player.PlayerData.citizenid}, function(result)
+                    if result[1] ~= nil then
+                        TriggerClientEvent('QBCore:Notify', src, "This person has " .. #result .. " unpaid fines.", "success")
+                    else
+                        TriggerClientEvent('QBCore:Notify', src, "This person has no unpaid fines.", "success")
+                    end
+                end)
+			else
+				TriggerClientEvent('QBCore:Notify', src, "You are too far away.", "error")
+			end
+		else
+			TriggerClientEvent('QBCore:Notify', src, "This command is for officers only!", "error")
+		end
+	else
+		TriggerClientEvent('QBCore:Notify', src, "Wrong ID.", "error")
+	end
+end)
+
 QBCore.Commands.Add("911", "Make a police report", {{name = "message", help = "Message you want to send"}}, true, function(source, args)
     local src = source
     local ped = GetPlayerPed(src)
@@ -1119,6 +1147,35 @@ RegisterNetEvent('police:server:SendTrackerLocation', function(coords, requestId
     }
     TriggerClientEvent("police:client:TrackerMessage", requestId, msg, coords)
     TriggerClientEvent("qb-phone:client:addPoliceAlert", requestId, alertData)
+end)
+
+RegisterNetEvent('police:server:SyncSpikes', function(table)
+    TriggerClientEvent('police:client:SyncSpikes', -1, table)
+end)
+
+RegisterNetEvent('police:server:checkFines', function(playerId)
+    local src = source
+    local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
+    if SearchedPlayer ~= nil then 
+		exports.oxmysql:execute('SELECT * FROM phone_invoices WHERE citizenid = ?', {SearchedPlayer.PlayerData.citizenid}.. "' AND `society`='police'", function(invoices)
+            if #invoices == 0 then
+                TriggerClientEvent('chat:addMessage', src, {
+                    template = '<div class="chat-message server"><strong>SYSTEM:</strong> Player have no unpaid fines.</div>',
+                })
+            else
+                local str = ""
+                for i=1,#invoices do
+                    local invoice = invoices[i]
+                    str = str .. '<br>'
+                    str = str .. i .. '. ' .. invoice.title .. ' - $' .. invoice.amount
+                end
+
+                TriggerClientEvent('chat:addMessage', src, {
+                    template = '<div class="chat-message emergency">Player Unpaid Fines: '.. str ..' </div>',
+                })
+            end
+        end)
+    end
 end)
 
 RegisterNetEvent('police:server:SyncSpikes', function(table)
