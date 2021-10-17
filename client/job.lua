@@ -243,7 +243,7 @@ function MenuImpound()
 end
 
 function ImpoundVehicleList()
-    QBCore.Functions.TriggerCallback("police:GetImpoundedVehicles", function(result)
+    QBCore.Functions.TriggerCallback("police:server:GetImpoundedVehicles", function(result)
         ped = PlayerPedId();
         MenuTitle = "Impounded Vehicles:"
         ClearMenu()
@@ -347,7 +347,7 @@ RegisterNetEvent('police:client:CheckStatus', function()
             local player, distance = GetClosestPlayer()
             if player ~= -1 and distance < 5.0 then
                 local playerId = GetPlayerServerId(player)
-                QBCore.Functions.TriggerCallback('police:GetPlayerStatus', function(result)
+                QBCore.Functions.TriggerCallback('police:server:GetPlayerStatus', function(result)
                     if result then
                         for k, v in pairs(result) do
                             QBCore.Functions.Notify(''..v..'')
