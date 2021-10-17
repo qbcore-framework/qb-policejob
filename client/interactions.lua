@@ -239,6 +239,16 @@ RegisterNetEvent('police:client:KidnapPlayer', function()
     end
 end)
 
+RegisterNetEvent('police:client:checkFines', function()
+    local player, distance = QBCore.Functions.GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerId = GetPlayerServerId(player)
+        TriggerServerEvent("police:server:checkFines", playerId)
+    else
+        QBCore.Functions.Notify("No one nearby!", "error")
+    end
+end)
+
 RegisterNetEvent('police:client:CuffPlayerSoft', function()
     if not IsPedRagdoll(PlayerPedId()) then
         local player, distance = QBCore.Functions.GetClosestPlayer()
