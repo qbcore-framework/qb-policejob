@@ -658,6 +658,10 @@ end)
 
 -- Events
 
+RegisterNetEvent('onResourceStart', function(resourceName)
+    exports.oxmysql:execute('DELETE FROM stashitems WHERE stash="policetrash"')
+end)
+
 RegisterNetEvent('police:server:TakeOutImpound', function(plate)
     local src = source
     exports.oxmysql:execute('UPDATE player_vehicles SET state = ? WHERE plate  = ?', {0, plate})
