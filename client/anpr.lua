@@ -17,7 +17,7 @@ function HandlespeedCam(speedCam, hasBeenBusted)
 			if GetPedInVehicleSeat(vehicle, -1) == myPed then
 				if GetVehicleClass(vehicle) ~= 18 then
                     local plate = GetVehicleNumberPlateText(vehicle)
-					QBCore.Functions.TriggerCallback('police:IsPlateFlagged', function(result)
+					QBCore.Functions.TriggerCallback('police:server:IsPlateFlagged', function(result)
 						if result then
 							local coords = GetEntityCoords(PlayerPedId())
 							local blipsettings = {
