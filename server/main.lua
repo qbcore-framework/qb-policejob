@@ -664,6 +664,18 @@ AddEventHandler('onResourceStart', function(resourceName)
     end
 end)
 
+RegisterNetEvent('police:server:policeAlert', function(text)
+    local src = source
+    local ped = GetPlayerPed(src)
+    local coords = GetEntityCoords(ped)
+    local players = QBCore.Functions.GetQBPlayers()
+    for k,v in pairs(players) do
+        if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
+            TriggerClientEvent('police:client:policeAlert', v.PlayerData.source, coords, text)
+        end
+    end
+end)
+
 RegisterNetEvent('police:server:TakeOutImpound', function(plate)
     local src = source
     exports.oxmysql:execute('UPDATE player_vehicles SET state = ? WHERE plate  = ?', {0, plate})
