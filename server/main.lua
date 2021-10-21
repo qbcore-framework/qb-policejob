@@ -634,6 +634,12 @@ end)
 
 -- Events
 
+AddEventHandler('onResourceStart', function(resourceName)
+    if resourceName == GetCurrentResourceName() then
+        exports.oxmysql:execute('DELETE FROM stashitems WHERE stash="policetrash"')
+    end
+end)
+
 RegisterNetEvent('police:server:policeAlert', function(text)
     local src = source
     local ped = GetPlayerPed(src)
