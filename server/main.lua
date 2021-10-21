@@ -8,6 +8,106 @@ local FingerDrops = {}
 local Objects = {}
 local QBCore = exports['qb-core']:GetCoreObject()
 
+-- Functions
+
+local function UpdateBlips()
+    local dutyPlayers = {}
+    local players = QBCore.Functions.GetQBPlayers()
+    for k, v in pairs(players) do
+        if (v.PlayerData.job.name == "police" or v.PlayerData.job.name == "ambulance") and v.PlayerData.job.onduty then
+            local coords = GetEntityCoords(GetPlayerPed(v.PlayerData.source))
+            local heading = GetEntityHeading(GetPlayerPed(v.PlayerData.source))
+            dutyPlayers[#dutyPlayers+1] = {
+                source = v.PlayerData.source,
+                label = v.PlayerData.metadata["callsign"],
+                job = v.PlayerData.job.name,
+                location = {
+                    x = coords.x,
+                    y = coords.y,
+                    z = coords.z,
+                    w = heading
+                }
+            }
+        end
+    end
+    TriggerClientEvent("police:client:UpdateBlips", -1, dutyPlayers)
+end
+
+local function CreateBloodId()
+    if BloodDrops then
+        local bloodId = math.random(10000, 99999)
+        while BloodDrops[caseId] do
+            bloodId = math.random(10000, 99999)
+        end
+        return bloodId
+    else
+        local bloodId = math.random(10000, 99999)
+        return bloodId
+    end
+end
+
+local function CreateFingerId()
+    if FingerDrops then
+        local fingerId = math.random(10000, 99999)
+        while FingerDrops[caseId] do
+            fingerId = math.random(10000, 99999)
+        end
+        return fingerId
+    else
+        local fingerId = math.random(10000, 99999)
+        return fingerId
+    end
+end
+
+local function CreateCasingId()
+    if Casings then
+        local caseId = math.random(10000, 99999)
+        while Casings[caseId] do
+            caseId = math.random(10000, 99999)
+        end
+        return caseId
+    else
+        local caseId = math.random(10000, 99999)
+        return caseId
+    end
+end
+
+local function CreateObjectId()
+    if Objects then
+        local objectId = math.random(10000, 99999)
+        while Objects[caseId] do
+            objectId = math.random(10000, 99999)
+        end
+        return objectId
+    else
+        local objectId = math.random(10000, 99999)
+        return objectId
+    end
+end
+
+local function IsVehicleOwned(plate)
+    local result = exports.oxmysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
+    return result
+end
+
+local function GetCurrentCops()
+    local amount = 0
+    local players = QBCore.Functions.GetQBPlayers()
+    for k, v in pairs(players) do
+        if v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
+            amount = amount + 1
+        end
+    end
+    return amount
+end
+
+local function DnaHash(s)
+    local h = string.gsub(s, ".", function(c)
+        return string.format("%02x", string.byte(c))
+    end)
+    return h
+end
+
 -- Commands
 
 QBCore.Commands.Add("spikestrip", "Place Spike Strip (Police Only)", {}, false, function(source)
@@ -92,23 +192,6 @@ QBCore.Commands.Add("cuff", "Cuff Player (Police Only)", {}, false, function(sou
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
         TriggerClientEvent("police:client:CuffPlayer", src)
-    else
-        TriggerClientEvent('QBCore:Notify', src, 'For on-duty police only', 'error')
-    end
-end)
-
-QBCore.Commands.Add("palert", "Make a police alert", {{name = "alert", help = "The Police alert"}}, false, function(source, args)
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
-        if args[1] then
-            local msg = table.concat(args, " ")
-            TriggerClientEvent('QBCore:Notify', -1, ''..msg..'', 'police')
-            TriggerEvent("qb-log:server:CreateLog", "palert", "Police alert", "blue", "**" .. GetPlayerName(src) .. "** (CitizenID: " .. Player.PlayerData.citizenid .. " | ID: " .. src .. ") **Alert:** " .. msg, false)
-            TriggerClientEvent('police:PlaySound', -1)
-        else
-            TriggerClientEvent('QBCore:Notify', src, 'No report entered', 'error')
-        end
     else
         TriggerClientEvent('QBCore:Notify', src, 'For on-duty police only', 'error')
     end
@@ -317,44 +400,6 @@ QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{name = "id
     end
 end)
 
-QBCore.Commands.Add("911", "Make a police report", {{name = "message", help = "Message you want to send"}}, true, function(source, args)
-    local src = source
-    local ped = GetPlayerPed(src)
-    local coords = GetEntityCoords(ped)
-    local message = table.concat(args, " ")
-    local Player = QBCore.Functions.GetPlayer(src)
-    if Player.Functions.GetItemByName("phone") then
-        TriggerClientEvent('police:client:SendEmergencyMessage', src, coords, message)
-        TriggerEvent("qb-log:server:CreateLog", "911", "911 alert", "blue", "**" .. GetPlayerName(src) .. "** (CitizenID: " .. Player.PlayerData.citizenid .. " | ID: " .. src .. ") **Alert:** " .. message, false)
-    else
-        TriggerClientEvent('QBCore:Notify', src, 'You dont have a phone', 'error')
-    end
-end)
-
-QBCore.Commands.Add("911a", "Send an anonymous report to emergency services (gives no location)", {{name = "message", help = "Message you want to send"}}, true, function(source, args)
-    local src = source
-    local message = table.concat(args, " ")
-    local Player = QBCore.Functions.GetPlayer(src)
-    if Player.Functions.GetItemByName("phone") then
-        TriggerClientEvent("police:client:CallAnim", src)
-        TriggerClientEvent('police:client:Send112AMessage', -1, message)
-    else
-        TriggerClientEvent('QBCore:Notify', src, 'You dont have a phone', 'error')
-    end
-end)
-
-QBCore.Commands.Add("911r", "Send a message back to an alert", {{name = "id", help = "ID of the alert"}, {name = "message",help = "Message you want to send"}}, true, function(source, args)
-    local src = source
-    local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
-    table.remove(args, 1)
-    local message = table.concat(args, " ")
-    if OtherPlayer then
-        TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, ''..message..'')
-        TriggerClientEvent("police:client:EmergencySound", OtherPlayer.PlayerData.source)
-        TriggerClientEvent("police:client:CallAnim", src)
-    end
-end)
-
 QBCore.Commands.Add("anklet", "Attach Tracking Anklet (Police Only)", {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -415,13 +460,6 @@ QBCore.Commands.Add("takedrivinglicense", "Seize Drivers License (Police Only)",
     end
 end)
 
-local function DnaHash(s)
-    local h = string.gsub(s, ".", function(c)
-        return string.format("%02x", string.byte(c))
-    end)
-    return h
-end
-
 QBCore.Commands.Add("takedna", "Take a DNA sanple from a person (empty evidence bag needed) (Police Only)", {{"id", "ID of the person"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -438,6 +476,37 @@ QBCore.Commands.Add("takedna", "Take a DNA sanple from a person (empty evidence 
             end
         else
             TriggerClientEvent('QBCore:Notify', src, "You must have an empty evidence bag with you", "error")
+        end
+    end
+end)
+
+RegisterNetEvent('police:server:SendTrackerLocation', function(coords, requestId)
+    local Target = QBCore.Functions.GetPlayer(source)
+    local msg = "The location of " .. Target.PlayerData.charinfo.firstname .. " " .. Target.PlayerData.charinfo.lastname .. " is marked on your map."
+    local alertData = {
+        title = "Anklet location",
+        coords = {
+            x = coords.x,
+            y = coords.y,
+            z = coords.z
+        },
+        description = msg
+    }
+    TriggerClientEvent("police:client:TrackerMessage", requestId, msg, coords)
+    TriggerClientEvent("qb-phone:client:addPoliceAlert", requestId, alertData)
+end)
+
+QBCore.Commands.Add('911p', 'Police Report', {{name='message', help='Message to be sent'}}, false, function(source, args)
+	local src = source
+	if args[1] then message = table.concat(args, " ") else message = 'Civilian Call' end
+    local ped = GetPlayerPed(src)
+    local coords = GetEntityCoords(ped)
+    local players = QBCore.Functions.GetQBPlayers()
+    for k,v in pairs(players) do
+        if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
+            local alertData = {title = 'New 911 Call', coords = {coords.x, coords.y, coords.z}, description = message}
+            TriggerClientEvent("qb-phone:client:addPoliceAlert", v.PlayerData.source, alertData)
+            TriggerClientEvent('police:client:policeAlert', v.PlayerData.source, coords, message)
         end
     end
 end)
@@ -465,99 +534,6 @@ QBCore.Functions.CreateUseableItem("moneybag", function(source, item)
         end
     end
 end)
-
--- Functions
-
-local function UpdateBlips()
-    local dutyPlayers = {}
-    local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
-        if (v.PlayerData.job.name == "police" or v.PlayerData.job.name == "ambulance") and v.PlayerData.job.onduty then
-            local coords = GetEntityCoords(GetPlayerPed(v.PlayerData.source))
-            local heading = GetEntityHeading(GetPlayerPed(v.PlayerData.source))
-            dutyPlayers[#dutyPlayers+1] = {
-                source = v.PlayerData.source,
-                label = v.PlayerData.metadata["callsign"],
-                job = v.PlayerData.job.name,
-                location = {
-                    x = coords.x,
-                    y = coords.y,
-                    z = coords.z,
-                    w = heading
-                }
-            }
-        end
-    end
-    TriggerClientEvent("police:client:UpdateBlips", -1, dutyPlayers)
-end
-
-local function CreateBloodId()
-    if BloodDrops then
-        local bloodId = math.random(10000, 99999)
-        while BloodDrops[caseId] do
-            bloodId = math.random(10000, 99999)
-        end
-        return bloodId
-    else
-        local bloodId = math.random(10000, 99999)
-        return bloodId
-    end
-end
-
-local function CreateFingerId()
-    if FingerDrops then
-        local fingerId = math.random(10000, 99999)
-        while FingerDrops[caseId] do
-            fingerId = math.random(10000, 99999)
-        end
-        return fingerId
-    else
-        local fingerId = math.random(10000, 99999)
-        return fingerId
-    end
-end
-
-local function CreateCasingId()
-    if Casings then
-        local caseId = math.random(10000, 99999)
-        while Casings[caseId] do
-            caseId = math.random(10000, 99999)
-        end
-        return caseId
-    else
-        local caseId = math.random(10000, 99999)
-        return caseId
-    end
-end
-
-local function CreateObjectId()
-    if Objects then
-        local objectId = math.random(10000, 99999)
-        while Objects[caseId] do
-            objectId = math.random(10000, 99999)
-        end
-        return objectId
-    else
-        local objectId = math.random(10000, 99999)
-        return objectId
-    end
-end
-
-local function IsVehicleOwned(plate)
-    local result = exports.oxmysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
-    return result
-end
-
-local function GetCurrentCops()
-    local amount = 0
-    local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
-        if v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
-            amount = amount + 1
-        end
-    end
-    return amount
-end
 
 -- Callbacks
 
@@ -665,6 +641,8 @@ RegisterNetEvent('police:server:policeAlert', function(text)
     local players = QBCore.Functions.GetQBPlayers()
     for k,v in pairs(players) do
         if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
+            local alertData = {title = 'New Call', coords = {coords.x, coords.y, coords.z}, description = text}
+            TriggerClientEvent("qb-phone:client:addPoliceAlert", v.PlayerData.source, alertData)
             TriggerClientEvent('police:client:policeAlert', v.PlayerData.source, coords, text)
         end
     end
@@ -692,10 +670,7 @@ RegisterNetEvent('police:server:EscortPlayer', function(playerId)
     local Player = QBCore.Functions.GetPlayer(source)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if EscortPlayer then
-        if (Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance" or
-            Player.PlayerData.job.name == "doctor") or
-            (EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or
-                EscortPlayer.PlayerData.metadata["inlaststand"]) then
+        if (Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance") or (EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or EscortPlayer.PlayerData.metadata["inlaststand"]) then
             TriggerClientEvent("police:client:GetEscorted", EscortPlayer.PlayerData.source, Player.PlayerData.source)
         else
             TriggerClientEvent('QBCore:Notify', src, "Civilian isn't cuffed or dead", 'error')
@@ -791,106 +766,29 @@ RegisterNetEvent('heli:spotlight', function(state)
     TriggerClientEvent('heli:spotlight', -1, serverID, state)
 end)
 
-RegisterNetEvent('police:server:FlaggedPlateTriggered', function(camId, plate, street1, street2, blipSettings)
-    local src = source
-    for k, v in pairs(QBCore.Functions.GetPlayers()) do
-        local Player = QBCore.Functions.GetPlayer(v)
-        if Player then
-            if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
-                if street2 then
-                    TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
-                        camId = camId,
-                        plate = plate,
-                        streetLabel = street1 .. " " .. street2
-                    }, blipSettings)
-                else
-                    TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
-                        camId = camId,
-                        plate = plate,
-                        streetLabel = street1
-                    }, blipSettings)
-                end
-            end
-        end
-    end
-end)
-
-RegisterNetEvent('police:server:PoliceAlertMessage', function(title, caption) -- Use this for robberies, etc
-    local src = source
-    local ped = GetPlayerPed(src)
-    local coords = GetEntityCoords(ped)
-    local players = QBCore.Functions.GetQBPlayers()
-
-    for k, v in pairs(players) do
-        if v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
-            TriggerClientEvent("police:client:PoliceAlertMessage", v.PlayerData.source, title, caption, coords)
-        end
-    end
-
-    local alertData = {
-        title = "911 alert - "..title,
-        coords = {
-            x = coords.x,
-            y = coords.y,
-            z = coords.z
-        },
-        description = caption
-    }
-    TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
-end)
-
-RegisterNetEvent('police:server:GunshotAlert', function(streetLabel, isAutomatic, fromVehicle, coords, vehicleInfo)
-    local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
-        if v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
-            TriggerClientEvent("police:client:GunShotAlert", v.PlayerData.source, streetLabel, isAutomatic, fromVehicle, coords, vehicleInfo)
-        end
-    end
-end)
-
-RegisterNetEvent('police:server:VehicleCall', function(pos, msg, alertTitle, streetLabel, modelPlate, modelName)
-    local alertData = {
-        title = "Vehicle theft",
-        coords = {
-            x = pos.x,
-            y = pos.y,
-            z = pos.z
-        },
-        description = msg
-    }
-    TriggerClientEvent("police:client:VehicleCall", -1, pos, alertTitle, streetLabel, modelPlate, modelName)
-    TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
-end)
-
-RegisterNetEvent('police:server:HouseRobberyCall', function(coords, message, gender, streetLabel)
-    local alertData = {
-        title = "Burglary",
-        coords = {
-            x = coords.x,
-            y = coords.y,
-            z = coords.z
-        },
-        description = message
-    }
-    TriggerClientEvent("police:client:HouseRobberyCall", -1, coords, message, gender, streetLabel)
-    TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
-end)
-
-RegisterNetEvent('police:server:SendEmergencyMessage', function(coords, message)
-    local src = source
-    local MainPlayer = QBCore.Functions.GetPlayer(src)
-    local alertData = {
-        title = "911 alert - " .. MainPlayer.PlayerData.charinfo.firstname .. " " .. MainPlayer.PlayerData.charinfo.lastname .. " (" .. src .. ")",
-        coords = {
-            x = coords.x,
-            y = coords.y,
-            z = coords.z
-        },
-        description = message
-    }
-    TriggerClientEvent("qb-phone:client:addPoliceAlert", -1, alertData)
-    TriggerClientEvent('police:server:SendEmergencyMessageCheck', -1, message, coords)
-end)
+-- RegisterNetEvent('police:server:FlaggedPlateTriggered', function(camId, plate, street1, street2, blipSettings)
+--     local src = source
+--     for k, v in pairs(QBCore.Functions.GetPlayers()) do
+--         local Player = QBCore.Functions.GetPlayer(v)
+--         if Player then
+--             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
+--                 if street2 then
+--                     TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
+--                         camId = camId,
+--                         plate = plate,
+--                         streetLabel = street1 .. " " .. street2
+--                     }, blipSettings)
+--                 else
+--                     TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
+--                         camId = camId,
+--                         plate = plate,
+--                         streetLabel = street1
+--                     }, blipSettings)
+--                 end
+--             end
+--         end
+--     end
+-- end)
 
 RegisterNetEvent('police:server:SearchPlayer', function(playerId)
     local src = source
