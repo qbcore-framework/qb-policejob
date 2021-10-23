@@ -25,9 +25,16 @@ end
 
 local function HandCuffAnimation()
     local ped = PlayerPedId()
+    if isHandcuffed == true then
+        TriggerServerEvent("InteractSound_SV:PlayOnSource", "Cuff", 0.2)
+    else
+        TriggerServerEvent("InteractSound_SV:PlayOnSource", "Uncuff", 0.2)
+    end
+
     loadAnimDict("mp_arrest_paired")
 	Wait(100)
     TaskPlayAnim(ped, "mp_arrest_paired", "cop_p2_back_right", 3.0, 3.0, -1, 48, 0, 0, 0, 0)
+    TriggerServerEvent("InteractSound_SV:PlayOnSource", "Cuff", 0.2)
 	Wait(3500)
     TaskPlayAnim(ped, "mp_arrest_paired", "exit", 3.0, 3.0, -1, 48, 0, 0, 0, 0)
 end
@@ -36,11 +43,13 @@ local function GetCuffedAnimation(playerId)
     local ped = PlayerPedId()
     local cuffer = GetPlayerPed(GetPlayerFromServerId(playerId))
     local heading = GetEntityHeading(cuffer)
-    loadAnimDict("mp_arrest_paired")
+    TriggerServerEvent("InteractSound_SV:PlayOnSource", "Cuff", 0.2)
+    loadAnimDict("mp_arrest")
     SetEntityCoords(ped, GetOffsetFromEntityInWorldCoords(cuffer, 0.0, 0.45, 0.0))
+    
 	Wait(100)
 	SetEntityHeading(ped, heading)
-	TaskPlayAnim(ped, "mp_arrest_paired", "crook_p2_back_right", 3.0, 3.0, -1, 32, 0, 0, 0, 0)
+	TaskPlayAnim(ped, "mp_arrest", "crook_p2_back_right", 3.0, 3.0, -1, 32, 0, 0, 0, 0 ,true, true, true)
 	Wait(2500)
 end
 
@@ -382,6 +391,7 @@ RegisterNetEvent('police:client:GetCuffed', function(playerId, isSoftcuff)
         DetachEntity(ped, true, false)
         TriggerServerEvent("police:server:SetHandcuffStatus", false)
         ClearPedTasksImmediately(ped)
+        TriggerServerEvent("InteractSound_SV:PlayOnSource", "Uncuff", 0.2)
         QBCore.Functions.Notify("You are uncuffed!")
     end
 end)
