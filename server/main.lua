@@ -591,7 +591,7 @@ end)
 
 QBCore.Functions.CreateCallback('police:GetImpoundedVehicles', function(source, cb)
     local vehicles = {}
-    exports.oxmysql:fetch('SELECT * FROM player_vehicles WHERE state = ?', {2}, function(result)
+    exports.oxmysql:execute('SELECT * FROM player_vehicles WHERE state = ?', {2}, function(result)
         if result[1] then
             vehicles = result
         end
