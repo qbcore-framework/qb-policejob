@@ -7,8 +7,6 @@ draggerId = 0
 PlayerJob = {}
 onDuty = false
 local DutyBlips = {}
-local databankOpen = false
-local tabletProp = nil
 
 -- Functions
 
@@ -223,15 +221,6 @@ RegisterNetEvent('police:client:SendToJail', function(time)
 end)
 
 -- NUI
-
-RegisterNUICallback("closeDatabank", function(data, cb)
-    databankOpen = false
-    DetachEntity(tabletProp, true, true)
-    DeleteObject(tabletProp)
-    SetNuiFocus(false, false)
-    TaskPlayAnim(PlayerPedId(), "amb@code_human_in_bus_passenger_idles@female@tablet@base", "exit", 3.0, 3.0, -1, 49, 0,
-        0, 0, 0)
-end)
 
 -- Threads
 
