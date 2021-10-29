@@ -636,7 +636,9 @@ end)
 
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
-        exports.oxmysql:execute('DELETE FROM stashitems WHERE stash="policetrash"')
+        CreateThread(function()
+            exports.oxmysql:execute('DELETE FROM stashitems WHERE stash="policetrash"')
+        end)
     end
 end)
 
