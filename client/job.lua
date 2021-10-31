@@ -48,27 +48,6 @@ local function GetClosestPlayer() -- interactions, job, tracker
     return closestPlayer, closestDistance
 end
 
-local function Input(Titel, Placeholder, MaxLenght)
-	AddTextEntry('FMMC_KEY_TIP1', Titel)
-	DisplayOnscreenKeyboard(1, "FMMC_KEY_TIP1", "", Placeholder, "", "", "", MaxLenght)
-	blockinput = true
-
-	while UpdateOnscreenKeyboard() ~= 1 and UpdateOnscreenKeyboard() ~= 2 do
-		Citizen.Wait(0)
-	end
-
-	if UpdateOnscreenKeyboard() ~= 2 then
-		local result = GetOnscreenKeyboardResult()
-		Citizen.Wait(500)
-		blockinput = false
-		return result --Returns the result
-	else
-		Citizen.Wait(500)
-		blockinput = false
-		return nil
-	end
-end
-
 local function openFingerprintUI()
     SendNUIMessage({
         type = "fingerprintOpen"
@@ -424,13 +403,25 @@ CreateThread(function()
                     if #(pos - v) < 1.0 then
                         DrawText3D(v.x, v.y, v.z, "~g~E~w~ -    Evidence stash")
                         if IsControlJustReleased(0, 38) then
-                            local drawer = Input("Which drawer do you want to look at?", "", 2)
+                            local drawer = exports['qb-input']:ShowInput({
+                                header = 'Evidence Stash',
+                                submitText = "open",
+                                inputs = {
+                                    {
+                                        type = 'number',
+                                        isRequired = true,
+                                        name = 'slot',
+                                        text = 'Slot no!'
+                                    }
+                                }
+                            })
                             if drawer then
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 1 | Drawer "..drawer, {
+                                if not drawer.slot then return end
+                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 1 | Drawer "..drawer.slot, {
                                     maxweight = 4000000,
                                     slots = 500,
                                 })
-                                TriggerEvent("inventory:client:SetCurrentStash", " 1 | Drawer "..drawer)
+                                TriggerEvent("inventory:client:SetCurrentStash", " 1 | Drawer "..drawer.slot)
                             end
                         end
                     elseif #(pos - v) < 1.5 then
@@ -445,13 +436,25 @@ CreateThread(function()
                     if #(pos - v) < 1.0 then
                         DrawText3D(v.x, v.y, v.z, "~g~E~w~ - evidence stash")
                         if IsControlJustReleased(0, 38) then
-                            local drawer = Input("Which drawer do you want to look at?", "", 2)
+                            local drawer = exports['qb-input']:ShowInput({
+                                header = 'Evidence Stash',
+                                submitText = "open",
+                                inputs = {
+                                    {
+                                        type = 'number',
+                                        isRequired = true,
+                                        name = 'slot',
+                                        text = 'Slot no!'
+                                    }
+                                }
+                            })
                             if drawer then
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 2 | Drawer "..drawer, {
+                                if not drawer.slot then return end
+                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 2 | Drawer "..drawer.slot, {
                                     maxweight = 4000000,
                                     slots = 500,
                                 })
-                                TriggerEvent("inventory:client:SetCurrentStash", " 2 | Drawer "..drawer)
+                                TriggerEvent("inventory:client:SetCurrentStash", " 2 | Drawer "..drawer.slot)
                             end
                         end
                     elseif #(pos - v) < 1.5 then
@@ -466,13 +469,25 @@ CreateThread(function()
                     if #(pos - v) < 1.0 then
                         DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Evidence stash")
                         if IsControlJustReleased(0, 38) then
-                            local drawer = Input("Which drawer do you want to look at?", "", 2)
+                            local drawer = exports['qb-input']:ShowInput({
+                                header = 'Evidence Stash',
+                                submitText = "open",
+                                inputs = {
+                                    {
+                                        type = 'number',
+                                        isRequired = true,
+                                        name = 'slot',
+                                        text = 'Slot no!'
+                                    }
+                                }
+                            })
                             if drawer then
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 3 | Drawer "..drawer, {
+                                if not drawer.slot then return end
+                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 3 | Drawer "..drawer.slot, {
                                     maxweight = 4000000,
                                     slots = 500,
                                 })
-                                TriggerEvent("inventory:client:SetCurrentStash", " 3 | Drawer "..drawer)
+                                TriggerEvent("inventory:client:SetCurrentStash", " 3 | Drawer "..drawer.slot)
                             end
                         end
                     elseif #(pos - v) < 1.5 then
