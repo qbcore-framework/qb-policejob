@@ -201,7 +201,9 @@ function MenuGarage()
             txt = "",
             params = {
                 event = "police:client:TakeOutVehicle",
-                vehicle = veh
+                args = {
+                    vehicle = veh
+                }
             }
         }
     end
@@ -213,7 +215,9 @@ function MenuGarage()
                 txt = "",
                 params = {
                     event = "police:client:TakeOutVehicle",
-                    vehicle = veh
+                    args = {
+                        vehicle = veh
+                    }
                 }
             }
         end
@@ -227,7 +231,7 @@ function MenuGarage()
         }
 
     }
-    exports['qb-menu']:openMenu(impoundMenu)
+    exports['qb-menu']:openMenu(vehicleMenu)
 end
 
 
@@ -253,7 +257,9 @@ function MenuImpound()
                     txt = "Engine: " .. enginePercent .. "%", " Body: " .. bodyPercent.. "%", " Fuel: "..currentFuel.. "%",
                     params = {
                         event = "police:client:TakeOutImpound",
-                        vehicle = v
+                        args = {
+                            vehicle = v
+                        }
                     }
                 }
             end
