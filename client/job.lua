@@ -417,7 +417,7 @@ CreateThread(function()
                                         type = 'number',
                                         isRequired = true,
                                         name = 'slot',
-                                        text = 'Slot no!'
+                                        text = 'Slot no. (1,2,3)'
                                     }
                                 }
                             })
@@ -450,7 +450,7 @@ CreateThread(function()
                                         type = 'number',
                                         isRequired = true,
                                         name = 'slot',
-                                        text = 'Slot no!'
+                                        text = 'Slot no. (1,2,3)'
                                     }
                                 }
                             })
@@ -483,7 +483,7 @@ CreateThread(function()
                                         type = 'number',
                                         isRequired = true,
                                         name = 'slot',
-                                        text = 'Slot no!'
+                                        text = 'Slot no. (1,2,3)'
                                     }
                                 }
                             })
