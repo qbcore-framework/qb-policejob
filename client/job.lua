@@ -177,7 +177,7 @@ function TakeOutVehicle(vehicleInfo)
     local coords = Config.Locations["vehicle"][currentGarage]
     QBCore.Functions.SpawnVehicle(vehicleInfo, function(veh)
 	    SetCarItemsInfo()
-        SetVehicleNumberPlateText(veh, "PLZI"..tostring(math.random(1000, 9999)))
+        SetVehicleNumberPlateText(veh, "POL"..tostring(math.random(10000, 99999)))
         SetEntityHeading(veh, coords.w)
         exports['LegacyFuel']:SetFuel(veh, 100.0)
         closeMenuFull()
