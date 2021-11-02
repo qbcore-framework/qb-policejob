@@ -256,7 +256,7 @@ function MenuImpound()
 
                 impoundMenu[#impoundMenu+1] = {
                     header = vname.." ["..v.plate.."]",
-                    txt = "Engine: " .. enginePercent .. "% <br>Fuel: "..currentFuel.. "%",
+                    txt = "Engine: " .. enginePercent .. "% | Fuel: "..currentFuel.. "%",
                     params = {
                         event = "police:client:TakeOutImpound",
                         args = {
