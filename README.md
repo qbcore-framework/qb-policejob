@@ -27,6 +27,9 @@ Police Job for QB-Core Framework :police_officer:
 - [qb-phone](https://github.com/qbcore-framework/qb-phone) - For the MEOS app and notifications etc.
 - [qb-moneysafe](https://github.com/qbcore-framework/qb-moneysafe) - For the money safe
 - [qb-log](https://github.com/qbcore-framework/qb-logs) - For logging certain events
+- [qb-menu](https://github.com/qbcore-framework/qb-menu) - For the vehicle menus
+- [qb-input](https://github.com/qbcore-framework/qb-input) - For accessing evidence stashes
+
 
 ## Screenshots
 ![On Duty / Off Duty](https://imgur.com/KO2ydlt.png)
@@ -139,7 +142,7 @@ Config.Locations = {
    ["duty"] = { -- On Duty/Off Duty Marker
        [1] = vector4(440.085, -974.924, 30.689, 90.654),
        [2] = vector4(-449.811, 6012.909, 31.815, 90.654),
-   },    
+   },
    ["vehicle"] = { -- Vehicle Spawner Marker
        [1] = vector4(448.159, -1017.41, 28.562, 90.654),
        [2] = vector4(471.13, -1024.05, 28.17, 274.5),
@@ -147,33 +150,33 @@ Config.Locations = {
    },
    ["stash"] = { -- Stash Marker
        [1] = vector4(453.075, -980.124, 30.889, 90.654),
-   },     
+   },
    ["impound"] = { -- Impounded Vehicles Marker
        [1] = vector4(436.68, -1007.42, 27.32, 180.0),
        [2] = vector4(-436.14, 5982.63, 31.34, 136.0),
-   }, 
+   },
    ["helicopter"] = { -- Helicopter Spawner Marker
        [1] = vector4(449.168, -981.325, 43.691, 87.234),
        [2] = vector4(-475.43, 5988.353, 31.716, 31.34),
-   }, 
+   },
    ["armory"] = { -- Armory Marker
        [1] = vector4(462.23, -981.12, 30.68, 90.654),
-   },   
+   },
    ["trash"] = { -- Trash Marker
        [1] = vector4(439.0907, -976.746, 30.776, 93.03),
-   },      
+   },
    ["fingerprint"] = { -- Fingerprint Scan Marker
        [1] = vector4(460.9667, -989.180, 24.92, 358.5),
    },
    ["evidence"] = { -- Evidence Closet 1 Marker
        [1] = vector4(442.1722, -996.067, 30.689, 187.5),
-   },    
+   },
    ["evidence2"] = { -- Evidence Closet 2 Marker
        [1] = vector4(451.7031, -973.232, 30.689, 1.741),
-   },   
+   },
    ["evidence3"] = { -- Evidence Closet 3 Marker
        [1] = vector4(455.1456, -985.462, 30.689, 2.854),
-   },        
+   },
    ["stations"] = { -- Police Stations Blips
        [1] = {label = "Police Station", coords = vector4(428.23, -984.28, 29.76, 3.5)},
        [2] = {label = "Prison", coords = vector4(1845.903, 2585.873, 45.672, 272.249)},
@@ -343,7 +346,7 @@ Config.Items = { -- Items to be displayed on Armory
             price = 0,
             amount = 1,
             info = {
-                serie = "",                
+                serie = "",
                 attachments = {
                     {component = "COMPONENT_AT_PI_FLSH", label = "Flashlight"},
                 }
@@ -357,7 +360,7 @@ Config.Items = { -- Items to be displayed on Armory
             price = 0,
             amount = 1,
             info = {
-                serie = "",            
+                serie = "",
             },
             type = "weapon",
             slot = 2,
@@ -382,7 +385,7 @@ Config.Items = { -- Items to be displayed on Armory
             price = 0,
             amount = 1,
             info = {
-                serie = "",                
+                serie = "",
                 attachments = {
                     {component = "COMPONENT_AT_SCOPE_MACRO_02", label = "1x Scope"},
                     {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},

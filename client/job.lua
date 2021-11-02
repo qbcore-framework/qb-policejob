@@ -48,27 +48,6 @@ local function GetClosestPlayer() -- interactions, job, tracker
     return closestPlayer, closestDistance
 end
 
-local function Input(Titel, Placeholder, MaxLenght)
-	AddTextEntry('FMMC_KEY_TIP1', Titel)
-	DisplayOnscreenKeyboard(1, "FMMC_KEY_TIP1", "", Placeholder, "", "", "", MaxLenght)
-	blockinput = true
-
-	while UpdateOnscreenKeyboard() ~= 1 and UpdateOnscreenKeyboard() ~= 2 do
-		Citizen.Wait(0)
-	end
-
-	if UpdateOnscreenKeyboard() ~= 2 then
-		local result = GetOnscreenKeyboardResult()
-		Citizen.Wait(500)
-		blockinput = false
-		return result --Returns the result
-	else
-		Citizen.Wait(500)
-		blockinput = false
-		return nil
-	end
-end
-
 local function openFingerprintUI()
     SendNUIMessage({
         type = "fingerprintOpen"
@@ -87,10 +66,10 @@ local function SetCarItemsInfo()
 			info = item.info,
 			label = itemInfo["label"],
 			description = itemInfo["description"] and itemInfo["description"] or "",
-			weight = itemInfo["weight"], 
-			type = itemInfo["type"], 
-			unique = itemInfo["unique"], 
-			useable = itemInfo["useable"], 
+			weight = itemInfo["weight"],
+			type = itemInfo["type"],
+			unique = itemInfo["unique"],
+			useable = itemInfo["useable"],
 			image = itemInfo["image"],
 			slot = item.slot,
 		}
@@ -99,36 +78,22 @@ local function SetCarItemsInfo()
 end
 
 local function doCarDamage(currentVehicle, veh)
-	smash = false
-	damageOutside = false
-	damageOutside2 = false 
+	local smash = false
+	local damageOutside = false
+	local damageOutside2 = false
 	local engine = veh.engine + 0.0
 	local body = veh.body + 0.0
-	if engine < 200.0 then
-		engine = 200.0
-    end
 
-    if engine  > 1000.0 then
-        engine = 950.0
-    end
-
-	if body < 150.0 then
-		body = 150.0
-	end
-	if body < 950.0 then
-		smash = true
-	end
-
-	if body < 920.0 then
-		damageOutside = true
-	end
-
-	if body < 920.0 then
-		damageOutside2 = true
-	end
+	if engine < 200.0 then engine = 200.0 end
+    if engine  > 1000.0 then engine = 950.0 end
+	if body < 150.0 then body = 150.0 end
+	if body < 950.0 then smash = true end
+	if body < 920.0 then damageOutside = true end
+	if body < 920.0 then damageOutside2 = true end
 
     Citizen.Wait(100)
     SetVehicleEngineHealth(currentVehicle, engine)
+
 	if smash then
 		SmashVehicleWindow(currentVehicle, 0)
 		SmashVehicleWindow(currentVehicle, 1)
@@ -136,26 +101,26 @@ local function doCarDamage(currentVehicle, veh)
 		SmashVehicleWindow(currentVehicle, 3)
 		SmashVehicleWindow(currentVehicle, 4)
 	end
+
 	if damageOutside then
 		SetVehicleDoorBroken(currentVehicle, 1, true)
 		SetVehicleDoorBroken(currentVehicle, 6, true)
 		SetVehicleDoorBroken(currentVehicle, 4, true)
 	end
+
 	if damageOutside2 then
 		SetVehicleTyreBurst(currentVehicle, 1, false, 990.0)
 		SetVehicleTyreBurst(currentVehicle, 2, false, 990.0)
 		SetVehicleTyreBurst(currentVehicle, 3, false, 990.0)
 		SetVehicleTyreBurst(currentVehicle, 4, false, 990.0)
 	end
+
 	if body < 1000 then
 		SetVehicleBodyHealth(currentVehicle, 985.1)
 	end
 end
 
 function TakeOutImpound(vehicle)
-    enginePercent = round(vehicle.engine / 10, 0)
-    bodyPercent = round(vehicle.body / 10, 0)
-    currentFuel = vehicle.fuel
     local coords = Config.Locations["impound"][currentGarage]
     QBCore.Functions.SpawnVehicle(vehicle.vehicle, function(veh)
         QBCore.Functions.TriggerCallback('qb-garage:server:GetVehicleProperties', function(properties)
@@ -173,6 +138,11 @@ function TakeOutImpound(vehicle)
     end, coords, true)
 end
 
+RegisterNetEvent('police:client:TakeOutImpouund', function(data)
+    local vehicle = data.vehicle
+    TakeOutImpound(vehicle)
+end)
+
 function TakeOutVehicle(vehicleInfo)
     local coords = Config.Locations["vehicle"][currentGarage]
     QBCore.Functions.SpawnVehicle(vehicleInfo, function(veh)
@@ -187,6 +157,11 @@ function TakeOutVehicle(vehicleInfo)
         SetVehicleEngineOn(veh, true, true)
     end, coords, true)
 end
+
+RegisterNetEvent('police:client:TakeOutVehicle', function(data)
+    local vehicle = data.vehicle
+    TakeOutVehicle(vehicle)
+end)
 
 local function IsArmoryWhitelist() -- being removed
     local retval = false
@@ -212,63 +187,102 @@ end
 -- GUI Menu Functions (being replaced)
 
 function MenuGarage()
-    MenuTitle = "Garage"
-    ClearMenu()
-    Menu.addButton("Vehicles", "VehicleList", nil)
-    Menu.addButton("Close menu", "closeMenuFull", nil)
-end
+    local vehicleMenu = {
+        {
+            header = "Police Vehicles",
+            txt = ""
+        }
+    }
 
-function VehicleList()
-    MenuTitle = "Vehicles:"
-    ClearMenu()
     local authorizedVehicles = Config.AuthorizedVehicles[QBCore.Functions.GetPlayerData().job.grade.level]
-    for k, v in pairs(authorizedVehicles) do
-        Menu.addButton(authorizedVehicles[k], "TakeOutVehicle", k, "Garage", " Engine: 100%", " Body: 100%", " Fuel: 100%")
+    for veh, label in pairs(authorizedVehicles) do
+        vehicleMenu[#vehicleMenu+1] = {
+            header = label,
+            txt = "",
+            params = {
+                event = "police:client:TakeOutVehicle",
+                args = {
+                    vehicle = veh
+                }
+            }
+        }
     end
+
     if IsArmoryWhitelist() then
         for veh, label in pairs(Config.WhitelistedVehicles) do
-            Menu.addButton(label, "TakeOutVehicle", veh, "Garage", " Engine: 100%", " Body: 100%", " Fuel: 100%")
+            vehicleMenu[#vehicleMenu+1] = {
+                header = label,
+                txt = "",
+                params = {
+                    event = "police:client:TakeOutVehicle",
+                    args = {
+                        vehicle = veh
+                    }
+                }
+            }
         end
     end
 
-    Menu.addButton("Back", "MenuGarage",nil)
+    vehicleMenu[#vehicleMenu+1] = {
+        header = "⬅ Close Menu",
+        txt = "",
+        params = {
+            event = "qb-menu:client:closeMenu"
+        }
+
+    }
+    exports['qb-menu']:openMenu(vehicleMenu)
 end
+
 
 function MenuImpound()
-    ped = PlayerPedId();
-    MenuTitle = "Impounded"
-    ClearMenu()
-    Menu.addButton("Police Impound", "ImpoundVehicleList", nil)
-    Menu.addButton("Close menu", "closeMenuFull", nil) 
-end
-
-function ImpoundVehicleList()
+    local impoundMenu = {
+        {
+            header = "Impounded Vehicles",
+            txt = ""
+        }
+    }
     QBCore.Functions.TriggerCallback("police:GetImpoundedVehicles", function(result)
-        ped = PlayerPedId();
-        MenuTitle = "Impounded Vehicles:"
-        ClearMenu()
-
+        local shouldContinue = false
         if result == nil then
             QBCore.Functions.Notify("There are no impounded vehicles", "error", 5000)
-            closeMenuFull()
         else
-            for k, v in pairs(result) do
-                enginePercent = round(v.engine / 10, 0)
-                bodyPercent = round(v.body / 10, 0)
-                currentFuel = v.fuel
-
-                Menu.addButton(QBCore.Shared.Vehicles[v.vehicle]["name"], "TakeOutImpound", v, "Impounded", " Engine: " .. enginePercent .. "%", " Body: " .. bodyPercent.. "%", " Fuel: "..currentFuel.. "%")
+            shouldContinue = true
+            for _ , v in pairs(result) do
+                local enginePercent = round(v.engine / 10, 0)
+                local bodyPercent = round(v.body / 10, 0)
+                local currentFuel = v.fuel
+                impoundMenu[#impoundMenu+1] = {
+                    header = QBCore.Shared.Vehicles[v.vehicle]["name"],
+                    txt = "Engine: " .. enginePercent .. "%", " Body: " .. bodyPercent.. "%", " Fuel: "..currentFuel.. "%",
+                    params = {
+                        event = "police:client:TakeOutImpound",
+                        args = {
+                            vehicle = v
+                        }
+                    }
+                }
             end
         end
 
-        Menu.addButton("Back", "MenuImpound",nil)
+
+        if shouldContinue then
+            impoundMenu[#impoundMenu+1] = {
+                header = "⬅ Close Menu",
+                txt = "",
+                params = {
+                    event = "qb-menu:client:closeMenu"
+                }
+
+            }
+            exports['qb-menu']:openMenu(impoundMenu)
+        end
     end)
+
 end
 
 function closeMenuFull()
-    Menu.hidden = true
-    currentGarage = nil
-    ClearMenu()
+    exports['qb-menu']:closeMenu()
 end
 
 -- NUI
@@ -309,7 +323,7 @@ end)
 RegisterNetEvent('police:client:CallAnim', function()
     local isCalling = true
     local callCount = 5
-    loadAnimDict("cellphone@")   
+    loadAnimDict("cellphone@")
     TaskPlayAnim(PlayerPedId(), 'cellphone@', 'cellphone_call_listen_base', 3.0, -1, -1, 49, 0, false, false, false)
     Citizen.Wait(1000)
     Citizen.CreateThread(function()
@@ -395,13 +409,25 @@ CreateThread(function()
                     if #(pos - v) < 1.0 then
                         DrawText3D(v.x, v.y, v.z, "~g~E~w~ -    Evidence stash")
                         if IsControlJustReleased(0, 38) then
-                            local drawer = Input("Which drawer do you want to look at?", "", 2)
+                            local drawer = exports['qb-input']:ShowInput({
+                                header = 'Evidence Stash',
+                                submitText = "open",
+                                inputs = {
+                                    {
+                                        type = 'number',
+                                        isRequired = true,
+                                        name = 'slot',
+                                        text = 'Slot no. (1,2,3)'
+                                    }
+                                }
+                            })
                             if drawer then
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 1 | Drawer "..drawer, {
+                                if not drawer.slot then return end
+                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 1 | Drawer "..drawer.slot, {
                                     maxweight = 4000000,
                                     slots = 500,
                                 })
-                                TriggerEvent("inventory:client:SetCurrentStash", " 1 | Drawer "..drawer)
+                                TriggerEvent("inventory:client:SetCurrentStash", " 1 | Drawer "..drawer.slot)
                             end
                         end
                     elseif #(pos - v) < 1.5 then
@@ -416,13 +442,25 @@ CreateThread(function()
                     if #(pos - v) < 1.0 then
                         DrawText3D(v.x, v.y, v.z, "~g~E~w~ - evidence stash")
                         if IsControlJustReleased(0, 38) then
-                            local drawer = Input("Which drawer do you want to look at?", "", 2)
+                            local drawer = exports['qb-input']:ShowInput({
+                                header = 'Evidence Stash',
+                                submitText = "open",
+                                inputs = {
+                                    {
+                                        type = 'number',
+                                        isRequired = true,
+                                        name = 'slot',
+                                        text = 'Slot no. (1,2,3)'
+                                    }
+                                }
+                            })
                             if drawer then
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 2 | Drawer "..drawer, {
+                                if not drawer.slot then return end
+                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 2 | Drawer "..drawer.slot, {
                                     maxweight = 4000000,
                                     slots = 500,
                                 })
-                                TriggerEvent("inventory:client:SetCurrentStash", " 2 | Drawer "..drawer)
+                                TriggerEvent("inventory:client:SetCurrentStash", " 2 | Drawer "..drawer.slot)
                             end
                         end
                     elseif #(pos - v) < 1.5 then
@@ -437,13 +475,25 @@ CreateThread(function()
                     if #(pos - v) < 1.0 then
                         DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Evidence stash")
                         if IsControlJustReleased(0, 38) then
-                            local drawer = Input("Which drawer do you want to look at?", "", 2)
+                            local drawer = exports['qb-input']:ShowInput({
+                                header = 'Evidence Stash',
+                                submitText = "open",
+                                inputs = {
+                                    {
+                                        type = 'number',
+                                        isRequired = true,
+                                        name = 'slot',
+                                        text = 'Slot no. (1,2,3)'
+                                    }
+                                }
+                            })
                             if drawer then
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 3 | Drawer "..drawer, {
+                                if not drawer.slot then return end
+                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 3 | Drawer "..drawer.slot, {
                                     maxweight = 4000000,
                                     slots = 500,
                                 })
-                                TriggerEvent("inventory:client:SetCurrentStash", " 3 | Drawer "..drawer)
+                                TriggerEvent("inventory:client:SetCurrentStash", " 3 | Drawer "..drawer.slot)
                             end
                         end
                     elseif #(pos - v) < 1.5 then
@@ -487,10 +537,8 @@ CreateThread(function()
                                 else
                                     MenuGarage()
                                     currentGarage = k
-                                    Menu.hidden = not Menu.hidden
                                 end
                             end
-                            Menu.renderGUI()
                         end
                     end
                 end
@@ -513,11 +561,9 @@ CreateThread(function()
                                 else
                                     MenuImpound()
                                     currentGarage = k
-                                    Menu.hidden = not Menu.hidden
                                 end
                             end
-                            Menu.renderGUI()
-                        end  
+                        end
                     end
                 end
             end
@@ -551,7 +597,7 @@ CreateThread(function()
                                     end, coords, true)
                                 end
                             end
-                        end  
+                        end
                     end
                 end
             end
@@ -622,7 +668,7 @@ CreateThread(function()
                             end
                         elseif #(pos - v) < 2.5 then
                             DrawText3D(v.x, v.y, v.z, "Finger scan")
-                        end  
+                        end
                     end
                 end
             end
