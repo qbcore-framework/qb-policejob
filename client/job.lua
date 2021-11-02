@@ -138,7 +138,7 @@ function TakeOutImpound(vehicle)
     end, coords, true)
 end
 
-RegisterNetEvent('police:client:TakeOutImpouund', function(data)
+RegisterNetEvent('police:client:TakeOutImpound', function(data)
     local vehicle = data.vehicle
     TakeOutImpound(vehicle)
 end)
