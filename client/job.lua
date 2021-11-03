@@ -190,7 +190,7 @@ function MenuGarage()
     local vehicleMenu = {
         {
             header = "Police Vehicles",
-            txt = ""
+            isMenuHeader = true
         }
     }
 
