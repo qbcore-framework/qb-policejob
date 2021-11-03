@@ -34,8 +34,7 @@ local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
         BeginTextCommandSetBlipName('STRING')
         AddTextComponentString(playerLabel)
         EndTextCommandSetBlipName(blip)
-
-        table.insert(DutyBlips, blip)
+        DutyBlips[#DutyBlips+1] = blip
     end
 
     if GetBlipFromEntity(PlayerPedId()) == blip then

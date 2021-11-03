@@ -291,7 +291,7 @@ QBCore.Commands.Add("flagplate", "Flag A Plate (Police Only)", {{name = "plate",
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
         local reason = {}
         for i = 2, #args, 1 do
-            table.insert(reason, args[i])
+            reason[#reason+1] = args[i]
         end
         Plates[args[1]:upper()] = {
             isflagged = true,
@@ -548,7 +548,7 @@ QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(source, cb, p
     if Player then
         if PlayerStatus[Player.PlayerData.source] and next(PlayerStatus[Player.PlayerData.source]) then
             for k, v in pairs(PlayerStatus[Player.PlayerData.source]) do
-                table.insert(statList, PlayerStatus[Player.PlayerData.source][k].text)
+                statList[#statList+1] = PlayerStatus[Player.PlayerData.source][k].text
             end
         end
     end

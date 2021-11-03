@@ -144,7 +144,7 @@ RegisterNetEvent('evidence:client:ClearBlooddropsInArea', function()
                 if #(pos -
                     vector3(Blooddrops[bloodId].coords.x, Blooddrops[bloodId].coords.y, Blooddrops[bloodId].coords.z)) <
                     10.0 then
-                    table.insert(blooddropList, bloodId)
+                    blooddropList[#blooddropList+1] = bloodId
                 end
             end
             TriggerServerEvent('evidence:server:ClearBlooddrops', blooddropList)
@@ -186,7 +186,7 @@ RegisterNetEvent('evidence:client:ClearCasingsInArea', function()
             for casingId, v in pairs(Casings) do
                 if #(pos - vector3(Casings[casingId].coords.x, Casings[casingId].coords.y, Casings[casingId].coords.z)) <
                     10.0 then
-                    table.insert(casingList, casingId)
+                    casingList[#casingList+1] = casingId
                 end
             end
             TriggerServerEvent('evidence:server:ClearCasings', casingList)

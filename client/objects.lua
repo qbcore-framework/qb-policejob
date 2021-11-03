@@ -220,7 +220,7 @@ RegisterNetEvent('police:client:SpawnSpikeStrip', function()
             SetNetworkIdCanMigrate(netid, false)
             SetEntityHeading(spike, GetEntityHeading(PlayerPedId()))
             PlaceObjectOnGroundProperly(spike)
-            table.insert(SpawnedSpikes, {
+            SpawnedSpikes[#SpawnedSpikes+1] = {
                 coords = {
                     x = spawnCoords.x,
                     y = spawnCoords.y,
@@ -228,7 +228,7 @@ RegisterNetEvent('police:client:SpawnSpikeStrip', function()
                 },
                 netid = netid,
                 object = spike,
-            })
+            }
             spikesSpawned = true
             TriggerServerEvent('police:server:SyncSpikes', SpawnedSpikes)
         end
@@ -299,8 +299,8 @@ Citizen.CreateThread(function()
                             DrawText3D(pos.x, pos.y, pos.z, '[E] Delete Spike')
                             if IsControlJustPressed(0, 38) then
                                 NetworkRegisterEntityAsNetworked(SpawnedSpikes[ClosestSpike].object)
-                                NetworkRequestControlOfEntity(SpawnedSpikes[ClosestSpike].object)            
-                                SetEntityAsMissionEntity(SpawnedSpikes[ClosestSpike].object)        
+                                NetworkRequestControlOfEntity(SpawnedSpikes[ClosestSpike].object)
+                                SetEntityAsMissionEntity(SpawnedSpikes[ClosestSpike].object)
                                 DeleteEntity(SpawnedSpikes[ClosestSpike].object)
                                 table.remove(SpawnedSpikes, ClosestSpike)
                                 ClosestSpike = nil
