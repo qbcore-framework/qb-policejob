@@ -239,7 +239,7 @@ function MenuImpound()
     local impoundMenu = {
         {
             header = "Impounded Vehicles",
-            txt = ""
+            isMenuHeader = true
         }
     }
     QBCore.Functions.TriggerCallback("police:GetImpoundedVehicles", function(result)
