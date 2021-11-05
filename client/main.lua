@@ -16,30 +16,27 @@ local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
 
     if not DoesBlipExist(blip) then
 
-        if NetworkIsPlayerActive(playerId) then
-            blip = AddBlipForEntity(ped)
-        else
-            blip = AddBlipForCoord(playerLocation.x, playerLocation.y, playerLocation.z)
+        if GetBlipFromEntity(PlayerPedId()) ~= blip then    --Don't insert our own blip
+            if NetworkIsPlayerActive(playerId) then
+                blip = AddBlipForEntity(ped)
+            else
+                blip = AddBlipForCoord(playerLocation.x, playerLocation.y, playerLocation.z)
+            end
+            SetBlipSprite(blip, 1)
+            ShowHeadingIndicatorOnBlip(blip, true)
+            SetBlipRotation(blip, math.ceil(playerLocation.w))
+            SetBlipScale(blip, 1.0)
+            if playerJob == "police" then
+                SetBlipColour(blip, 38)
+            else
+                SetBlipColour(blip, 5)
+            end
+            SetBlipAsShortRange(blip, true)
+            BeginTextCommandSetBlipName('STRING')
+            AddTextComponentString(playerLabel)
+            EndTextCommandSetBlipName(blip)
+            DutyBlips[#DutyBlips+1] = blip
         end
-        SetBlipSprite(blip, 1)
-        ShowHeadingIndicatorOnBlip(blip, true)
-        SetBlipRotation(blip, math.ceil(playerLocation.w))
-        SetBlipScale(blip, 1.0)
-        if playerJob == "police" then
-            SetBlipColour(blip, 38)
-        else
-            SetBlipColour(blip, 5)
-        end
-        SetBlipAsShortRange(blip, true)
-        BeginTextCommandSetBlipName('STRING')
-        AddTextComponentString(playerLabel)
-        EndTextCommandSetBlipName(blip)
-        DutyBlips[#DutyBlips+1] = blip
-    end
-
-    if GetBlipFromEntity(PlayerPedId()) == blip then
-        -- Ensure we remove our own blip.
-        RemoveBlip(blip)
     end
 end
 
