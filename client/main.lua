@@ -43,17 +43,6 @@ local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
     end
 end
 
-local function RadarSound()
-    PlaySoundFrontend(-1, "Beep_Green", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1)
-    Citizen.Wait(100)
-    PlaySoundFrontend(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1)
-    Citizen.Wait(100)
-    PlaySoundFrontend(-1, "Beep_Green", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1)
-    Citizen.Wait(100)
-    PlaySoundFrontend(-1, "Beep_Red", "DLC_HEIST_HACKING_SNAKE_SOUNDS", 1)
-    Citizen.Wait(100)
-end
-
 -- Events
 
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()

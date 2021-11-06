@@ -36,7 +36,7 @@ end
 local function CreateBloodId()
     if BloodDrops then
         local bloodId = math.random(10000, 99999)
-        while BloodDrops[caseId] do
+        while BloodDrops[bloodId] do
             bloodId = math.random(10000, 99999)
         end
         return bloodId
@@ -49,7 +49,7 @@ end
 local function CreateFingerId()
     if FingerDrops then
         local fingerId = math.random(10000, 99999)
-        while FingerDrops[caseId] do
+        while FingerDrops[fingerId] do
             fingerId = math.random(10000, 99999)
         end
         return fingerId
@@ -75,7 +75,7 @@ end
 local function CreateObjectId()
     if Objects then
         local objectId = math.random(10000, 99999)
-        while Objects[caseId] do
+        while Objects[objectId] do
             objectId = math.random(10000, 99999)
         end
         return objectId

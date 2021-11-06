@@ -30,26 +30,26 @@ function Menu.addButton(name, func,args,extra,damages,bodydamages,fuel)
 	Menu.GUI[Menu.buttonCount+1]["active"] = false
 	Menu.GUI[Menu.buttonCount+1]["xmin"] = xmin
 	Menu.GUI[Menu.buttonCount+1]["ymin"] = ymin * (Menu.buttonCount + 0.01) +yoffset
-	Menu.GUI[Menu.buttonCount+1]["xmax"] = xmax 
-	Menu.GUI[Menu.buttonCount+1]["ymax"] = ymax 
+	Menu.GUI[Menu.buttonCount+1]["xmax"] = xmax
+	Menu.GUI[Menu.buttonCount+1]["ymax"] = ymax
 	Menu.buttonCount = Menu.buttonCount+1
 end
 
 
-function Menu.updateSelection() 
+function Menu.updateSelection()
 	if IsControlJustPressed(1, 173) then -- Down Arrow
 		if(Menu.selection < Menu.buttonCount -1 ) then
 			Menu.selection = Menu.selection +1
 		else
 			Menu.selection = 0
-		end		
+		end
 		PlaySound(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 0, 0, 1)
 	elseif IsControlJustPressed(1, 27) then -- Up Arrow
 		if(Menu.selection > 0)then
 			Menu.selection = Menu.selection -1
 		else
 			Menu.selection = Menu.buttonCount-1
-		end	
+		end
 		PlaySound(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", 0, 0, 1)
 	elseif IsControlJustPressed(1, 215) then
 		MenuCallFunction(Menu.GUI[Menu.selection +1]["func"], Menu.GUI[Menu.selection +1]["args"])
@@ -77,17 +77,17 @@ function Menu.renderBox(xMin,xMax,yMin,yMax,color1,color2,color3,color4)
 end
 
 function Menu.renderButtons()
-	
+
 		local yoffset = 0.5
 		local xoffset = 0
 
-		
-		
+
+
 	for id, settings in pairs(Menu.GUI) do
 		local screen_w = 0
 		local screen_h = 0
 		screen_w, screen_h =  GetScreenResolution(0, 0)
-		
+
 		boxColor = {38,38,38,199}
 		local movetext = 0.0
 		if(settings["extra"] == "Garage") then
@@ -107,40 +107,40 @@ function Menu.renderButtons()
 
 			SetTextScale(0.34, 0.34)
 			SetTextColour(255, 255, 255, 255)
-			SetTextEntry("STRING") 
+			SetTextEntry("STRING")
 			AddTextComponentString(settings["name"])
-			DrawText(0.63, (settings["ymin"] - 0.012 )) 
+			DrawText(0.63, (settings["ymin"] - 0.012 ))
 
 			SetTextFont(4)
 			SetTextScale(0.26, 0.26)
 			SetTextColour(255, 255, 255, 255)
-			SetTextEntry("STRING") 
+			SetTextEntry("STRING")
 			AddTextComponentString(settings["extra"])
-			DrawText(0.730 + movetext, (settings["ymin"] - 0.011 )) 
+			DrawText(0.730 + movetext, (settings["ymin"] - 0.011 ))
 
 
 			SetTextFont(4)
 			SetTextScale(0.28, 0.28)
 			SetTextColour(11, 11, 11, 255)
-			SetTextEntry("STRING") 
+			SetTextEntry("STRING")
 			AddTextComponentString(settings["damages"])
-			DrawText(0.778, (settings["ymin"] - 0.012 )) 
+			DrawText(0.778, (settings["ymin"] - 0.012 ))
 
 			SetTextFont(4)
 			SetTextScale(0.28, 0.28)
 			SetTextColour(11, 11, 11, 255)
-			SetTextEntry("STRING") 
+			SetTextEntry("STRING")
 			AddTextComponentString(settings["bodydamages"])
-			DrawText(0.815, (settings["ymin"] - 0.012 ))  
+			DrawText(0.815, (settings["ymin"] - 0.012 ))
 
 			SetTextFont(4)
 			SetTextScale(0.28, 0.28)
 			SetTextColour(11, 11, 11, 255)
-			SetTextEntry("STRING") 
+			SetTextEntry("STRING")
 			AddTextComponentString(settings["fuel"])
-			DrawText(0.854, (settings["ymin"] - 0.012 )) 
+			DrawText(0.854, (settings["ymin"] - 0.012 ))
 
-			
+
 
 			DrawRect(0.832, settings["ymin"], 0.11, settings["ymax"]-0.002, 255,255,255,199)
 			--Global.DrawRect(x, y, width, height, r, g, b, a)
@@ -149,9 +149,9 @@ function Menu.renderButtons()
 			SetTextScale(0.31, 0.31)
 			SetTextColour(255, 255, 255, 255)
 			SetTextCentre(true)
-			SetTextEntry("STRING") 
+			SetTextEntry("STRING")
 			AddTextComponentString(settings["name"])
-			DrawText(0.7, (settings["ymin"] - 0.012 )) 
+			DrawText(0.7, (settings["ymin"] - 0.012 ))
 
 		end
 
@@ -161,7 +161,7 @@ function Menu.renderButtons()
 		Menu.renderBox(settings["xmin"] ,settings["xmax"], settings["ymin"], settings["ymax"],boxColor[1],boxColor[2],boxColor[3],boxColor[4])
 
 
-	 end     
+	 end
 end
 
 --------------------------------------------------------------------------------------------------------------------

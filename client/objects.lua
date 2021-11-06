@@ -3,7 +3,6 @@
 local ObjectList = {}
 local SpawnedSpikes = {}
 local spikemodel = `P_ld_stinger_s`
-local spikesSpawned = false
 local ClosestSpike = nil
 
 local SpikeConfig = {
@@ -229,7 +228,6 @@ RegisterNetEvent('police:client:SpawnSpikeStrip', function()
                 netid = netid,
                 object = spike,
             }
-            spikesSpawned = true
             TriggerServerEvent('police:server:SyncSpikes', SpawnedSpikes)
         end
     else
@@ -245,7 +243,7 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        if LocalPlayer.state['isLoggedIn'] then
+        if LocalPlayer.state.isLoggedIn then
             GetClosestSpike()
         end
         Citizen.Wait(500)
@@ -254,7 +252,7 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        if LocalPlayer.state['isLoggedIn'] then
+        if LocalPlayer.state.isLoggedIn then
             if ClosestSpike then
                 local tires = {
                     {bone = "wheel_lf", index = 0},
@@ -287,7 +285,7 @@ end)
 
 Citizen.CreateThread(function()
     while true do
-        if LocalPlayer.state['isLoggedIn'] then
+        if LocalPlayer.state.isLoggedIn then
             if ClosestSpike then
                 local ped = PlayerPedId()
                 local pos = GetEntityCoords(ped)
