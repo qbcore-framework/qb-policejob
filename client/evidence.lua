@@ -2,13 +2,10 @@
 
 local CurrentStatusList = {}
 local Casings = {}
-local CasingsNear = {}
 local CurrentCasing = nil
 local Blooddrops = {}
-local BlooddropsNear = {}
 local CurrentBlooddrop = nil
 local Fingerprints = {}
-local FingerprintsNear = {}
 local CurrentFingerprint = 0
 local shotAmount = 0
 
@@ -62,10 +59,10 @@ local function WhitelistedWeapon(weapon)
     return false
 end
 
-local function DropBulletCasing(weapon)
+local function DropBulletCasing(weapon, ped)
     local randX = math.random() + math.random(-1, 1)
     local randY = math.random() + math.random(-1, 1)
-    local coords = GetOffsetFromEntityInWorldCoords(GetPlayerPed(GetPlayerFromServerId(playerId)), randX, randY, 0)
+    local coords = GetOffsetFromEntityInWorldCoords(ped, randX, randY, 0)
     TriggerServerEvent('evidence:server:CreateCasing', weapon, coords)
     Wait(300)
 end
@@ -109,7 +106,6 @@ end)
 
 RegisterNetEvent('evidence:client:RemoveBlooddrop', function(bloodId)
     Blooddrops[bloodId] = nil
-    BlooddropsNear[bloodId] = nil
     CurrentBlooddrop = 0
 end)
 
@@ -126,7 +122,6 @@ end)
 
 RegisterNetEvent('evidence:client:RemoveFingerprint', function(fingerId)
     Fingerprints[fingerId] = nil
-    FingerprintsNear[fingerId] = nil
     CurrentFingerprint = 0
 end)
 
@@ -169,7 +164,6 @@ end)
 
 RegisterNetEvent('evidence:client:RemoveCasing', function(casingId)
     Casings[casingId] = nil
-    CasingsNear[casingId] = nil
     CurrentCasing = 0
 end)
 
@@ -202,7 +196,7 @@ end)
 CreateThread(function()
     while true do
         Wait(10000)
-        if LocalPlayer.state['isLoggedIn'] then
+        if LocalPlayer.state.isLoggedIn then
             if CurrentStatusList and next(CurrentStatusList) then
                 for k, v in pairs(CurrentStatusList) do
                     if CurrentStatusList[k].time > 0 then
@@ -223,8 +217,9 @@ end)
 CreateThread(function() -- Gunpowder Status when shooting
     while true do
         Wait(1)
-        if IsPedShooting(PlayerPedId()) or IsPedDoingDriveby(PlayerPedId()) then
-            local weapon = GetSelectedPedWeapon(PlayerPedId())
+        local ped = PlayerPedId()
+        if IsPedShooting(ped) or IsPedDoingDriveby(ped) then
+            local weapon = GetSelectedPedWeapon(ped)
             if not WhitelistedWeapon(weapon) then
                 shotAmount = shotAmount + 1
                 if shotAmount > 5 and (CurrentStatusList == nil or CurrentStatusList['gunpowder'] == nil) then
@@ -232,7 +227,7 @@ CreateThread(function() -- Gunpowder Status when shooting
                         TriggerEvent('evidence:client:SetStatus', 'gunpowder', 200)
                     end
                 end
-                DropBulletCasing(weapon)
+                DropBulletCasing(weapon, ped)
             end
         end
     end
@@ -320,56 +315,35 @@ end)
 CreateThread(function()
     while true do
         Wait(10)
-        if LocalPlayer.state['isLoggedIn'] then
+        if LocalPlayer.state.isLoggedIn then
             if PlayerJob.name == 'police' and onDuty then
                 if IsPlayerFreeAiming(PlayerId()) and GetSelectedPedWeapon(PlayerPedId()) == `WEAPON_FLASHLIGHT` then
                     if next(Casings) then
                         local pos = GetEntityCoords(PlayerPedId(), true)
                         for k, v in pairs(Casings) do
                             local dist = #(pos - vector3(v.coords.x, v.coords.y, v.coords.z))
-                            if dist < 12.5 then
-                                CasingsNear[k] = v
-                                if dist < 1.5 then
-                                    CurrentCasing = k
-                                end
-                            else
-                                CasingsNear[k] = nil
+                            if dist < 1.5 then
+                                CurrentCasing = k
                             end
                         end
-                    else
-                        CasingsNear = {}
                     end
                     if next(Blooddrops) then
                         local pos = GetEntityCoords(PlayerPedId(), true)
                         for k, v in pairs(Blooddrops) do
                             local dist = #(pos - vector3(v.coords.x, v.coords.y, v.coords.z))
-                            if dist < 12.5 then
-                                BlooddropsNear[k] = v
-                                if dist < 1.5 then
-                                    CurrentBlooddrop = k
-                                end
-                            else
-                                BlooddropsNear[k] = nil
+                            if dist < 1.5 then
+                                CurrentBlooddrop = k
                             end
                         end
-                    else
-                        BlooddropsNear = {}
                     end
                     if next(Fingerprints) then
                         local pos = GetEntityCoords(PlayerPedId(), true)
                         for k, v in pairs(Fingerprints) do
                             local dist = #(pos - vector3(v.coords.x, v.coords.y, v.coords.z))
-                            if dist < 12.5 then
-                                FingerprintsNear[k] = v
-                                if dist < 1.5 then
-                                    CurrentFingerprint = k
-                                end
-                            else
-                                FingerprintsNear[k] = nil
+                            if dist < 1.5 then
+                                CurrentFingerprint = k
                             end
                         end
-                    else
-                        FingerprintsNear = {}
                     end
                 else
                     Wait(1000)

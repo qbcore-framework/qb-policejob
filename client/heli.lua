@@ -1,7 +1,7 @@
 local fov_max = 80.0
 local fov_min = 10.0 -- max zoom level (smaller fov is more zoom)
 local zoomspeed = 2.0 -- camera zoom speed
-local speed_lr = 3.0 -- speed by which the camera pans left-right 
+local speed_lr = 3.0 -- speed by which the camera pans left-right
 local speed_ud = 3.0 -- speed by which the camera pans up-down
 local toggle_helicam = 51 -- control id of the button by which to toggle the helicam mode. Default: INPUT_CONTEXT (E)
 local toggle_vision = 25 -- control id to toggle vision mode. Default: INPUT_AIM (Right mouse btn)
@@ -79,7 +79,7 @@ local function HandleZoom(cam)
 		fov = math.max(fov - zoomspeed, fov_min)
 	end
 	if IsControlJustPressed(0,242) then
-		fov = math.min(fov + zoomspeed, fov_max) -- ScrollDown		
+		fov = math.min(fov + zoomspeed, fov_max) -- ScrollDown
 	end
 	local current_fov = GetCamFov(cam)
 	if math.abs(fov-current_fov) < 0.1 then -- the difference is too small, just set the value directly to avoid unneeded updates to FOV of order 10^-5
@@ -116,7 +116,7 @@ local function RenderVehicleInfo(vehicle)
 	local speed = math.ceil(GetEntitySpeed(vehicle) * 3.6)
 	local street1, street2 = GetStreetNameAtCoord(pos.x, pos.y, pos.z, Citizen.ResultAsInteger(), Citizen.ResultAsInteger())
 	local streetLabel = GetStreetNameFromHashKey(street1)
-	if street2 ~= 0 then 
+	if street2 ~= 0 then
 		streetLabel = streetLabel .. " | " .. GetStreetNameFromHashKey(street2)
 	end
 	SendNUIMessage({
@@ -140,7 +140,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
-		if LocalPlayer.state['isLoggedIn'] then
+		if LocalPlayer.state.isLoggedIn then
 			if PlayerJob.name == 'police' and onDuty then
 				if IsPlayerInPolmav() then
 					local lPed = PlayerPedId()
@@ -176,8 +176,6 @@ Citizen.CreateThread(function()
 						while not HasScaleformMovieLoaded(scaleform) do
 							Citizen.Wait(0)
 						end
-						local lPed = PlayerPedId()
-						local heli = GetVehiclePedIsIn(lPed)
 						local cam = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
 						AttachCamToEntity(cam, heli, 0.0,0.0,-1.5, true)
 						SetCamRot(cam, 0.0,0.0,GetEntityHeading(heli))
@@ -204,7 +202,7 @@ Citizen.CreateThread(function()
 								PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 								ChangeVision()
 							end
-
+							local zoomvalue = 0
 							if locked_on_vehicle then
 								if DoesEntityExist(locked_on_vehicle) then
 									PointCamAtEntity(cam, locked_on_vehicle, 0.0, 0.0, 0.0, true)
@@ -212,8 +210,8 @@ Citizen.CreateThread(function()
 										PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 										locked_on_vehicle = nil
 										local rot = GetCamRot(cam, 2) -- All this because I can't seem to get the camera unlocked from the entity
-										local fov = GetCamFov(cam)
-										local old cam = cam
+										fov = GetCamFov(cam)
+										local old_cam = cam
 										DestroyCam(old_cam, false)
 										cam = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
 										AttachCamToEntity(cam, heli, 0.0,0.0,-1.5, true)
@@ -234,7 +232,7 @@ Citizen.CreateThread(function()
 									locked_on_vehicle = nil -- Cam will auto unlock when entity doesn't exist anyway
 								end
 							else
-								local zoomvalue = (1.0/(fov_max-fov_min))*(fov-fov_min)
+								zoomvalue = (1.0/(fov_max-fov_min))*(fov-fov_min)
 								CheckInputRotation(cam, zoomvalue)
 								vehicle_detected = GetVehicleInView(cam)
 								if DoesEntityExist(vehicle_detected) then
@@ -275,7 +273,7 @@ Citizen.CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-	while true do 
+	while true do
 		Citizen.Wait(1)
 		if helicam then
 			if isScanning and not isScanned then
