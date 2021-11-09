@@ -385,7 +385,7 @@ end)
 --                     if IsPedInAnyVehicle(PlayerPedId(), true) then
 --                         local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 --                         local vehicleInfo = {
---                             plate = GetVehicleNumberPlateText(vehicle),
+--                             plate = QBCore.Functions.GetPlate(vehicle),
 --                             name = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
 --                         }
 --                         TriggerServerEvent('police:server:GunshotAlert', streetLabel, automatic, true, coords, vehicleInfo)

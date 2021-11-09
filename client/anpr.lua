@@ -16,7 +16,7 @@ function HandlespeedCam(speedCam, hasBeenBusted)
 		if IsPedInAnyVehicle(myPed, false) then
 			if GetPedInVehicleSeat(vehicle, -1) == myPed then
 				if GetVehicleClass(vehicle) ~= 18 then
-                    local plate = GetVehicleNumberPlateText(vehicle)
+                    local plate = QBCore.Functions.GetPlate(vehicle)
 					QBCore.Functions.TriggerCallback('police:IsPlateFlagged', function(result)
 						if result then
 							local coords = GetEntityCoords(PlayerPedId())
@@ -39,7 +39,7 @@ function HandlespeedCam(speedCam, hasBeenBusted)
 			end
 		end
 	end
-		
+
 	if not isInMarker and HasAlreadyEnteredMarker and lastRadar == hasBeenBusted then
 		HasAlreadyEnteredMarker = false
 		lastRadar = nil
