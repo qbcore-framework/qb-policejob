@@ -31,3 +31,5 @@ files {
 	'html/main.css',
 	'html/vcr-ocd.ttf'
 }
+
+lua54 'yes'
