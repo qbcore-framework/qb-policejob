@@ -1,5 +1,7 @@
 Config = {}
 
+MaxSpikes = 15
+
 Config.Objects = {
     ["cone"] = {model = `prop_roadcone02a`, freeze = false},
     ["barier"] = {model = `prop_barrier_work06a`, freeze = true},
