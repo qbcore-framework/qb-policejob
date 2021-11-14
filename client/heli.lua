@@ -114,7 +114,7 @@ local function RenderVehicleInfo(vehicle)
 	local vehname = GetLabelText(GetDisplayNameFromVehicleModel(model))
 	local licenseplate = QBCore.Functions.GetPlate(vehicle)
 	local speed = math.ceil(GetEntitySpeed(vehicle) * 3.6)
-	local street1, street2 = GetStreetNameAtCoord(pos.x, pos.y, pos.z, Citizen.ResultAsInteger(), Citizen.ResultAsInteger())
+	local street1, street2 = GetStreetNameAtCoord(pos.x, pos.y, pos.z)
 	local streetLabel = GetStreetNameFromHashKey(street1)
 	if street2 ~= 0 then
 		streetLabel = streetLabel .. " | " .. GetStreetNameFromHashKey(street2)
@@ -137,9 +137,9 @@ end)
 
 -- Threads
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		if LocalPlayer.state.isLoggedIn then
 			if PlayerJob.name == 'police' and onDuty then
 				if IsPlayerInPolmav() then
@@ -174,7 +174,7 @@ Citizen.CreateThread(function()
 						SetTimecycleModifierStrength(0.3)
 						local scaleform = RequestScaleformMovie("HELI_CAM")
 						while not HasScaleformMovieLoaded(scaleform) do
-							Citizen.Wait(0)
+							Wait(0)
 						end
 						local cam = CreateCam("DEFAULT_SCRIPTED_FLY_CAMERA", true)
 						AttachCamToEntity(cam, heli, 0.0,0.0,-1.5, true)
@@ -249,7 +249,7 @@ Citizen.CreateThread(function()
 							PushScaleformMovieFunctionParameterFloat(GetCamRot(cam, 2).z)
 							PopScaleformMovieFunctionVoid()
 							DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255)
-							Citizen.Wait(0)
+							Wait(0)
 						end
 						helicam = false
 						ClearTimecycleModifier()
@@ -261,20 +261,20 @@ Citizen.CreateThread(function()
 						SetSeethrough(false)
 					end
 				else
-					Citizen.Wait(2000)
+					Wait(2000)
 				end
 			else
-				Citizen.Wait(2000)
+				Wait(2000)
 			end
 		else
-			Citizen.Wait(2000)
+			Wait(2000)
 		end
 	end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		Wait(1)
 		if helicam then
 			if isScanning and not isScanned then
 				if scanValue < 100 then
@@ -289,19 +289,19 @@ Citizen.CreateThread(function()
 						isScanning = false
 						isScanned = true
 					end
-					Citizen.Wait(10)
+					Wait(10)
 				end
 			elseif isScanned and not isScanning and locked_on_vehicle then
 				scanValue = 100
 				RenderVehicleInfo(locked_on_vehicle)
 				isScanning = false
-				Citizen.Wait(100)
+				Wait(100)
 			else
 				scanValue = 0
-				Citizen.Wait(500)
+				Wait(500)
 			end
 		else
-			Citizen.Wait(1000)
+			Wait(1000)
 		end
 	end
 end)
