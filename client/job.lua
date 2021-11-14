@@ -419,6 +419,39 @@ RegisterNetEvent('police:client:TakeOutVehicle', function(data)
     end
 end)
 
+RegisterNetEvent('police:client:EvidenceStashDrawer', function(data)
+    local currentEvidence = data.currentEvidence
+    local pos = GetEntityCoords(PlayerPedId())
+    local takeLoc = Config.Locations["evidence"][currentEvidence]
+
+    if not takeLoc then return end
+
+    if #(pos - takeLoc) <= 1.0 then
+        local drawer = exports['qb-input']:ShowInput({
+            header = 'Evidence Stash | '.. currentEvidence,
+            submitText = "open",
+            inputs = {
+                {
+                    type = 'number',
+                    isRequired = true,
+                    name = 'slot',
+                    text = 'Slot no. (1,2,3)'
+                }
+            }
+        })
+        if drawer then
+            if not drawer.slot then return end
+            TriggerServerEvent("inventory:server:OpenInventory", "stash", currentEvidence.." | Drawer "..drawer.slot, {
+                maxweight = 4000000,
+                slots = 500,
+            })
+            TriggerEvent("inventory:client:SetCurrentStash", currentEvidence.." | Drawer "..drawer.slot)
+        end
+    else
+        exports['qb-menu']:closeMenu()
+    end
+end)
+
 --[[
     Section: Threads
 
@@ -461,6 +494,8 @@ end)
 -- Stash 1
 CreateThread(function()
     Wait(1000)
+    local headerDrawn = false
+
     while true do
         local sleep = 2000
         if LocalPlayer.state.isLoggedIn and PlayerJob.name == "police" then
@@ -469,119 +504,26 @@ CreateThread(function()
                 if #(pos - v) < 2 then
                     sleep = 5
                     if #(pos - v) < 1.0 then
-                        DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Evidence stash")
-                        if IsControlJustReleased(0, 38) then
-                            local drawer = exports['qb-input']:ShowInput({
-                                header = 'Evidence Stash',
-                                submitText = "open",
-                                inputs = {
-                                    {
-                                        type = 'number',
-                                        isRequired = true,
-                                        name = 'slot',
-                                        text = 'Slot no. (1,2,3)'
+                        if not headerDrawn then
+                            headerDrawn = true
+                            exports['qb-menu']:showHeader({
+                                {
+                                    header = 'Evidence Stash | ' .. k,
+                                    params = {
+                                        event = 'police:client:EvidenceStashDrawer',
+                                        args = {
+                                            currentEvidence = k
+                                        }
                                     }
                                 }
                             })
-                            if drawer then
-                                if not drawer.slot then return end
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 1 | Drawer "..drawer.slot, {
-                                    maxweight = 4000000,
-                                    slots = 500,
-                                })
-                                TriggerEvent("inventory:client:SetCurrentStash", " 1 | Drawer "..drawer.slot)
-                            end
                         end
                     elseif #(pos - v) < 1.5 then
-                        DrawText3D(v.x, v.y, v.z, "Stash 1")
-                    end
-                end
-            end
-        end
-        Wait(sleep)
-    end
-end)
-
--- Stash 2
-CreateThread(function()
-    Wait(1000)
-    while true do
-        local sleep = 2000
-        if LocalPlayer.state.isLoggedIn and PlayerJob.name == "police" then
-            local pos = GetEntityCoords(PlayerPedId())
-            for k, v in pairs(Config.Locations["evidence2"]) do
-                if #(pos - v) < 2 then
-                    sleep = 5
-                    if #(pos - v) < 1.0 then
-                        DrawText3D(v.x, v.y, v.z, "~g~E~w~ - evidence stash")
-                        if IsControlJustReleased(0, 38) then
-                            local drawer = exports['qb-input']:ShowInput({
-                                header = 'Evidence Stash',
-                                submitText = "open",
-                                inputs = {
-                                    {
-                                        type = 'number',
-                                        isRequired = true,
-                                        name = 'slot',
-                                        text = 'Slot no. (1,2,3)'
-                                    }
-                                }
-                            })
-                            if drawer then
-                                if not drawer.slot then return end
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 2 | Drawer "..drawer.slot, {
-                                    maxweight = 4000000,
-                                    slots = 500,
-                                })
-                                TriggerEvent("inventory:client:SetCurrentStash", " 2 | Drawer "..drawer.slot)
-                            end
+                        DrawText3D(v.x, v.y, v.z, "Stash " .. k)
+                        if headerDrawn then
+                            headerDrawn = false
+                            exports['qb-menu']:closeMenu()
                         end
-                    elseif #(pos - v) < 1.5 then
-                        DrawText3D(v.x, v.y, v.z, "Stash 2")
-                    end
-                end
-            end
-        end
-        Wait(sleep)
-    end
-end)
-
--- Stash 3
-CreateThread(function()
-    Wait(1000)
-    while true do
-        local sleep = 2000
-        if LocalPlayer.state.isLoggedIn and PlayerJob.name == "police" then
-            local pos = GetEntityCoords(PlayerPedId())
-            for k, v in pairs(Config.Locations["evidence3"]) do
-                if #(pos - v) < 2 then
-                    sleep = 5
-                    if #(pos - v) < 1.0 then
-                        DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Evidence stash")
-                        if IsControlJustReleased(0, 38) then
-                            local drawer = exports['qb-input']:ShowInput({
-                                header = 'Evidence Stash',
-                                submitText = "open",
-                                inputs = {
-                                    {
-                                        type = 'number',
-                                        isRequired = true,
-                                        name = 'slot',
-                                        text = 'Slot no. (1,2,3)'
-                                    }
-                                }
-                            })
-                            if drawer then
-                                if not drawer.slot then return end
-                                TriggerServerEvent("inventory:server:OpenInventory", "stash", " 3 | Drawer "..drawer.slot, {
-                                    maxweight = 4000000,
-                                    slots = 500,
-                                })
-                                TriggerEvent("inventory:client:SetCurrentStash", " 3 | Drawer "..drawer.slot)
-                            end
-                        end
-                    elseif #(pos - v) < 1.5 then
-                        DrawText3D(v.x, v.y, v.z, "Stash 3")
                     end
                 end
             end
