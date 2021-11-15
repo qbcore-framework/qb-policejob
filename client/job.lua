@@ -238,8 +238,8 @@ function MenuImpound(currentSelection)
         else
             shouldContinue = true
             for _ , v in pairs(result) do
-                local enginePercent = QBCore.Round(v.engine / 10, 0)
-                local bodyPercent = QBCore.Round(v.body / 10, 0)
+                local enginePercent = QBCore.Shared.Round(v.engine / 10, 0)
+                local bodyPercent = QBCore.Shared.Round(v.body / 10, 0)
                 local currentFuel = v.fuel
                 local vname = QBCore.Shared.Vehicles[v.vehicle].name
 
