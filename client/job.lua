@@ -409,7 +409,7 @@ CreateThread(function()
                 if #(pos - v) < 2 then
                     sleep = 5
                     if #(pos - v) < 1.0 then
-                        DrawText3D(v.x, v.y, v.z, "~g~E~w~ -    Evidence stash")
+                        DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Evidence stash")
                         if IsControlJustReleased(0, 38) then
                             local drawer = exports['qb-input']:ShowInput({
                                 header = 'Evidence Stash',
