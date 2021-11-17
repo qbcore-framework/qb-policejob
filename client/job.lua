@@ -395,7 +395,7 @@ RegisterNetEvent("police:client:ImpoundMenuHeader", function (data)
     takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
     if #(pos - takeDist) <= 1.5 then
         MenuImpound(data.currentSelection)
-        currentGarage = k
+        currentGarage = data.currentSelection
     end
 end)
 
