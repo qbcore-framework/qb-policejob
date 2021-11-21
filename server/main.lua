@@ -1045,17 +1045,17 @@ end)
 
 -- Threads
 
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
-        Citizen.Wait(1000 * 60 * 10)
+        Wait(1000 * 60 * 10)
         local curCops = GetCurrentCops()
         TriggerClientEvent("police:SetCopCount", -1, curCops)
     end
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
-        Citizen.Wait(5000)
+        Wait(5000)
         UpdateBlips()
     end
 end)
