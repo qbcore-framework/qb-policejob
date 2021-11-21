@@ -29,7 +29,7 @@ function HandlespeedCam(speedCam, hasBeenBusted)
 								scale = 0.9,
 								text = "Speed camera #"..hasBeenBusted.." - Marked vehicle"
 							}
-							local s1, s2 = GetStreetNameAtCoord(coords.x, coords.y, coords.z, Citizen.PointerValueInt(), Citizen.PointerValueInt())
+							local s1, s2 = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
 							local street1 = GetStreetNameFromHashKey(s1)
 							local street2 = GetStreetNameFromHashKey(s2)
 							TriggerServerEvent("police:server:FlaggedPlateTriggered", hasBeenBusted, plate, street1, street2, blipsettings)
@@ -46,16 +46,16 @@ function HandlespeedCam(speedCam, hasBeenBusted)
 	end
 end
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(1)
+		Wait(1)
 		if IsPedInAnyVehicle(PlayerPedId(), false) then
 			for key, value in pairs(Config.Radars) do
 				HandlespeedCam(value, key)
 			end
-			Citizen.Wait(200)
+			Wait(200)
 		else
-			Citizen.Wait(2500)
+			Wait(2500)
 		end
 	end
 end)
