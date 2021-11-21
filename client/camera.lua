@@ -23,7 +23,7 @@ local function ChangeSecurityCamera(x, y, z, r)
     SetCamCoord(cam, x, y, z)
     SetCamRot(cam, r.x, r.y, r.z, 2)
     RenderScriptCams(1, 0, 0, 1, 1)
-    Citizen.Wait(250)
+    Wait(250)
     createdCamera = cam
 end
 
@@ -52,7 +52,7 @@ end
 local function CreateInstuctionScaleform(scaleform)
     local scaleform = RequestScaleformMovie(scaleform)
     while not HasScaleformMovieLoaded(scaleform) do
-        Citizen.Wait(0)
+        Wait(0)
     end
     PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
     PopScaleformMovieFunctionVoid()
@@ -86,7 +86,7 @@ RegisterNetEvent('police:client:ActiveCamera', function(cameraId)
     if Config.SecurityCameras.cameras[cameraId] then
         DoScreenFadeOut(250)
         while not IsScreenFadedOut() do
-            Citizen.Wait(0)
+            Wait(0)
         end
         SendNUIMessage({
             type = "enablecam",
@@ -106,7 +106,7 @@ RegisterNetEvent('police:client:ActiveCamera', function(cameraId)
     elseif cameraId == 0 then
         DoScreenFadeOut(250)
         while not IsScreenFadedOut() do
-            Citizen.Wait(0)
+            Wait(0)
         end
         CloseSecurityCamera()
         SendNUIMessage({
@@ -136,7 +136,7 @@ end)
 
 -- Threads
 
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
         sleep = 2000
         if createdCamera ~= 0 then
@@ -154,7 +154,7 @@ Citizen.CreateThread(function()
             if IsControlJustPressed(1, 177) then
                 DoScreenFadeOut(250)
                 while not IsScreenFadedOut() do
-                    Citizen.Wait(0)
+                    Wait(0)
                 end
                 CloseSecurityCamera()
                 SendNUIMessage({
