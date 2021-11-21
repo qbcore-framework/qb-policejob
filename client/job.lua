@@ -408,15 +408,20 @@ RegisterNetEvent('police:client:TakeOutImpound', function(data)
         TakeOutImpound(vehicle)
     end
 end)
-
+function TakeOutVehicle(vehicleInfo)
+    local coords = Config.Locations["vehicle"][currentGarage]
+    QBCore.Functions.SpawnVehicle(vehicleInfo, function(veh)
+        SetVehicleNumberPlateText(veh, "AMBU"..tostring(math.random(1000, 9999)))
+        SetEntityHeading(veh, coords.w)
+        exports['LegacyFuel']:SetFuel(veh, 100.0)
+        TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+        TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+        SetVehicleEngineOn(veh, true, true)
+    end, coords, true)
+end
 RegisterNetEvent('police:client:TakeOutVehicle', function(data)
-    local pos = GetEntityCoords(PlayerPedId())
-    local takeDist = Config.Locations['vehicle'][data.currentSelection]
-    takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
-    if #(pos - takeDist) <= 1.5 then
-        local vehicle = data.vehicle
-        TakeOutVehicle(vehicle)
-    end
+    local vehicle = data.vehicle
+    TakeOutVehicle(vehicle)
 end)
 
 RegisterNetEvent('police:client:EvidenceStashDrawer', function(data)
@@ -763,47 +768,31 @@ CreateThread(function()
     end
 end)
 
--- Police Vehicle Garage
 CreateThread(function()
-    Wait(1000)
-    local headerDrawn = false
     while true do
-        local sleep = 2000
-        if LocalPlayer.state.isLoggedIn and PlayerJob.name == "police" then
-            local pos = GetEntityCoords(PlayerPedId())
-            for k, v in pairs(Config.Locations["vehicle"]) do
-                if #(pos - vector3(v.x, v.y, v.z)) < 7.5 then
-                    if onDuty then
-                        sleep = 5
+        sleep = 1000
+        if LocalPlayer.state['isLoggedIn'] then
+            local ped = PlayerPedId()
+            local pos = GetEntityCoords(ped)
+            if PlayerJob.name =="police" then
+                for k, v in pairs(Config.Locations["vehicle"]) do
+                    local dist = #(pos - vector3(v.x, v.y, v.z))
+                    if dist < 4.5 then
+                        sleep = 0
                         DrawMarker(2, v.x, v.y, v.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 200, 0, 0, 222, false, false, false, true, false, false, false)
-                        if #(pos - vector3(v.x, v.y, v.z)) < 1.5 then
-                            if IsPedInAnyVehicle(PlayerPedId(), false) then
+                        if dist < 1.5 then
+                            if IsPedInAnyVehicle(ped, false) then
                                 DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Store vehicle")
                             else
-                                if not headerDrawn then
-                                    headerDrawn = true
-                                    exports['qb-menu']:showHeader({
-                                        {
-                                            header = 'Police Garage',
-                                            params = {
-                                                event = 'police:client:VehicleMenuHeader',
-                                                args = {
-                                                    currentSelection = k,
-                                                }
-                                            }
-                                        }
-                                    })
-                                end
+                                DrawText3D(v.x, v.y, v.z, "~g~E~w~ - Vehicles")
                             end
                             if IsControlJustReleased(0, 38) then
-                                if IsPedInAnyVehicle(PlayerPedId(), false) then
-                                    QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                                if IsPedInAnyVehicle(ped, false) then
+                                    QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(ped))
+                                else
+                                    MenuGarage()
+                                    currentGarage = k
                                 end
-                            end
-                        else
-                            if headerDrawn then
-                                headerDrawn = false
-                                exports['qb-menu']:closeMenu()
                             end
                         end
                     end
