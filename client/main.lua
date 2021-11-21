@@ -159,7 +159,7 @@ RegisterNetEvent('police:client:UpdateBlips', function(players)
 end)
 
 RegisterNetEvent('police:client:policeAlert', function(coords, text)
-    local street1, street2 = GetStreetNameAtCoord(coords.x, coords.y, coords.z, Citizen.ResultAsInteger(), Citizen.ResultAsInteger())
+    local street1, street2 = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
     local street1name = GetStreetNameFromHashKey(street1)
     local street2name = GetStreetNameFromHashKey(street2)
     QBCore.Functions.Notify({text = text, caption = street1name.. ' ' ..street2name}, 'police')
@@ -209,7 +209,7 @@ end)
 
 -- Threads
 
-Citizen.CreateThread(function()
+CreateThread(function()
     for k, station in pairs(Config.Locations["stations"]) do
         local blip = AddBlipForCoord(station.coords.x, station.coords.y, station.coords.z)
         SetBlipSprite(blip, 60)
