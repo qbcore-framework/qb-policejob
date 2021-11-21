@@ -25,7 +25,6 @@ Police Job for QB-Core Framework :police_officer:
 - [qb-garages](https://github.com/qbcore-framework/qb-garages) - For the vehicle spawner
 - [qb-clothing](https://github.com/qbcore-framework/qb-clothing) - For the locker room
 - [qb-phone](https://github.com/qbcore-framework/qb-phone) - For the MEOS app and notifications etc.
-- [qb-moneysafe](https://github.com/qbcore-framework/qb-moneysafe) - For the money safe
 - [qb-log](https://github.com/qbcore-framework/qb-logs) - For logging certain events
 - [qb-menu](https://github.com/qbcore-framework/qb-menu) - For the vehicle menus
 - [qb-input](https://github.com/qbcore-framework/qb-input) - For accessing evidence stashes
