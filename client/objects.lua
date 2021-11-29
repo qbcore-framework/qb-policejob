@@ -17,7 +17,7 @@ local function GetClosestPoliceObject()
     local dist = nil
 
     for id, data in pairs(ObjectList) do
-        local dist2 = #(pos - vector3(ObjectList[id].coords.x, ObjectList[id].coords.y, ObjectList[id].coords.z))
+        local dist2 = #(pos - ObjectList[id].coords)
         if current then
             if dist2 < dist then
                 current = id
@@ -142,7 +142,6 @@ RegisterNetEvent('police:client:spawnTent', function()
 end)
 
 RegisterNetEvent('police:client:spawnLight', function()
-    local coords = GetEntityCoords(PlayerPedId())
     QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
@@ -201,11 +200,7 @@ RegisterNetEvent('police:client:spawnObject', function(objectId, type, player)
     ObjectList[objectId] = {
         id = objectId,
         object = spawnedObj,
-        coords = {
-            x = x,
-            y = y,
-            z = z - 0.3,
-        },
+        coords = vector3(x, y, z - 0.3),
     }
 end)
 
@@ -220,11 +215,7 @@ RegisterNetEvent('police:client:SpawnSpikeStrip', function()
             SetEntityHeading(spike, GetEntityHeading(PlayerPedId()))
             PlaceObjectOnGroundProperly(spike)
             SpawnedSpikes[#SpawnedSpikes+1] = {
-                coords = {
-                    x = spawnCoords.x,
-                    y = spawnCoords.y,
-                    z = spawnCoords.z,
-                },
+                coords = vector3(spawnCoords.x, spawnCoords.y, spawnCoords.z),
                 netid = netid,
                 object = spike,
             }
@@ -268,7 +259,7 @@ CreateThread(function()
                     local tirePos = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, tires[a].bone))
                     local spike = GetClosestObjectOfType(tirePos.x, tirePos.y, tirePos.z, 15.0, spikemodel, 1, 1, 1)
                     local spikePos = GetEntityCoords(spike, false)
-                    local distance = Vdist(tirePos.x, tirePos.y, tirePos.z, spikePos.x, spikePos.y, spikePos.z)
+                    local distance = #(tirePos - spikePos)
 
                     if distance < 1.8 then
                         if not IsVehicleTyreBurst(vehicle, tires[a].index, true) or IsVehicleTyreBurst(vehicle, tires[a].index, false) then
@@ -285,22 +276,23 @@ end)
 
 CreateThread(function()
     while true do
+        local sleep = 1000
         if LocalPlayer.state.isLoggedIn then
             if ClosestSpike then
                 local ped = PlayerPedId()
                 local pos = GetEntityCoords(ped)
-                local dist = #(pos - vector3(SpawnedSpikes[ClosestSpike].coords.x, SpawnedSpikes[ClosestSpike].coords.y, SpawnedSpikes[ClosestSpike].coords.z))
-
+                local dist = #(pos - SpawnedSpikes[ClosestSpike].coords)
                 if dist < 4 then
                     if not IsPedInAnyVehicle(PlayerPedId()) then
                         if PlayerJob.name == "police" and PlayerJob.onduty then
+                            sleep = 0
                             DrawText3D(pos.x, pos.y, pos.z, '[E] Delete Spike')
                             if IsControlJustPressed(0, 38) then
                                 NetworkRegisterEntityAsNetworked(SpawnedSpikes[ClosestSpike].object)
                                 NetworkRequestControlOfEntity(SpawnedSpikes[ClosestSpike].object)
                                 SetEntityAsMissionEntity(SpawnedSpikes[ClosestSpike].object)
                                 DeleteEntity(SpawnedSpikes[ClosestSpike].object)
-                                table.remove(SpawnedSpikes, ClosestSpike)
+                                SpawnedSpikes[ClosestSpike] = nil
                                 ClosestSpike = nil
                                 TriggerServerEvent('police:server:SyncSpikes', SpawnedSpikes)
                             end
@@ -309,6 +301,6 @@ CreateThread(function()
                 end
             end
         end
-        Wait(3)
+        Wait(sleep)
     end
 end)
