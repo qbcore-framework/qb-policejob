@@ -164,13 +164,20 @@ RegisterNetEvent('police:client:JailPlayer', function()
     local player, distance = QBCore.Functions.GetClosestPlayer()
     if player ~= -1 and distance < 2.5 then
         local playerId = GetPlayerServerId(player)
-        DisplayOnscreenKeyboard(1, "", "", "", "", "", "", 20)
-        while UpdateOnscreenKeyboard() ~= 1 and UpdateOnscreenKeyboard() ~= 2 do
-            Wait(7)
-        end
-        local time = GetOnscreenKeyboardResult()
-        if tonumber(time) > 0 then
-            TriggerServerEvent("police:server:JailPlayer", playerId, tonumber(time))
+        local dialog = exports['qb-input']:ShowInput({
+            header = "Jail time",
+            submitText = "Submit",
+            inputs = {
+                {
+                    text = "Time in months",
+                    name = "jailtime",
+                    type = "number",
+                    isRequired = true
+                }
+            }
+        })
+        if tonumber(dialog['jailtime']) > 0 then
+            TriggerServerEvent("police:server:JailPlayer", playerId, tonumber(dialog['jailtime']))
         else
             QBCore.Functions.Notify("Time must be higher than 0..", "error")
         end
@@ -183,15 +190,22 @@ RegisterNetEvent('police:client:BillPlayer', function()
     local player, distance = QBCore.Functions.GetClosestPlayer()
     if player ~= -1 and distance < 2.5 then
         local playerId = GetPlayerServerId(player)
-        DisplayOnscreenKeyboard(1, "", "", "", "", "", "", 20)
-        while UpdateOnscreenKeyboard() ~= 1 and UpdateOnscreenKeyboard() ~= 2 do
-            Wait(7)
-        end
-        local price = GetOnscreenKeyboardResult()
-        if tonumber(price) > 0 then
-            TriggerServerEvent("police:server:BillPlayer", playerId, tonumber(price))
+        local dialog = exports['qb-input']:ShowInput({
+            header = "Bill",
+            submitText = "Submit",
+            inputs = {
+                {
+                    text = "Price",
+                    name = "bill",
+                    type = "number",
+                    isRequired = true
+                }
+            }
+        })
+        if tonumber(dialog['bill']) > 0 then
+            TriggerServerEvent("police:server:BillPlayer", playerId, tonumber(dialog['bill']))
         else
-            QBCore.Functions.Notify("Time must be higher than 0..", "error")
+            QBCore.Functions.Notify("Price must be higher than 0..", "error")
         end
     else
         QBCore.Functions.Notify("No one nearby!", "error")
@@ -253,7 +267,7 @@ RegisterNetEvent('police:client:CuffPlayerSoft', function()
         local player, distance = QBCore.Functions.GetClosestPlayer()
         if player ~= -1 and distance < 1.5 then
             local playerId = GetPlayerServerId(player)
-            if not IsPedInAnyVehicle(GetPlayerPed(player)) and not IsPedInAnyVehicle(GetPlayerPed(PlayerPedId())) then
+            if not IsPedInAnyVehicle(GetPlayerPed(player)) and not IsPedInAnyVehicle(PlayerPedId()) then
                 TriggerServerEvent("police:server:CuffPlayer", playerId, true)
                 HandCuffAnimation()
             else
@@ -274,7 +288,7 @@ RegisterNetEvent('police:client:CuffPlayer', function()
             QBCore.Functions.TriggerCallback('QBCore:HasItem', function(result)
                 if result then 
                     local playerId = GetPlayerServerId(player)
-                    if not IsPedInAnyVehicle(GetPlayerPed(player)) and not IsPedInAnyVehicle(GetPlayerPed(PlayerPedId())) then
+                    if not IsPedInAnyVehicle(GetPlayerPed(player)) and not IsPedInAnyVehicle(PlayerPedId()) then
                         TriggerServerEvent("police:server:CuffPlayer", playerId, false)
                         HandCuffAnimation()
                     else
