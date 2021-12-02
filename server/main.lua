@@ -410,7 +410,7 @@ QBCore.Commands.Add("anklet", "Attach Tracking Anklet (Police Only)", {}, false,
     end
 end)
 
-QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{"cid", "Citizen ID of the person"}}, true, function(source, args)
+QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{name="cid", help="Citizen ID of the person"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -430,7 +430,7 @@ QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{
     end
 end)
 
-QBCore.Commands.Add("removeanklet", "Remove Tracking Anklet (Police Only)", {{"cid", "Citizen ID of person"}}, true,function(source, args)
+QBCore.Commands.Add("removeanklet", "Remove Tracking Anklet (Police Only)", {{name="cid", help="Citizen ID of person"}}, true,function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -460,7 +460,7 @@ QBCore.Commands.Add("takedrivinglicense", "Seize Drivers License (Police Only)",
     end
 end)
 
-QBCore.Commands.Add("takedna", "Take a DNA sanple from a person (empty evidence bag needed) (Police Only)", {{"id", "ID of the person"}}, true, function(source, args)
+QBCore.Commands.Add("takedna", "Take a DNA sample from a person (empty evidence bag needed) (Police Only)", {{name="id", help="ID of the person"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
