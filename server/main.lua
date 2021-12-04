@@ -123,11 +123,18 @@ end)
 QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name = "id", help = "ID of a person"}, {name = "license", help = "License Type"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
+    local license = nil
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.grade.level >= 2 then
         if args[2] == "driver" or args[2] == "weapon" then
             local SearchedPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
             if SearchedPlayer then
                 local licenseTable = SearchedPlayer.PlayerData.metadata["licences"]
+		if args[2] == "driver" then
+                    license = "driver_license"
+                elseif args[2] == "weapon" then
+                    license = "weaponlicense"
+                end
+		Player.Functions.AddItem(license, 1)
                 licenseTable[args[2]] = true
                 SearchedPlayer.Functions.SetMetaData("licences", licenseTable)
                 TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been granted a license",
