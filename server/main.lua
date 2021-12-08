@@ -1,6 +1,5 @@
 -- Variables
 
-local Plates = {}
 local PlayerStatus = {}
 local Casings = {}
 local BloodDrops = {}
@@ -289,15 +288,22 @@ QBCore.Commands.Add("flagplate", "Flag A Plate (Police Only)", {{name = "plate",
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
-        local reason = {}
-        for i = 2, #args, 1 do
-            reason[#reason+1] = args[i]
-        end
-        Plates[args[1]:upper()] = {
-            isflagged = true,
-            reason = table.concat(reason, " ")
-        }
-        TriggerClientEvent('QBCore:Notify', src, "Vehicle (" .. args[1]:upper() .. ") is flagged for: " .. table.concat(reason, " "))
+        local reasonData = {}
+        local plate = args[1]:upper()
+        for i = 2, #args, 1 do reasonData[#reasonData + 1] = args[i] end
+        local reason = table.concat(reasonData, " ")
+
+        exports["oxmysql"]:execute("SELECT * FROM player_vehicles WHERE plate = ?", { plate }, function(result)
+            if string.len(json.encode(result)) > 2 then
+                exports["oxmysql"]:update("UPDATE player_vehicles SET flags = ? WHERE plate = ?", { reason, plate }, function(ar)
+                    if ar then
+                        TriggerClientEvent("QBCore:Notify", src, "Vehicle (" .. plate .. ") has been flagged for: " .. reason, "police")
+                    end
+                end)
+            else
+                TriggerClientEvent("QBCore:Notify", src, "Vehicle (" .. plate .. ") could not be found in the database!", "error")
+            end
+        end)
     else
         TriggerClientEvent('QBCore:Notify', src, 'For on-duty police only', 'error')
     end
@@ -307,16 +313,19 @@ QBCore.Commands.Add("unflagplate", "Unflag A Plate (Police Only)", {{name = "pla
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
-        if Plates and Plates[args[1]:upper()] then
-            if Plates[args[1]:upper()].isflagged then
-                Plates[args[1]:upper()].isflagged = false
-                TriggerClientEvent('QBCore:Notify', src, "Vehicle (" .. args[1]:upper() .. ") is unflagged")
+        local plate = args[1]:upper()
+
+        exports["oxmysql"]:execute("SELECT * FROM player_vehicles WHERE plate = ?", { plate }, function(result)
+            if string.len(json.encode(result)) > 2 then
+                exports["oxmysql"]:update("UPDATE player_vehicles SET flags = '' WHERE plate = ?", { plate }, function(ar)
+                    if ar then
+                        TriggerClientEvent("QBCore:Notify", src, "Vehicle (" .. plate .. ") has been unflagged!", "police")
+                    end
+                end)
             else
-                TriggerClientEvent('QBCore:Notify', src, 'Vehicle not flagged', 'error')
+                TriggerClientEvent("QBCore:Notify", src, "Vehicle (" .. plate .. ") could not be found in the database!", "error")
             end
-        else
-            TriggerClientEvent('QBCore:Notify', src, 'Vehicle not flagged', 'error')
-        end
+        end)
     else
         TriggerClientEvent('QBCore:Notify', src, 'For on-duty police only', 'error')
     end
@@ -326,15 +335,18 @@ QBCore.Commands.Add("plateinfo", "Run A Plate (Police Only)", {{name = "plate",h
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
-        if Plates and Plates[args[1]:upper()] then
-            if Plates[args[1]:upper()].isflagged then
-                TriggerClientEvent('QBCore:Notify', src, 'Vehicle ' .. args[1]:upper() .. ' has been flagged for: ' .. Plates[args[1]:upper()].reason)
-            else
-                TriggerClientEvent('QBCore:Notify', src, 'Vehicle not flagged', 'error')
-            end
-        else
-            TriggerClientEvent('QBCore:Notify', src, 'Vehicle not flagged', 'error')
-        end
+            exports["oxmysql"]:execute("SELECT flags FROM player_vehicles WHERE plate = ?", { args[1]:upper() }, function(result)
+                if string.len(json.encode(result)) > 2 then
+                    if result then
+                        for _, v in pairs(result) do
+                            local flags = v.flags
+                            TriggerClientEvent("QBCore:Notify", src, "Vehicle (" .. args[1]:upper() .. ") has been flagged for: " .. flags, "police")
+                        end
+                    end
+                else
+                    TriggerClientEvent("QBCore:Notify", src, "Vehicle (" .. args[1]:upper() .. ") could not be found in the database!", "error")
+                end
+            end)
     else
         TriggerClientEvent('QBCore:Notify', src, 'For on-duty police only', 'error')
     end
@@ -601,11 +613,19 @@ end)
 
 QBCore.Functions.CreateCallback('police:IsPlateFlagged', function(source, cb, plate)
     local retval = false
-    if Plates and Plates[plate] then
-        if Plates[plate].isflagged then
-            retval = true
+    exports["oxmysql"]:execute("SELECT flags FROM player_vehicles WHERE plate = ?", { plate }, function(result)
+        if result then
+            for _, v in pairs(result) do
+                if not v.flags == "None" then
+                    retval = true
+                else
+                    retval = false
+                end
+            end
+        else
+            retval = false
         end
-    end
+    end)
     cb(retval)
 end)
 
