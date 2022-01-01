@@ -44,12 +44,12 @@ local function GetCuffedAnimation(playerId)
     local cuffer = GetPlayerPed(GetPlayerFromServerId(playerId))
     local heading = GetEntityHeading(cuffer)
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "Cuff", 0.2)
-    loadAnimDict("mp_arrest")
+    loadAnimDict("mp_arrest_paired")
     SetEntityCoords(ped, GetOffsetFromEntityInWorldCoords(cuffer, 0.0, 0.45, 0.0))
     
 	Wait(100)
 	SetEntityHeading(ped, heading)
-	TaskPlayAnim(ped, "mp_arrest", "crook_p2_back_right", 3.0, 3.0, -1, 32, 0, 0, 0, 0 ,true, true, true)
+	TaskPlayAnim(ped, "mp_arrest_paired", "crook_p2_back_right", 3.0, 3.0, -1, 32, 0, 0, 0, 0 ,true, true, true)
 	Wait(2500)
 end
 
