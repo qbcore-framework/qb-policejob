@@ -637,7 +637,7 @@ end)
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         CreateThread(function()
-            MySQL.Async.fetchAll('DELETE FROM stashitems WHERE stash="policetrash"')
+            MySQL.Async.execute('DELETE FROM stashitems WHERE stash="policetrash"')
         end)
     end
 end)
@@ -658,7 +658,7 @@ end)
 
 RegisterNetEvent('police:server:TakeOutImpound', function(plate)
     local src = source
-    MySQL.Async.fetchAll('UPDATE player_vehicles SET state = ? WHERE plate  = ?', {0, plate})
+    MySQL.Async.execute('UPDATE player_vehicles SET state = ? WHERE plate  = ?', {0, plate})
     TriggerClientEvent('QBCore:Notify', src, "Vehicle unimpounded!", 'success')
 end)
 
@@ -869,12 +869,12 @@ RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, bo
     local price = price and price or 0
     if IsVehicleOwned(plate) then
         if not fullImpound then
-            MySQL.Async.fetchAll(
+            MySQL.Async.execute(
                 'UPDATE player_vehicles SET state = ?, depotprice = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
                 {0, price, body, engine, fuel, plate})
             TriggerClientEvent('QBCore:Notify', src, "Vehicle taken into depot for $" .. price .. "!")
         else
-            MySQL.Async.fetchAll(
+            MySQL.Async.execute(
                 'UPDATE player_vehicles SET state = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
                 {2, body, engine, fuel, plate})
             TriggerClientEvent('QBCore:Notify', src, "Vehicle seized")
