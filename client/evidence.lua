@@ -21,7 +21,8 @@ local StatusList = {
     ['handbleed'] = 'Blood on hands',
     ['confused'] = 'Confused',
     ['alcohol'] = 'Smells like alcohol',
-    ['heavyalcohol'] = 'Smells very much like alcohol'
+    ["heavyalcohol"] = "Smells very much like alcohol",
+    ["agitated"] = "Agitated ,Signs of Meth Use"
 }
 
 local WhitelistedWeapons = {
