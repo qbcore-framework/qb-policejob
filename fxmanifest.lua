@@ -18,7 +18,10 @@ client_scripts {
 	'client/tracker.lua'
 }
 
-server_script 'server/main.lua'
+server_script {
+	'server/main.lua',
+	'@oxmysql/lib/MySQL.lua',
+}
 
 ui_page 'html/index.html'
 
