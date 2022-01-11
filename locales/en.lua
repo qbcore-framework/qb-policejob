@@ -16,6 +16,9 @@ local Translations = {
        rank_license = "You must be a Sergeant to grant licenses!",
        revoked_license = "You've had a license revoked",
        rank_revoke = "You must be a Sergeant to revoke licenses!",
+       on_duty_police_only = 'For on-duty police only',
+       vehicle_not_flag = 'Vehicle not flagged',
+       not_towdriver = 'Not a tow truck driver',
 
        
     },
@@ -24,6 +27,7 @@ local Translations = {
         grated_license = "You have been granted a license",
         grant_license = "You granted a license",
         revoke_license = "You revoked a license",
+        tow_paid = 'You were paid $500',
     },
     info = {
         blood_clear = 'Blood cleared :)',
@@ -31,6 +35,10 @@ local Translations = {
         cuff = "You are cuffed!",
         cuffed_walk = "You are cuffed, but you can walk",
         dont_know_var = ''..v..'',
+        vehicle_flagged = "Vehicle (" .. args[1]:upper() .. ") is flagged for: " .. table.concat(reason, " "),
+        unflag_vehicle = "Vehicle (" .. args[1]:upper() .. ") is unflagged",
+        tow_driver_paid = 'You paid the tow truck driver',
+        paid_lawyer = 'You paid a lawyer',
     },
     general = {
     },
