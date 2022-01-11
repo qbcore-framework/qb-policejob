@@ -80,7 +80,7 @@ RegisterNetEvent('police:client:spawnCone', function()
         TriggerServerEvent("police:server:spawnObject", "cone")
     end, function() -- Cancel
         StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify("Canceled..", "error")
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
     end)
 end)
 
@@ -99,7 +99,7 @@ RegisterNetEvent('police:client:spawnBarier', function()
         TriggerServerEvent("police:server:spawnObject", "barier")
     end, function() -- Cancel
         StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify("Canceled..", "error")
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
     end)
 end)
 
@@ -118,7 +118,7 @@ RegisterNetEvent('police:client:spawnSchotten', function()
         TriggerServerEvent("police:server:spawnObject", "schotten")
     end, function() -- Cancel
         StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify("Canceled..", "error")
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
     end)
 end)
 
@@ -137,7 +137,7 @@ RegisterNetEvent('police:client:spawnTent', function()
         TriggerServerEvent("police:server:spawnObject", "tent")
     end, function() -- Cancel
         StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify("Canceled..", "error")
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
     end)
 end)
 
@@ -156,7 +156,7 @@ RegisterNetEvent('police:client:spawnLight', function()
         TriggerServerEvent("police:server:spawnObject", "light")
     end, function() -- Cancel
         StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify("Canceled..", "error")
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
     end)
 end)
 
@@ -177,7 +177,7 @@ RegisterNetEvent('police:client:deleteObject', function()
             TriggerServerEvent("police:server:deleteObject", objectId)
         end, function() -- Cancel
             StopAnimTask(PlayerPedId(), "weapons@first_person@aim_rng@generic@projectile@thermal_charge@", "plant_floor", 1.0)
-            QBCore.Functions.Notify("Canceled..", "error")
+            QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
         end)
     end
 end)
@@ -222,7 +222,7 @@ RegisterNetEvent('police:client:SpawnSpikeStrip', function()
             TriggerServerEvent('police:server:SyncSpikes', SpawnedSpikes)
         end
     else
-        QBCore.Functions.Notify('There are no Spikestrips left..', 'error')
+        QBCore.Functions.Notify(Lang:t("error.no_spikestripe"), 'error')
     end
 end)
 

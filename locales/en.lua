@@ -11,6 +11,8 @@ local Translations = {
        vehicle_cuff = "You can\'t cuff someone in a vehicle",
        no_cuff = "You don\'t have handcuffs on you",
        no_impound = "There are no impounded vehicles",
+       no_spikestripe = 'There are no Spikestrips left..',
+
        
     },
     success = {
@@ -21,6 +23,7 @@ local Translations = {
         bullet_sleeve_remove = 'Bullet sleeves removed :)',
         cuff = "You are cuffed!",
         cuffed_walk = "You are cuffed, but you can walk",
+        dont_know_var = ''..v..'',
     },
     general = {
     },
