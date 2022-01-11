@@ -60,9 +60,7 @@ local Translations = {
         sent_jail_for = "You sent the person to prison for " .. time .. " months",
         fine_received = "You received a fine of $" .. price .. "",
     },
-    general = {
-    },
-    options = {
+    commds = {
     },
 }
 
