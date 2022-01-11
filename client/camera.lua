@@ -114,7 +114,7 @@ RegisterNetEvent('police:client:ActiveCamera', function(cameraId)
         })
         DoScreenFadeIn(250)
     else
-        QBCore.Functions.Notify("Camera doesn\'t exist..", "error")
+        Notify(Lang:t("error.no_camera"))
     end
 end)
 
