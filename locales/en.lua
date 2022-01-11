@@ -28,6 +28,7 @@ local Translations = {
        put_anklet = 'You put on an ankle strap.',
        put_anklet_on = 'You put on an ankle strap to ' .. Target.PlayerData.charinfo.firstname .. " " .. Target.PlayerData.charinfo.lastname .. "",
        no_driver_license = 'No drivers license',
+       not_cuffed_dead = "Civilian isn't cuffed or dead"
 
        
     },
@@ -52,6 +53,12 @@ local Translations = {
         vehicle_seized = "Vehicle seized",
         stolen_money = "You have stolen $" .. money .."",
         robbed_off = "You have been robbed of $" .. money .."",
+        driving_license_confiscated = 'Your driving license has been confiscated',
+        cash_confiscated = 'Your cash was confiscated',
+        beign_searched = "You are being searched",
+        cash_found = 'Found $'..SearchedPlayer.PlayerData.money["cash"]..' on the civilian',
+        sent_jail_for = "You sent the person to prison for " .. time .. " months",
+        fine_received = "You received a fine of $" .. price .. "",
     },
     general = {
     },

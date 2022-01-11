@@ -681,7 +681,7 @@ RegisterNetEvent('police:server:EscortPlayer', function(playerId)
         if (Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "ambulance") or (EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or EscortPlayer.PlayerData.metadata["inlaststand"]) then
             TriggerClientEvent("police:client:GetEscorted", EscortPlayer.PlayerData.source, Player.PlayerData.source)
         else
-            TriggerClientEvent('QBCore:Notify', src, "Civilian isn't cuffed or dead", 'error')
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.not_cuffed_dead"), 'error')
         end
     end
 end)
@@ -696,7 +696,7 @@ RegisterNetEvent('police:server:KidnapPlayer', function(playerId)
             TriggerClientEvent("police:client:GetKidnappedTarget", EscortPlayer.PlayerData.source, Player.PlayerData.source)
             TriggerClientEvent("police:client:GetKidnappedDragger", Player.PlayerData.source, EscortPlayer.PlayerData.source)
         else
-            TriggerClientEvent('QBCore:Notify', src, "Civilian isn't cuffed or dead", 'error')
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.not_cuffed_dead"), 'error')
         end
     end
 end)
@@ -709,7 +709,7 @@ RegisterNetEvent('police:server:SetPlayerOutVehicle', function(playerId)
         if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] then
             TriggerClientEvent("police:client:SetOutVehicle", EscortPlayer.PlayerData.source)
         else
-            TriggerClientEvent('QBCore:Notify', src, "Civilian isn't cuffed or dead", 'error')
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.not_cuffed_dead"), 'error')
         end
     end
 end)
@@ -721,7 +721,7 @@ RegisterNetEvent('police:server:PutPlayerInVehicle', function(playerId)
         if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] then
             TriggerClientEvent("police:client:PutInVehicle", EscortPlayer.PlayerData.source)
         else
-           TriggerClientEvent('QBCore:Notify', src, "Civilian isn't cuffed or dead", 'error')
+           TriggerClientEvent('QBCore:Notify', src, Lang:t("error.not_cuffed_dead"), 'error')
         end
     end
 end)
@@ -734,7 +734,7 @@ RegisterNetEvent('police:server:BillPlayer', function(playerId, price)
         if OtherPlayer then
             OtherPlayer.Functions.RemoveMoney("bank", price, "paid-bills")
             TriggerEvent('qb-bossmenu:server:addAccountMoney', "police", price)
-            TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, "You received a fine of $" .. price)
+            TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, Lang:t("info.fine_received"))
         end
     end
 end)
@@ -756,7 +756,7 @@ RegisterNetEvent('police:server:JailPlayer', function(playerId, time)
                 ["date"] = currentDate
             })
             TriggerClientEvent("police:client:SendToJail", OtherPlayer.PlayerData.source, time)
-            TriggerClientEvent('QBCore:Notify', src, "You sent the person to prison for " .. time .. " months")
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.sent_jail_for"))
         end
     end
 end)
@@ -802,8 +802,8 @@ RegisterNetEvent('police:server:SearchPlayer', function(playerId)
     local src = source
     local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
     if SearchedPlayer then
-        TriggerClientEvent('QBCore:Notify', src, 'Found $'..SearchedPlayer.PlayerData.money["cash"]..' on the civilian')
-        TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You are being searched")
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("info.cash_found"))
+        TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t("info.beign_searched"))
     end
 end)
 
@@ -817,7 +817,7 @@ RegisterNetEvent('police:server:SeizeCash', function(playerId)
         SearchedPlayer.Functions.RemoveMoney("cash", moneyAmount, "police-cash-seized")
         Player.Functions.AddItem("moneybag", 1, false, info)
         TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items["moneybag"], "add")
-        TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, 'Your cash was confiscated')
+        TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t("info.cash_confiscated"))
     end
 end)
 
@@ -829,7 +829,7 @@ RegisterNetEvent('police:server:SeizeDriverLicense', function(playerId)
         if driverLicense then
             local licenses = {["driver"] = false, ["business"] = SearchedPlayer.PlayerData.metadata["licences"]["business"]}
             SearchedPlayer.Functions.SetMetaData("licences", licenses)
-            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, 'Your driving license has been confiscated')
+            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t("info.driving_license_confiscated"))
         else
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.no_driver_license"), 'error')
         end
