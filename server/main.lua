@@ -110,7 +110,7 @@ end
 
 -- Commands
 
-QBCore.Commands.Add("spikestrip", "Place Spike Strip (Police Only)", {}, false, function(source)
+QBCore.Commands.Add("spikestrip", Lang:t("commands.place_spike"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player then
@@ -120,7 +120,7 @@ QBCore.Commands.Add("spikestrip", "Place Spike Strip (Police Only)", {}, false, 
     end
 end)
 
-QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name = "id", help = "ID of a person"}, {name = "license", help = "License Type"}}, true, function(source, args)
+QBCore.Commands.Add("grantlicense", Lang:t("commands.license_grant"), {{name = "id", help = "ID of a person"}, {name = "license", help = "License Type"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.grade.level >= 2 then
@@ -142,7 +142,7 @@ QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name = "id",
     end
 end)
 
-QBCore.Commands.Add("revokelicense", "Revoke a license from someone", {{name = "id", help = "ID of a person"}, {name = "license", help = "License Type"}}, true, function(source, args)
+QBCore.Commands.Add("revokelicense", Lang:t("commands.license_revoke"), {{name = "id", help = "ID of a person"}, {name = "license", help = "License Type"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.grade.level >= 2 then
@@ -164,7 +164,7 @@ QBCore.Commands.Add("revokelicense", "Revoke a license from someone", {{name = "
     end
 end)
 
-QBCore.Commands.Add("pobject", "Place/Delete An Object (Police Only)", {{name = "type",help = "Type object you want or 'delete' to delete"}}, true, function(source, args)
+QBCore.Commands.Add("pobject", Lang:t("commands.place_object"), {{name = "type",help = "Type object you want or 'delete' to delete"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local type = args[1]:lower()
@@ -187,7 +187,7 @@ QBCore.Commands.Add("pobject", "Place/Delete An Object (Police Only)", {{name = 
     end
 end)
 
-QBCore.Commands.Add("cuff", "Cuff Player (Police Only)", {}, false, function(source, args)
+QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -197,18 +197,18 @@ QBCore.Commands.Add("cuff", "Cuff Player (Police Only)", {}, false, function(sou
     end
 end)
 
-QBCore.Commands.Add("escort", "Escort Player", {}, false, function(source, args)
+QBCore.Commands.Add("escort", Lang:t("commands.escort"), {}, false, function(source, args)
     local src = source
     TriggerClientEvent("police:client:EscortPlayer", src)
 end)
 
-QBCore.Commands.Add("callsign", "Give Yourself A Callsign", {{name = "name", help = "Name of your callsign"}}, false, function(source, args)
+QBCore.Commands.Add("callsign", Lang:t("commands.callsign"), {{name = "name", help = "Name of your callsign"}}, false, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     Player.Functions.SetMetaData("callsign", table.concat(args, " "))
 end)
 
-QBCore.Commands.Add("clearcasings", "Clear Area of Casings (Police Only)", {}, false, function(source)
+QBCore.Commands.Add("clearcasings", Lang:t("commands.clear_casign"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -218,7 +218,7 @@ QBCore.Commands.Add("clearcasings", "Clear Area of Casings (Police Only)", {}, f
     end
 end)
 
-QBCore.Commands.Add("jail", "Jail Player (Police Only)", {{name = "id", help = "Player ID"}, {name = "time", help = "Time they have to be in jail"}}, true, function(source, args)
+QBCore.Commands.Add("jail", Lang:t("commands.jail_player"), {{name = "id", help = "Player ID"}, {name = "time", help = "Time they have to be in jail"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -234,7 +234,7 @@ QBCore.Commands.Add("jail", "Jail Player (Police Only)", {{name = "id", help = "
     end
 end)
 
-QBCore.Commands.Add("unjail", "Unjail Player (Police Only)", {{name = "id", help = "Player ID"}}, true, function(source, args)
+QBCore.Commands.Add("unjail", Lang:t("commands.unjail_player"), {{name = "id", help = "Player ID"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -245,7 +245,7 @@ QBCore.Commands.Add("unjail", "Unjail Player (Police Only)", {{name = "id", help
     end
 end)
 
-QBCore.Commands.Add("clearblood", "Clear The Area of Blood (Police Only)", {}, false, function(source)
+QBCore.Commands.Add("clearblood", Lang:t("commands.clearblood"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -255,7 +255,7 @@ QBCore.Commands.Add("clearblood", "Clear The Area of Blood (Police Only)", {}, f
     end
 end)
 
-QBCore.Commands.Add("seizecash", "Seize Cash (Police Only)", {}, false, function(source)
+QBCore.Commands.Add("seizecash", Lang:t("commands.seizecash"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -265,7 +265,7 @@ QBCore.Commands.Add("seizecash", "Seize Cash (Police Only)", {}, false, function
     end
 end)
 
-QBCore.Commands.Add("sc", "Soft Cuff (Police Only)", {}, false, function(source)
+QBCore.Commands.Add("sc", Lang:t("commands.softcuff"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -275,7 +275,7 @@ QBCore.Commands.Add("sc", "Soft Cuff (Police Only)", {}, false, function(source)
     end
 end)
 
-QBCore.Commands.Add("cam", "View Security Camera (Police Only)", {{name = "camid", help = "Camera ID"}}, false, function(source, args)
+QBCore.Commands.Add("cam", Lang:t("commands.camera"), {{name = "camid", help = "Camera ID"}}, false, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -285,7 +285,7 @@ QBCore.Commands.Add("cam", "View Security Camera (Police Only)", {{name = "camid
     end
 end)
 
-QBCore.Commands.Add("flagplate", "Flag A Plate (Police Only)", {{name = "plate", help = "License"}, {name = "reason", help = "Reason of flagging the vehicle"}}, true, function(source, args)
+QBCore.Commands.Add("flagplate", Lang:t("commands.flagplate"), {{name = "plate", help = "License"}, {name = "reason", help = "Reason of flagging the vehicle"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -303,7 +303,7 @@ QBCore.Commands.Add("flagplate", "Flag A Plate (Police Only)", {{name = "plate",
     end
 end)
 
-QBCore.Commands.Add("unflagplate", "Unflag A Plate (Police Only)", {{name = "plate", help = "License plate"}}, true, function(source, args)
+QBCore.Commands.Add("unflagplate", Lang:t("commands.unflagplate"), {{name = "plate", help = "License plate"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -322,7 +322,7 @@ QBCore.Commands.Add("unflagplate", "Unflag A Plate (Police Only)", {{name = "pla
     end
 end)
 
-QBCore.Commands.Add("plateinfo", "Run A Plate (Police Only)", {{name = "plate",help = "License plate"}}, true, function(source, args)
+QBCore.Commands.Add("plateinfo", Lang:t("commands.plateinfo"), {{name = "plate",help = "License plate"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -340,7 +340,7 @@ QBCore.Commands.Add("plateinfo", "Run A Plate (Police Only)", {{name = "plate",h
     end
 end)
 
-QBCore.Commands.Add("depot", "Impound With Price (Police Only)", {{name = "price", help = "Price for how much the person has to pay (may be empty)"}}, false, function(source, args)
+QBCore.Commands.Add("depot", Lang:t("commands.depot"), {{name = "price", help = "Price for how much the person has to pay (may be empty)"}}, false, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -350,7 +350,7 @@ QBCore.Commands.Add("depot", "Impound With Price (Police Only)", {{name = "price
     end
 end)
 
-QBCore.Commands.Add("impound", "Impound A Vehicle (Police Only)", {}, false, function(source)
+QBCore.Commands.Add("impound", Lang:t("commands.impound"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -360,7 +360,7 @@ QBCore.Commands.Add("impound", "Impound A Vehicle (Police Only)", {}, false, fun
     end
 end)
 
-QBCore.Commands.Add("paytow", "Pay Tow Driver (Police Only)", {{name = "id",help = "ID of the player"}}, true, function(source, args)
+QBCore.Commands.Add("paytow", Lang:t("commands.paytow"), {{name = "id",help = "ID of the player"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -380,7 +380,7 @@ QBCore.Commands.Add("paytow", "Pay Tow Driver (Police Only)", {{name = "id",help
     end
 end)
 
-QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{name = "id",help = "ID of the player"}}, true, function(source, args)
+QBCore.Commands.Add("paylawyer", Lang:t("commands.paylawyer"), {{name = "id",help = "ID of the player"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "judge" then
@@ -400,7 +400,7 @@ QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{name = "id
     end
 end)
 
-QBCore.Commands.Add("anklet", "Attach Tracking Anklet (Police Only)", {}, false, function(source)
+QBCore.Commands.Add("anklet", Lang:t("commands.anklet"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -410,7 +410,7 @@ QBCore.Commands.Add("anklet", "Attach Tracking Anklet (Police Only)", {}, false,
     end
 end)
 
-QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{name="cid", help="Citizen ID of the person"}}, true, function(source, args)
+QBCore.Commands.Add("ankletlocation", Lang:t("commands.ankletlocation"), {{name="cid", help="Citizen ID of the person"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -430,7 +430,7 @@ QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{
     end
 end)
 
-QBCore.Commands.Add("removeanklet", "Remove Tracking Anklet (Police Only)", {{name="cid", help="Citizen ID of person"}}, true,function(source, args)
+QBCore.Commands.Add("removeanklet", Lang:t("commands.removeanklet"), {{name="cid", help="Citizen ID of person"}}, true,function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -450,7 +450,7 @@ QBCore.Commands.Add("removeanklet", "Remove Tracking Anklet (Police Only)", {{na
     end
 end)
 
-QBCore.Commands.Add("takedrivinglicense", "Seize Drivers License (Police Only)", {}, false, function(source, args)
+QBCore.Commands.Add("takedrivinglicense", Lang:t("commands.drivinglicense"), {}, false, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -460,7 +460,7 @@ QBCore.Commands.Add("takedrivinglicense", "Seize Drivers License (Police Only)",
     end
 end)
 
-QBCore.Commands.Add("takedna", "Take a DNA sample from a person (empty evidence bag needed) (Police Only)", {{name="id", help="ID of the person"}}, true, function(source, args)
+QBCore.Commands.Add("takedna", Lang:t("commands.takedna"), {{name="id", help="ID of the person"}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
@@ -496,15 +496,15 @@ RegisterNetEvent('police:server:SendTrackerLocation', function(coords, requestId
     TriggerClientEvent("qb-phone:client:addPoliceAlert", requestId, alertData)
 end)
 
-QBCore.Commands.Add('911p', 'Police Report', {{name='message', help='Message to be sent'}}, false, function(source, args)
+QBCore.Commands.Add('911p', Lang:t("commands.police_report"), {{name='message', help=Lang:t("commands.message_sent")}}, false, function(source, args)
 	local src = source
-	if args[1] then message = table.concat(args, " ") else message = 'Civilian Call' end
+	if args[1] then message = table.concat(args, " ") else message = Lang:t("commands.civilian_call") end
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
     local players = QBCore.Functions.GetQBPlayers()
     for k,v in pairs(players) do
         if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
-            local alertData = {title = 'New 911 Call', coords = {coords.x, coords.y, coords.z}, description = message}
+            local alertData = {title = Lang:t("commands.emergency_call"), coords = {coords.x, coords.y, coords.z}, description = message}
             TriggerClientEvent("qb-phone:client:addPoliceAlert", v.PlayerData.source, alertData)
             TriggerClientEvent('police:client:policeAlert', v.PlayerData.source, coords, message)
         end

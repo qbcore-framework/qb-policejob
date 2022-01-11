@@ -129,7 +129,7 @@ end)
 RegisterNetEvent('evidence:client:ClearBlooddropsInArea', function()
     local pos = GetEntityCoords(PlayerPedId())
     local blooddropList = {}
-    QBCore.Functions.Progressbar('clear_blooddrops', 'Clearing blood..', 5000, false, true, {
+    QBCore.Functions.Progressbar('clear_blooddrops', Lang:t("progressbar.blood_clear"), 5000, false, true, {
         disableMovement = false,
         disableCarMovement = false,
         disableMouse = false,
@@ -171,7 +171,7 @@ end)
 RegisterNetEvent('evidence:client:ClearCasingsInArea', function()
     local pos = GetEntityCoords(PlayerPedId())
     local casingList = {}
-    QBCore.Functions.Progressbar('clear_casings', 'Removing bullet sleeves..', 5000, false, true, {
+    QBCore.Functions.Progressbar('clear_casings', Lang:t("progressbar.bullet_sleeve"), 5000, false, true, {
         disableMovement = false,
         disableCarMovement = false,
         disableMouse = false,

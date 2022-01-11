@@ -66,7 +66,7 @@ end
 -- Events
 
 RegisterNetEvent('police:client:spawnCone', function()
-    QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
         disableMouse = false,
@@ -85,7 +85,7 @@ RegisterNetEvent('police:client:spawnCone', function()
 end)
 
 RegisterNetEvent('police:client:spawnBarier', function()
-    QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
         disableMouse = false,
@@ -104,7 +104,7 @@ RegisterNetEvent('police:client:spawnBarier', function()
 end)
 
 RegisterNetEvent('police:client:spawnSchotten', function()
-    QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
         disableMouse = false,
@@ -123,7 +123,7 @@ RegisterNetEvent('police:client:spawnSchotten', function()
 end)
 
 RegisterNetEvent('police:client:spawnTent', function()
-    QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
         disableMouse = false,
@@ -142,7 +142,7 @@ RegisterNetEvent('police:client:spawnTent', function()
 end)
 
 RegisterNetEvent('police:client:spawnLight', function()
-    QBCore.Functions.Progressbar("spawn_object", "Place object..", 2500, false, true, {
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
         disableMovement = true,
         disableCarMovement = true,
         disableMouse = false,
