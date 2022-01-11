@@ -130,15 +130,15 @@ QBCore.Commands.Add("grantlicense", "Grant a license to someone", {{name = "id",
                 local licenseTable = SearchedPlayer.PlayerData.metadata["licences"]
                 licenseTable[args[2]] = true
                 SearchedPlayer.Functions.SetMetaData("licences", licenseTable)
-                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been granted a license",
+                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t("success.grated_license"),
                     "success", 5000)
-                TriggerClientEvent('QBCore:Notify', src, "You granted a license", "success", 5000)
+                TriggerClientEvent('QBCore:Notify', src, Lang:t("success.grant_license"), "success", 5000)
             end
         else
-            TriggerClientEvent('QBCore:Notify', src, "Invalid license type", "error")
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license"), "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, "You must be a Sergeant to grant licenses!", "error")
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_license"), "error")
     end
 end)
 
@@ -152,12 +152,12 @@ QBCore.Commands.Add("revokelicense", "Revoke a license from someone", {{name = "
                 local licenseTable = SearchedPlayer.PlayerData.metadata["licences"]
                 licenseTable[args[2]] = false
                 SearchedPlayer.Functions.SetMetaData("licences", licenseTable)
-                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You've had a license revoked",
+                TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t("error.revoked_license"),
                     "error", 5000)
-                TriggerClientEvent('QBCore:Notify', src, "You revoked a license", "success", 5000)
+                TriggerClientEvent('QBCore:Notify', src, Lang:t("success.revoke_license"), "success", 5000)
             end
         else
-            TriggerClientEvent('QBCore:Notify', src, "Invalid license type", "error")
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license"), "error")
         end
     else
         TriggerClientEvent('QBCore:Notify', src, "You must be a Sergeant to revoke licenses!", "error")

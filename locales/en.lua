@@ -12,11 +12,18 @@ local Translations = {
        no_cuff = "You don\'t have handcuffs on you",
        no_impound = "There are no impounded vehicles",
        no_spikestripe = 'There are no Spikestrips left..',
+       error_license = "Invalid license type",
+       rank_license = "You must be a Sergeant to grant licenses!",
+       revoked_license = "You've had a license revoked",
+       rank_revoke = "You must be a Sergeant to revoke licenses!",
 
        
     },
     success = {
         uncuffed = "You are uncuffed!",
+        grated_license = "You have been granted a license",
+        grant_license = "You granted a license",
+        revoke_license = "You revoked a license",
     },
     info = {
         blood_clear = 'Blood cleared :)',
