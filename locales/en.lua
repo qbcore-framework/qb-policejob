@@ -8,7 +8,8 @@ local Translations = {
        canceled = "Canceled..",
        time_higher = "Time must be higher than 0..",
        price_higher = "Price must be higher than 0..",
-       vehicle_cuff = "You cant cuff someone in a vehicle",
+       vehicle_cuff = "You can\'t cuff someone in a vehicle",
+       no_cuff = "You don\'t have handcuffs on you",
        
     },
     success = {

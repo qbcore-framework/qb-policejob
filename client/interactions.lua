@@ -292,10 +292,10 @@ RegisterNetEvent('police:client:CuffPlayer', function()
                         TriggerServerEvent("police:server:CuffPlayer", playerId, false)
                         HandCuffAnimation()
                     else
-                        QBCore.Functions.Notify("You can\'t cuff someone in a vehicle", "error")
+                        QBCore.Functions.Notify(Lang:t("error.vehicle_cuff"), "error")
                     end
                 else
-                    QBCore.Functions.Notify("You don\'t have handcuffs on you", "error")
+                    QBCore.Functions.Notify(ang:t("error.no_cuff"), "error")
                 end
             end, "handcuffs")
         else
