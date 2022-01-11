@@ -312,10 +312,10 @@ QBCore.Commands.Add("unflagplate", "Unflag A Plate (Police Only)", {{name = "pla
                 Plates[args[1]:upper()].isflagged = false
                 TriggerClientEvent('QBCore:Notify', src, Lang:t("info.unflag_vehicle"))
             else
-                TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_not_flag"), 'error')
+                TriggerClientEvent('QBCore:Notify', src, Lang:t("error.vehicle_not_flag"), 'error')
             end
         else
-            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_not_flag"), 'error')
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.vehicle_not_flag"), 'error')
         end
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.on_duty_police_only"), 'error')
@@ -330,10 +330,10 @@ QBCore.Commands.Add("plateinfo", "Run A Plate (Police Only)", {{name = "plate",h
             if Plates[args[1]:upper()].isflagged then
                 TriggerClientEvent('QBCore:Notify', src, 'Vehicle ' .. args[1]:upper() .. ' has been flagged for: ' .. Plates[args[1]:upper()].reason)
             else
-                TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_not_flag"), 'error')
+                TriggerClientEvent('QBCore:Notify', src, Lang:t("error.vehicle_not_flag"), 'error')
             end
         else
-            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_not_flag"), 'error')
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.vehicle_not_flag"), 'error')
         end
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.on_duty_police_only"), 'error')
@@ -392,7 +392,7 @@ QBCore.Commands.Add("paylawyer", "Pay Lawyer (Police, Judge Only)", {{name = "id
                 TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, Lang:t("success.tow_paid"), 'success')
                 TriggerClientEvent('QBCore:Notify', src, Lang:t("info.paid_lawyer"))
             else
-                TriggerClientEvent('QBCore:Notify', src, 'Person is not a lawyer', "error")
+                TriggerClientEvent('QBCore:Notify', src, Lang:t("error.not_lawyer"), "error")
             end
         end
     else
@@ -421,7 +421,7 @@ QBCore.Commands.Add("ankletlocation", "Get the location of a persons anklet", {{
                 if Target.PlayerData.metadata["tracker"] then
                     TriggerClientEvent("police:client:SendTrackerLocation", Target.PlayerData.source, src)
                 else
-                    TriggerClientEvent('QBCore:Notify', src, 'This person doesn\'t have an anklet on.', 'error')
+                    TriggerClientEvent('QBCore:Notify', src, Lang:t("error.no_anklet"), 'error')
                 end
             end
         end
@@ -441,7 +441,7 @@ QBCore.Commands.Add("removeanklet", "Remove Tracking Anklet (Police Only)", {{na
                 if Target.PlayerData.metadata["tracker"] then
                     TriggerClientEvent("police:client:SendTrackerLocation", Target.PlayerData.source, src)
                 else
-                    TriggerClientEvent('QBCore:Notify', src, 'This person does not have an anklet', 'error')
+                    TriggerClientEvent('QBCore:Notify', src, Lang:t("error.no_anklet"), 'error')
                 end
             end
         end
@@ -475,7 +475,7 @@ QBCore.Commands.Add("takedna", "Take a DNA sample from a person (empty evidence 
                 TriggerClientEvent("inventory:client:ItemBox", src, QBCore.Shared.Items["filled_evidence_bag"], "add")
             end
         else
-            TriggerClientEvent('QBCore:Notify', src, "You must have an empty evidence bag with you", "error")
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.have_evidence_bag"), "error")
         end
     end
 end)
@@ -659,7 +659,7 @@ end)
 RegisterNetEvent('police:server:TakeOutImpound', function(plate)
     local src = source
     MySQL.Async.execute('UPDATE player_vehicles SET state = ? WHERE plate  = ?', {0, plate})
-    TriggerClientEvent('QBCore:Notify', src, "Vehicle unimpounded!", 'success')
+    TriggerClientEvent('QBCore:Notify', src, Lang:t("error.unimpound_vehicle"), 'success')
 end)
 
 RegisterNetEvent('police:server:CuffPlayer', function(playerId, isSoftcuff)
@@ -831,7 +831,7 @@ RegisterNetEvent('police:server:SeizeDriverLicense', function(playerId)
             SearchedPlayer.Functions.SetMetaData("licences", licenses)
             TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, 'Your driving license has been confiscated')
         else
-            TriggerClientEvent('QBCore:Notify', src, 'No drivers license', 'error')
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.no_driver_license"), 'error')
         end
     end
 end)
@@ -844,8 +844,8 @@ RegisterNetEvent('police:server:RobPlayer', function(playerId)
         local money = SearchedPlayer.PlayerData.money["cash"]
         Player.Functions.AddMoney("cash", money, "police-player-robbed")
         SearchedPlayer.Functions.RemoveMoney("cash", money, "police-player-robbed")
-        TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, "You have been robbed of $" .. money)
-        TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, "You have stolen $" .. money)
+        TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t("info.robbed_off"))
+        TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, Lang:t("info.stolen_money"))
     end
 end)
 
@@ -872,12 +872,12 @@ RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, bo
             MySQL.Async.execute(
                 'UPDATE player_vehicles SET state = ?, depotprice = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
                 {0, price, body, engine, fuel, plate})
-            TriggerClientEvent('QBCore:Notify', src, "Vehicle taken into depot for $" .. price .. "!")
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_taken_depot"))
         else
             MySQL.Async.execute(
                 'UPDATE player_vehicles SET state = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
                 {2, body, engine, fuel, plate})
-            TriggerClientEvent('QBCore:Notify', src, "Vehicle seized")
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_seized"))
         end
     end
 end)
@@ -923,7 +923,7 @@ RegisterNetEvent('evidence:server:AddBlooddropToInventory', function(bloodId, bl
             BloodDrops[bloodId] = nil
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, "You must have an empty evidence bag with you", "error")
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.have_evidence_bag"), "error")
     end
 end)
 
@@ -937,7 +937,7 @@ RegisterNetEvent('evidence:server:AddFingerprintToInventory', function(fingerId,
             FingerDrops[fingerId] = nil
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, "You must have an empty evidence bag with you", "error")
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.have_evidence_bag"), "error")
     end
 end)
 
@@ -988,7 +988,7 @@ RegisterNetEvent('evidence:server:AddCasingToInventory', function(casingId, casi
             Casings[casingId] = nil
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, "You must have an empty evidence bag with you", "error")
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.have_evidence_bag"), "error")
     end
 end)
 
@@ -1012,13 +1012,13 @@ RegisterNetEvent('police:server:SetTracker', function(targetId)
     local TrackerMeta = Target.PlayerData.metadata["tracker"]
     if TrackerMeta then
         Target.Functions.SetMetaData("tracker", false)
-        TriggerClientEvent('QBCore:Notify', targetId, 'Your anklet is taken off.', 'error', 5000)
-        TriggerClientEvent('QBCore:Notify', src, 'You took off an ankle bracelet from ' .. Target.PlayerData.charinfo.firstname .. " " .. Target.PlayerData.charinfo.lastname, 'error', 5000)
+        TriggerClientEvent('QBCore:Notify', targetId, Lang:t("error.anklet_taken_off"), 'error', 5000)
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.took_anklet_from"), 'error', 5000)
         TriggerClientEvent('police:client:SetTracker', targetId, false)
     else
         Target.Functions.SetMetaData("tracker", true)
-        TriggerClientEvent('QBCore:Notify', targetId, 'You put on an ankle strap.', 'error', 5000)
-        TriggerClientEvent('QBCore:Notify', src, 'You put on an ankle strap to ' .. Target.PlayerData.charinfo.firstname .. " " .. Target.PlayerData.charinfo.lastname, 'error', 5000)
+        TriggerClientEvent('QBCore:Notify', targetId, Lang:t("error.put_anklet"), 'error', 5000)
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.put_anklet_on"), 'error', 5000)
         TriggerClientEvent('police:client:SetTracker', targetId, true)
     end
 end)

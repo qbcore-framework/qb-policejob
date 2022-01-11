@@ -19,6 +19,15 @@ local Translations = {
        on_duty_police_only = 'For on-duty police only',
        vehicle_not_flag = 'Vehicle not flagged',
        not_towdriver = 'Not a tow truck driver',
+       not_lawyer = 'Person is not a lawyer',
+       no_anklet = 'This person doesn\'t have an anklet on.',
+       have_evidence_bag = "You must have an empty evidence bag with you",
+       unimpound_vehicle = "Vehicle unimpounded!",
+       anklet_taken_off = 'Your anklet is taken off.',
+       took_anklet_from = 'You took off an ankle bracelet from ' .. Target.PlayerData.charinfo.firstname .. " " .. Target.PlayerData.charinfo.lastname .."",
+       put_anklet = 'You put on an ankle strap.',
+       put_anklet_on = 'You put on an ankle strap to ' .. Target.PlayerData.charinfo.firstname .. " " .. Target.PlayerData.charinfo.lastname .. "",
+       no_driver_license = 'No drivers license',
 
        
     },
@@ -39,6 +48,10 @@ local Translations = {
         unflag_vehicle = "Vehicle (" .. args[1]:upper() .. ") is unflagged",
         tow_driver_paid = 'You paid the tow truck driver',
         paid_lawyer = 'You paid a lawyer',
+        vehicle_taken_depot = "Vehicle taken into depot for $" .. price .. "!",
+        vehicle_seized = "Vehicle seized",
+        stolen_money = "You have stolen $" .. money .."",
+        robbed_off = "You have been robbed of $" .. money .."",
     },
     general = {
     },
