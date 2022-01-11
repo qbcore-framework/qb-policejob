@@ -114,7 +114,7 @@ RegisterNetEvent('police:client:ActiveCamera', function(cameraId)
         })
         DoScreenFadeIn(250)
     else
-        Notify(Lang:t("error.no_camera"))
+        QBCore.Functions.Notify(Lang:t("error.no_camera"),"error")
     end
 end)
 

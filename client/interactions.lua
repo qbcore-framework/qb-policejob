@@ -91,7 +91,7 @@ RegisterNetEvent('police:client:SearchPlayer', function()
         TriggerServerEvent("inventory:server:OpenInventory", "otherplayer", playerId)
         TriggerServerEvent("police:server:SearchPlayer", playerId)
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -101,7 +101,7 @@ RegisterNetEvent('police:client:SeizeCash', function()
         local playerId = GetPlayerServerId(player)
         TriggerServerEvent("police:server:SeizeCash", playerId)
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -111,7 +111,7 @@ RegisterNetEvent('police:client:SeizeDriverLicense', function()
         local playerId = GetPlayerServerId(player)
         TriggerServerEvent("police:server:SeizeDriverLicense", playerId)
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -140,15 +140,15 @@ RegisterNetEvent('police:client:RobPlayer', function()
                     TriggerServerEvent("inventory:server:OpenInventory", "otherplayer", playerId)
                     TriggerEvent("inventory:server:RobPlayer", playerId)
                 else
-                    QBCore.Functions.Notify("No one nearby!", "error")
+                    QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
                 end
             end, function() -- Cancel
                 StopAnimTask(ped, "random@shop_robbery", "robbery_action_b", 1.0)
-                QBCore.Functions.Notify("Canceled..", "error")
+                QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
             end)
         end
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -179,10 +179,10 @@ RegisterNetEvent('police:client:JailPlayer', function()
         if tonumber(dialog['jailtime']) > 0 then
             TriggerServerEvent("police:server:JailPlayer", playerId, tonumber(dialog['jailtime']))
         else
-            QBCore.Functions.Notify("Time must be higher than 0..", "error")
+            QBCore.Functions.Notify(Lang:t("error.time_higher"), "error")
         end
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -205,10 +205,10 @@ RegisterNetEvent('police:client:BillPlayer', function()
         if tonumber(dialog['bill']) > 0 then
             TriggerServerEvent("police:server:BillPlayer", playerId, tonumber(dialog['bill']))
         else
-            QBCore.Functions.Notify("Price must be higher than 0..", "error")
+            QBCore.Functions.Notify(Lang:t("error.price_higher"), "error")
         end
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -220,7 +220,7 @@ RegisterNetEvent('police:client:PutPlayerInVehicle', function()
             TriggerServerEvent("police:server:PutPlayerInVehicle", playerId)
         end
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -232,7 +232,7 @@ RegisterNetEvent('police:client:SetPlayerOutVehicle', function()
             TriggerServerEvent("police:server:SetPlayerOutVehicle", playerId)
         end
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -244,7 +244,7 @@ RegisterNetEvent('police:client:EscortPlayer', function()
             TriggerServerEvent("police:server:EscortPlayer", playerId)
         end
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -258,7 +258,7 @@ RegisterNetEvent('police:client:KidnapPlayer', function()
             end
         end
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -271,10 +271,10 @@ RegisterNetEvent('police:client:CuffPlayerSoft', function()
                 TriggerServerEvent("police:server:CuffPlayer", playerId, true)
                 HandCuffAnimation()
             else
-                QBCore.Functions.Notify("You cant cuff someone in a vehicle", "error")
+                QBCore.Functions.Notify(Lang:t("error.vehicle_cuff"), "error")
             end
         else
-            QBCore.Functions.Notify("No one nearby!", "error")
+            QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
         end
     else
         Wait(2000)
@@ -299,7 +299,7 @@ RegisterNetEvent('police:client:CuffPlayer', function()
                 end
             end, "handcuffs")
         else
-            QBCore.Functions.Notify("No one nearby!", "error")
+            QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
         end
     else
         Wait(2000)

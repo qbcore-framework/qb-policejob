@@ -85,7 +85,7 @@ RegisterNetEvent('evidence:client:SetStatus', function(statusId, time)
                 text = StatusList[statusId],
                 time = time
             }
-            Notify(Lang:t("error.current_status_list"))
+            QBCore.Functions.Notify(Lang:t("error.current_status_list"))
         end
     elseif StatusList[statusId] then
         CurrentStatusList[statusId] = nil
@@ -144,10 +144,10 @@ RegisterNetEvent('evidence:client:ClearBlooddropsInArea', function()
                 end
             end
             TriggerServerEvent('evidence:server:ClearBlooddrops', blooddropList)
-            Notify(Lang:t("info.blood_clear"))
+            QBCore.Functions.Notify(Lang:t("info.blood_clear"),"info")
         end
     end, function() -- Cancel
-        Notify(Lang:t("error.blood_not_cleared"))
+        QBCore.Functions.Notify(Lang:t("error.blood_not_cleared"),"error")
     end)
 end)
 
@@ -185,11 +185,11 @@ RegisterNetEvent('evidence:client:ClearCasingsInArea', function()
                 end
             end
             TriggerServerEvent('evidence:server:ClearCasings', casingList)
-            Notify(Lang:t("info.bullet_sleeve_remove"))
+            QBCore.Functions.Notify(Lang:t("info.bullet_sleeve_remove"),"info")
             
         end
     end, function() -- Cancel
-        Notify(Lang:t("error.bullet_sleeve_not_remove"))
+        QBCore.Functions.Notify(Lang:t("error.bullet_sleeve_not_remove"),"error")
     end)
 end)
 
