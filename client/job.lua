@@ -237,7 +237,7 @@ function MenuImpound(currentSelection)
     QBCore.Functions.TriggerCallback("police:GetImpoundedVehicles", function(result)
         local shouldContinue = false
         if result == nil then
-            QBCore.Functions.Notify("There are no impounded vehicles", "error", 5000)
+            QBCore.Functions.Notify(Lang:t("error.no_impound"), "error", 5000)
         else
             shouldContinue = true
             for _ , v in pairs(result) do

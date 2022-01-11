@@ -295,7 +295,7 @@ RegisterNetEvent('police:client:CuffPlayer', function()
                         QBCore.Functions.Notify(Lang:t("error.vehicle_cuff"), "error")
                     end
                 else
-                    QBCore.Functions.Notify(ang:t("error.no_cuff"), "error")
+                    QBCore.Functions.Notify(Lang:t("error.no_cuff"), "error")
                 end
             end, "handcuffs")
         else
@@ -392,11 +392,11 @@ RegisterNetEvent('police:client:GetCuffed', function(playerId, isSoftcuff)
         if not isSoftcuff then
             cuffType = 16
             GetCuffedAnimation(playerId)
-            QBCore.Functions.Notify("You are cuffed!")
+            QBCore.Functions.Notify(Lang:t("info.cuff"),"info")
         else
             cuffType = 49
             GetCuffedAnimation(playerId)
-            QBCore.Functions.Notify("You are cuffed, but you can walk")
+            QBCore.Functions.Notify(Lang:t("info.cuffed_walk"),"info")
         end
     else
         isHandcuffed = false
@@ -406,7 +406,7 @@ RegisterNetEvent('police:client:GetCuffed', function(playerId, isSoftcuff)
         TriggerServerEvent("police:server:SetHandcuffStatus", false)
         ClearPedTasksImmediately(ped)
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "Uncuff", 0.2)
-        QBCore.Functions.Notify("You are uncuffed!")
+        QBCore.Functions.Notify(Lang:t("success.uncuffed"),"success")
     end
 end)
 

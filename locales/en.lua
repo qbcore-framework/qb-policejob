@@ -10,13 +10,17 @@ local Translations = {
        price_higher = "Price must be higher than 0..",
        vehicle_cuff = "You can\'t cuff someone in a vehicle",
        no_cuff = "You don\'t have handcuffs on you",
+       no_impound = "There are no impounded vehicles",
        
     },
     success = {
+        uncuffed = "You are uncuffed!",
     },
     info = {
         blood_clear = 'Blood cleared :)',
         bullet_sleeve_remove = 'Bullet sleeves removed :)',
+        cuff = "You are cuffed!",
+        cuffed_walk = "You are cuffed, but you can walk",
     },
     general = {
     },
