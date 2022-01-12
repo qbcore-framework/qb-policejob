@@ -85,7 +85,7 @@ RegisterNetEvent('evidence:client:SetStatus', function(statusId, time)
                 text = StatusList[statusId],
                 time = time
             }
-            QBCore.Functions.Notify(Lang:t("error.current_status_list"))
+            QBCore.Functions.Notify(''..CurrentStatusList[statusId].text..'', 'error')
         end
     elseif StatusList[statusId] then
         CurrentStatusList[statusId] = nil
@@ -129,7 +129,7 @@ end)
 RegisterNetEvent('evidence:client:ClearBlooddropsInArea', function()
     local pos = GetEntityCoords(PlayerPedId())
     local blooddropList = {}
-    QBCore.Functions.Progressbar('clear_blooddrops', Lang:t("progressbar.blood_clear"), 5000, false, true, {
+    QBCore.Functions.Progressbar('clear_blooddrops', 'Clearing blood..', 5000, false, true, {
         disableMovement = false,
         disableCarMovement = false,
         disableMouse = false,
@@ -144,10 +144,10 @@ RegisterNetEvent('evidence:client:ClearBlooddropsInArea', function()
                 end
             end
             TriggerServerEvent('evidence:server:ClearBlooddrops', blooddropList)
-            QBCore.Functions.Notify(Lang:t("info.blood_clear"),"info")
+            QBCore.Functions.Notify('Blood cleared :)')
         end
     end, function() -- Cancel
-        QBCore.Functions.Notify(Lang:t("error.blood_not_cleared"),"error")
+        QBCore.Functions.Notify('Blood not cleared..', 'error')
     end)
 end)
 
@@ -171,7 +171,7 @@ end)
 RegisterNetEvent('evidence:client:ClearCasingsInArea', function()
     local pos = GetEntityCoords(PlayerPedId())
     local casingList = {}
-    QBCore.Functions.Progressbar('clear_casings', Lang:t("progressbar.bullet_sleeve"), 5000, false, true, {
+    QBCore.Functions.Progressbar('clear_casings', 'Removing bullet sleeves..', 5000, false, true, {
         disableMovement = false,
         disableCarMovement = false,
         disableMouse = false,
@@ -185,11 +185,10 @@ RegisterNetEvent('evidence:client:ClearCasingsInArea', function()
                 end
             end
             TriggerServerEvent('evidence:server:ClearCasings', casingList)
-            QBCore.Functions.Notify(Lang:t("info.bullet_sleeve_remove"),"info")
-            
+            QBCore.Functions.Notify('Bullet sleeves removed :)')
         end
     end, function() -- Cancel
-        QBCore.Functions.Notify(Lang:t("error.bullet_sleeve_not_remove"),"error")
+        QBCore.Functions.Notify('Bullet sleeves not removed', 'error')
     end)
 end)
 
