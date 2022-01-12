@@ -4,7 +4,7 @@ RegisterNetEvent('police:client:CheckDistance', function()
         local playerId = GetPlayerServerId(player)
         TriggerServerEvent("police:server:SetTracker", playerId)
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 

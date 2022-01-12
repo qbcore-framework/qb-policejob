@@ -237,7 +237,7 @@ function MenuImpound(currentSelection)
     QBCore.Functions.TriggerCallback("police:GetImpoundedVehicles", function(result)
         local shouldContinue = false
         if result == nil then
-            QBCore.Functions.Notify("There are no impounded vehicles", "error", 5000)
+            QBCore.Functions.Notify(Lang:t("error.no_impound"), "error", 5000)
         else
             shouldContinue = true
             for _ , v in pairs(result) do
@@ -369,12 +369,12 @@ RegisterNetEvent('police:client:CheckStatus', function()
                 QBCore.Functions.TriggerCallback('police:GetPlayerStatus', function(result)
                     if result then
                         for k, v in pairs(result) do
-                            QBCore.Functions.Notify(''..v..'')
+                            QBCore.Functions.Notify(Lang:t("info.dont_know_var"),"info")
                         end
                     end
                 end, playerId)
             else
-                QBCore.Functions.Notify("No One Nearby", "error")
+                QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
             end
         end
     end)
@@ -611,7 +611,7 @@ CreateThread(function()
                                     local playerId = GetPlayerServerId(player)
                                     TriggerServerEvent("police:server:showFingerprint", playerId)
                                 else
-                                    QBCore.Functions.Notify("No one nearby!", "error")
+                                    QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
                                 end
                             end
                         elseif #(pos - v) < 2.5 then
