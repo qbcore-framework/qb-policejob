@@ -4,7 +4,7 @@ RegisterNetEvent('police:client:CheckDistance', function()
         local playerId = GetPlayerServerId(player)
         TriggerServerEvent("police:server:SetTracker", playerId)
     else
-        QBCore.Functions.Notify("No one nearby!", "error")
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
 
@@ -44,7 +44,7 @@ RegisterNetEvent('police:client:TrackerMessage', function(msg, coords)
     SetBlipAlpha(blip, transG)
     SetBlipScale(blip, 1.0)
     BeginTextCommandSetBlipName('STRING')
-    AddTextComponentString("Anklet location")
+    AddTextComponentString(Lang:t('info.ankle_location'))
     EndTextCommandSetBlipName(blip)
     while transG ~= 0 do
         Wait(180 * 4)

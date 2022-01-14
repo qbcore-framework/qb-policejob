@@ -11,7 +11,6 @@ local toggle_lock_on = 22 -- control id to lock onto a vehicle with the camera. 
 
 -- Script starts here
 local helicam = false
-local polmav_hash = `polmav`
 local fov = (fov_max+fov_min)*0.5
 local vision_state = 0 -- 0 is normal, 1 is nightmode, 2 is thermal vision
 
@@ -23,11 +22,10 @@ local vehicle_detected = nil
 local locked_on_vehicle = nil
 
 -- Functions
-
 local function IsPlayerInPolmav()
 	local lPed = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(lPed)
-	return IsVehicleModel(vehicle, polmav_hash)
+	return IsVehicleModel(vehicle, GetHashKey(Config.PoliceHelicopter))
 end
 
 local function IsHeliHighEnough(heli)
@@ -129,14 +127,12 @@ local function RenderVehicleInfo(vehicle)
 end
 
 -- Events
-
 RegisterNetEvent('heli:spotlight', function(serverID, state)
 	local heli = GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(serverID)), false)
 	SetVehicleSearchlight(heli, state, false)
 end)
 
 -- Threads
-
 CreateThread(function()
 	while true do
 		Wait(0)
