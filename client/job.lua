@@ -267,7 +267,6 @@ function MenuImpound(currentSelection)
                 params = {
                     event = "qb-menu:client:closeMenu"
                 }
-
             }
             exports['qb-menu']:openMenu(impoundMenu)
         end
@@ -418,7 +417,7 @@ RegisterNetEvent('police:client:EvidenceStashDrawer', function(data)
 
     if #(pos - takeLoc) <= 1.0 then
         local drawer = exports['qb-input']:ShowInput({
-            header = Lang:t('info.evidence_stash', {value = currentEvidence},
+            header = Lang:t('info.evidence_stash', {value = currentEvidence}),
             submitText = "open",
             inputs = {
                 {
@@ -431,11 +430,11 @@ RegisterNetEvent('police:client:EvidenceStashDrawer', function(data)
         })
         if drawer then
             if not drawer.slot then return end
-            TriggerServerEvent("inventory:server:OpenInventory", "stash", Lang:t('info.current_evidence', {value = currentEvidence, value2 = drawer.slot}, {
+            TriggerServerEvent("inventory:server:OpenInventory", "stash", Lang:t('info.current_evidence', {value = currentEvidence, value2 = drawer.slot}), {
                 maxweight = 4000000,
                 slots = 500,
             })
-            TriggerEvent("inventory:client:SetCurrentStash", Lang:t('info.current_evidence', {value = currentEvidence, value2 = drawer.slot})
+            TriggerEvent("inventory:client:SetCurrentStash", Lang:t('info.current_evidence', {value = currentEvidence, value2 = drawer.slot}))
         end
     else
         exports['qb-menu']:closeMenu()
@@ -503,7 +502,7 @@ CreateThread(function()
                             })
                         end
                     elseif #(pos - v) < 1.5 then
-                        DrawText3D(v.x, v.y, v.z, Lang:t('info.evidence_stash', {value = k})
+                        DrawText3D(v.x, v.y, v.z, Lang:t('info.evidence_stash', {value = k}))
                         if headerDrawn then
                             headerDrawn = false
                             exports['qb-menu']:closeMenu()
