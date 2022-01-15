@@ -137,7 +137,7 @@ QBCore.Commands.Add("grantlicense", Lang:t("commands.license_grant"), {{name = "
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license"), "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_license", "error")
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_license", "error"))
     end
 end)
 
@@ -161,7 +161,7 @@ QBCore.Commands.Add("revokelicense", Lang:t("commands.license_revoke"), {{name =
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license"), "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_revoke", "error")
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_revoke", "error"))
     end
 end)
 
@@ -870,7 +870,7 @@ RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, bo
             MySQL.Async.execute(
                 'UPDATE player_vehicles SET state = ?, depotprice = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
                 {0, price, body, engine, fuel, plate})
-            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_taken_depot"), {price = price}))
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_taken_depot", {price = price}))
         else
             MySQL.Async.execute(
                 'UPDATE player_vehicles SET state = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
@@ -1016,7 +1016,7 @@ RegisterNetEvent('police:server:SetTracker', function(targetId)
     else
         Target.Functions.SetMetaData("tracker", true)
         TriggerClientEvent('QBCore:Notify', targetId, Lang:t("success.put_anklet"), 'success')
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("success.put_anklet_on", {firstname = , lastname = }), 'success')
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("success.put_anklet_on", {firstname = Target.PlayerData.charinfo.firstname, lastname = Target.PlayerData.charinfo.lastname}), 'success')
         TriggerClientEvent('police:client:SetTracker', targetId, true)
     end
 end)
