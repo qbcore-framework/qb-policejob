@@ -635,7 +635,7 @@ end)
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         CreateThread(function()
-            MySQL.Async.execute("DELETE FROM stashitems WHERE stash = 'policetrash'")
+            MySQL.Async.execute("DELETE FROM stashitems WHERE stash='policetrash'")
         end)
     end
 end)
