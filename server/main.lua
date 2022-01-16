@@ -134,7 +134,7 @@ QBCore.Commands.Add("grantlicense", Lang:t("commands.license_grant"), {{name = "
             TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t("success.granted_license"), "success")
             TriggerClientEvent('QBCore:Notify', src, Lang:t("success.grant_license"), "success")
         else
-            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license"), "error")
+            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license_type"), "error")
         end
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_license", "error"))

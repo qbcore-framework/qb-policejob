@@ -45,7 +45,7 @@ local function GetCuffedAnimation(playerId)
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "Cuff", 0.2)
     loadAnimDict("mp_arrest_paired")
     SetEntityCoords(ped, GetOffsetFromEntityInWorldCoords(cuffer, 0.0, 0.45, 0.0))
-    
+
 	Wait(100)
 	SetEntityHeading(ped, heading)
 	TaskPlayAnim(ped, "mp_arrest_paired", "crook_p2_back_right", 3.0, 3.0, -1, 32, 0, 0, 0, 0 ,true, true, true)
@@ -163,7 +163,7 @@ RegisterNetEvent('police:client:JailPlayer', function()
     if player ~= -1 and distance < 2.5 then
         local playerId = GetPlayerServerId(player)
         local dialog = exports['qb-input']:ShowInput({
-            header = Lang:t('info.jail_time'),
+            header = Lang:t('info.jail_time_input'),
             submitText = Lang:t('info.submit'),
             inputs = {
                 {
