@@ -441,7 +441,15 @@ RegisterNetEvent('police:client:EvidenceStashDrawer', function(data)
     end
 end)
 
---Threads
+-- Threads
+-- Toggle Duty in an event.
+RegisterNetEvent('qb-policejob:ToggleDuty', function()
+    onDuty = not onDuty
+    TriggerServerEvent("police:server:UpdateCurrentCops")
+    TriggerServerEvent("police:server:UpdateBlips")
+    TriggerServerEvent("QBCore:ToggleDuty")
+end)
+
 -- Toggle Duty
 CreateThread(function()
     while true do
