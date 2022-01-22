@@ -89,10 +89,10 @@ RegisterNetEvent('police:client:SearchPlayer', function()
         local playerPed = GetPlayerPed(player)
         local playerId = GetPlayerServerId(player)
             QBCore.Functions.Progressbar("search_player", "Searching person..", math.random(5000, 7000), false, true, {
-                disableMovement = true,
-                disableCarMovement = true,
+                disableMovement = false,
+                disableCarMovement = false,
                 disableMouse = false,
-                disableCombat = true,
+                disableCombat = false,
             }, {
                 animDict = "random@shop_robbery",
                 anim = "robbery_action_b",
