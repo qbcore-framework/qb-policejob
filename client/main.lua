@@ -202,6 +202,12 @@ RegisterNetEvent('police:client:SendToJail', function(time)
     TriggerEvent("prison:client:Enter", time)
 end)
 
+RegisterNetEvent('police:client:SendPoliceEmergencyAlert', function()
+    local Player = QBCore.Functions.GetPlayerData()
+    TriggerServerEvent('police:server:policeAlert', Lang:t('info.officer_down', {lastname = Player.charinfo.lastname, callsign = Player.metadata.callsign}))
+    TriggerServerEvent('hospital:server:ambulanceAlert', Lang:t('info.officer_down', {lastname = Player.charinfo.lastname, callsign = Player.metadata.callsign}))
+end)
+
 -- Threads
 CreateThread(function()
     for k, station in pairs(Config.Locations["stations"]) do
