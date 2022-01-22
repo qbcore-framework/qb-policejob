@@ -84,12 +84,35 @@ end)
 
 RegisterNetEvent('police:client:SearchPlayer', function()
     local player, distance = QBCore.Functions.GetClosestPlayer()
+    local ped = PlayerPedId()
     if player ~= -1 and distance < 2.5 then
+        local playerPed = GetPlayerPed(player)
         local playerId = GetPlayerServerId(player)
-        TriggerServerEvent("inventory:server:OpenInventory", "otherplayer", playerId)
-        TriggerServerEvent("police:server:SearchPlayer", playerId)
+            QBCore.Functions.Progressbar("search_player", "Searching person..", math.random(5000, 7000), false, true, {
+                disableMovement = true,
+                disableCarMovement = true,
+                disableMouse = false,
+                disableCombat = true,
+            }, {
+                animDict = "random@shop_robbery",
+                anim = "robbery_action_b",
+                flags = 16,
+            }, {}, {}, function() -- Done
+                local plyCoords = GetEntityCoords(playerPed)
+                local pos = GetEntityCoords(ped)
+                if #(pos - plyCoords) < 2.5 then
+                    StopAnimTask(ped, "random@shop_robbery", "robbery_action_b", 1.0)
+                    TriggerServerEvent("inventory:server:OpenInventory", "otherplayer", playerId)
+                    TriggerServerEvent("police:server:SearchPlayer", playerId)
+                else
+                    QBCore.Functions.Notify("No one nearby!", "error")
+                end
+            end, function() -- Cancel
+                StopAnimTask(ped, "random@shop_robbery", "robbery_action_b", 1.0)
+                QBCore.Functions.Notify("Canceled..", "error")
+            end)
     else
-        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
+        QBCore.Functions.Notify("No one nearby!", "error")
     end
 end)
 
