@@ -505,10 +505,27 @@ QBCore.Commands.Add('911p', Lang:t("commands.police_report"), {{name='message', 
     local players = QBCore.Functions.GetQBPlayers()
     for k,v in pairs(players) do
         if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
-            local alertData = {title = Lang:t("commands.emergency_call"), coords = {coords.x, coords.y, coords.z}, description = message}
+            local alertData = {title = Lang:t("commands.emergency_call").."ID: "..src, coords = {coords.x, coords.y, coords.z}, description = message}
             TriggerClientEvent("qb-phone:client:addPoliceAlert", v.PlayerData.source, alertData)
             TriggerClientEvent('police:client:policeAlert', v.PlayerData.source, coords, message)
         end
+    end
+end)
+
+QBCore.Commands.Add("911r", Lang:t("commands.emergency_respond"), {{name="id", help=Lang:t("commands.id_of_person")}, {name="message", help=Lang:t("commands.message_sent")}}, true, function(source, args)
+    local Player = QBCore.Functions.GetPlayer(source)
+    local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
+    table.remove(args, 1)
+    local message = table.concat(args, " ")
+    local Prefix = "POLICE"
+    if Player.PlayerData.job.name == "ambulance" then
+        Prefix = "MEDIC"
+    end
+    if OtherPlayer ~= nil then 
+        TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "("..Prefix..") " ..Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname, "error", message)
+        TriggerClientEvent('police:server:ReplyEmergencyMessageCheck', -1, Player, message)
+        TriggerClientEvent("police:client:EmergencySound", OtherPlayer.PlayerData.source)
+        TriggerClientEvent("police:client:CallAnim", source)
     end
 end)
 

@@ -172,6 +172,8 @@ local Translations = {
         message_sent = 'Message to be sent',
         civilian_call = 'Civilian Call',
         emergency_call = 'New 911 Call',
+        emergency_respond = "Send a message back to the person",
+        id_of_person = "ID of the person",
     },
     progressbar = {
         blood_clear = 'Clearing Blood...',

@@ -208,6 +208,18 @@ RegisterNetEvent('police:client:SendPoliceEmergencyAlert', function()
     TriggerServerEvent('hospital:server:ambulanceAlert', Lang:t('info.officer_down', {lastname = Player.charinfo.lastname, callsign = Player.metadata.callsign}))
 end)
 
+RegisterNetEvent('police:server:ReplyEmergencyMessageCheck')
+AddEventHandler('police:server:ReplyEmergencyMessageCheck', function(Player, message)
+    local PlayerData = QBCore.Functions.GetPlayerData()
+    if PlayerData.job.name == "police" and onDuty then
+        TriggerEvent('chatMessage', "911r -> "..Player.PlayerData.source.." | ".. Player.PlayerData.charinfo.firstname, "police", message)
+        TriggerEvent("police:client:EmergencySound")
+    elseif PlayerData.job.name == "ambulance" and onDuty then
+        TriggerEvent('chatMessage', "911r -> "..Player.PlayerData.source.." | ".. Player.PlayerData.charinfo.firstname, "ambulance", message)
+        TriggerEvent("police:client:EmergencySound")
+    end
+end)
+
 -- Threads
 CreateThread(function()
     for k, station in pairs(Config.Locations["stations"]) do
