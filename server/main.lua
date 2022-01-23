@@ -500,7 +500,7 @@ end)
 QBCore.Commands.Add('911p', Lang:t("commands.police_report"), {{name='message', help=Lang:t("commands.message_sent")}}, false, function(source, args)
 	local src = source
     local custommessage = table.concat(args, "")
-    if args[1] then message = custommessage..' ID: '..source else message = Lang:t("commands.civilian_call").."ID: "..source end
+    if args[1] then message = custommessage..' ID: '..source else message = Lang:t("commands.civilian_call").." ID: "..source end
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
     local players = QBCore.Functions.GetQBPlayers()
