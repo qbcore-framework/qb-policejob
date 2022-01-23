@@ -499,15 +499,17 @@ end)
 
 QBCore.Commands.Add('911p', Lang:t("commands.police_report"), {{name='message', help=Lang:t("commands.message_sent")}}, false, function(source, args)
 	local src = source
-	if args[1] then message = table.concat(args, " ") else message = Lang:t("commands.civilian_call") end
+    local custommessage = table.concat(args, "")
+    if args[1] then message = custommessage..' ID: '..source else message = Lang:t("commands.civilian_call").."ID: "..source end
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
     local players = QBCore.Functions.GetQBPlayers()
     for k,v in pairs(players) do
         if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
-            local alertData = {title = Lang:t("commands.emergency_call").."ID: "..src, coords = {coords.x, coords.y, coords.z}, description = message}
+            local alertData = {title = 'New Police Call ID: '..source..'', coords = {coords.x, coords.y, coords.z}, description = message}
             TriggerClientEvent("qb-phone:client:addPoliceAlert", v.PlayerData.source, alertData)
             TriggerClientEvent('police:client:policeAlert', v.PlayerData.source, coords, message)
+            TriggerClientEvent('hospital:client:ambulanceAlert', v.PlayerData.source, coords, message)
         end
     end
 end)
