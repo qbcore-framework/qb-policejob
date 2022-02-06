@@ -149,7 +149,12 @@ function TakeOutVehicle(vehicleInfo)
             exports['LegacyFuel']:SetFuel(veh, 100.0)
             closeMenuFull()
             if Config.VehicleSettings[vehicleInfo] ~= nil then
-                QBCore.Shared.SetDefaultVehicleExtras(veh, Config.VehicleSettings[vehicleInfo].extras)
+                if Config.VehicleSettings[vehicleInfo].extras ~= nil then 
+					QBCore.Shared.SetDefaultVehicleExtras(veh, Config.VehicleSettings[vehicleInfo].extras)
+				end
+				if Config.VehicleSettings[vehicleInfo].livery ~= nil then 
+					SetVehicleLivery(veh, Config.VehicleSettings[vehicleInfo].livery)
+				end
             end
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
             TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
