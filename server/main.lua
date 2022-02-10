@@ -137,7 +137,7 @@ QBCore.Commands.Add("grantlicense", Lang:t("commands.license_grant"), {{name = "
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license_type"), "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_license", "error"))
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_license"), "error")
     end
 end)
 
