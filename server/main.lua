@@ -161,7 +161,7 @@ QBCore.Commands.Add("revokelicense", Lang:t("commands.license_revoke"), {{name =
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license"), "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_revoke", "error"))
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_revoke"), "error")
     end
 end)
 
