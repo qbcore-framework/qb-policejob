@@ -155,7 +155,7 @@ end)
 
 RegisterNetEvent('police:client:deleteObject', function()
     local objectId, dist = GetClosestPoliceObject()
-    if dist < 5.0 then
+    if type(dist) == "number" and  dist < 5.0 then
         QBCore.Functions.Progressbar("remove_object", Lang:t('progressbar.remove_object'), 2500, false, true, {
             disableMovement = true,
             disableCarMovement = true,
