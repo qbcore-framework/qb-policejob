@@ -56,7 +56,6 @@ local Translations = {
         jail_time = 'Time they have to be in jail',
         jail_time_no = 'Jail time needs to be higher than 0',
         license_type = 'License Type (driver/weapon)',
-        ankle_location = 'Ankle Tracker Location',
         cuff = 'You are cuffed!',
         cuffed_walk = 'You are cuffed, but you can walk',
         vehicle_flagged = 'Vehicle %{vehicle} is flagged for: %{reason}',
