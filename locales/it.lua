@@ -56,7 +56,6 @@ local Translations = {
         jail_time = 'Tempo che deve restare in prigione',
         jail_time_no = 'Il tempo di detenzione deve essere maggiore di 0',
         license_type = 'Tipo di licenza (driver/weapon)',
-        ankle_location = 'Posizione Cavigliera',
         cuff = 'Sei ammanettato!',
         cuffed_walk = 'Sei ammanettato, ma puoi camminare.',
         vehicle_flagged = 'Il veicolo %{vehicle} è segnalato per: %{reason}',
