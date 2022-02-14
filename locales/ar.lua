@@ -56,7 +56,6 @@ local Translations = {
         jail_time = 'عدد الاشهر لسجنه',
         jail_time_no = '0 يجب ان يكون اكثر من',
         license_type = '(driver/weapon) النوع',
-        ankle_location = 'أماكن الخلاخل',
         cuff = 'أنت مكلبش',
         cuffed_walk = 'أنت مكلبش و يمكنك التحرك فقط',
         vehicle_flagged = '%{vehicle} | %{reason} تم الإبلاغ عنه لـ',
