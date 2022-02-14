@@ -56,7 +56,6 @@ local Translations = {
         jail_time_input = 'Temps que la personne doit passer en prison',
         jail_time_no = 'Le temps de prison doit être supérieur a 0',
         license_type = 'Type de Permis (conduire/arme)',
-        ankle_location = 'Localisation du Bracelet éléctronique',
         cuff = 'Vous êtes menotté!',
         cuffed_walk = 'Vous êtes menotté, Mais vous pouvez marché',
         vehicle_flagged = 'Vehicule %{vehicle} est signalé pour: %{reason}',
