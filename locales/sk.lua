@@ -56,7 +56,6 @@ local Translations = {
         jail_time = 'Čas, kedy musia byť vo väzení',
         jail_time_no = 'Čas väzenia musí byť vyšší ako 0',
         license_type = 'Typ licencie (vodičký/zborjný)',
-        ankle_location = 'Lokalizácia sledovača',
         cuff = 'Si spútaný!',
         cuffed_walk = 'Si spútaný, ale môžeš chodiť',
         vehicle_flagged = 'Vozidlo %{vehicle} je označené pre: %{reason}',
