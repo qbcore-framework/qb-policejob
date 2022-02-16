@@ -6,35 +6,34 @@ exports('IsHandcuffed', function()
     return isHandcuffed
 end)
 
-local function loadAnimDict(dict) -- interactions, job,
-    while (not HasAnimDictLoaded(dict)) do
-        RequestAnimDict(dict)
-        Wait(10)
+local function loadAnimDict(dict)
+    RequestAnimDict(dict)
+    while not HasAnimDictLoaded(dict) do
+        Wait(0)
     end
 end
 
 local function IsTargetDead(playerId)
-    local retval = false
+    local retval = promise.new()
     QBCore.Functions.TriggerCallback('police:server:isPlayerDead', function(result)
-        retval = result
+        retval:resolve(result)
     end, playerId)
-    Wait(100)
-    return retval
+    return Citizen.Await(retval)
 end
 
 local function HandCuffAnimation()
     local ped = PlayerPedId()
-    if isHandcuffed == true then
+    if isHandcuffed then
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "Cuff", 0.2)
     else
         TriggerServerEvent("InteractSound_SV:PlayOnSource", "Uncuff", 0.2)
     end
 
     loadAnimDict("mp_arrest_paired")
-	Wait(100)
+    Wait(100)
     TaskPlayAnim(ped, "mp_arrest_paired", "cop_p2_back_right", 3.0, 3.0, -1, 48, 0, 0, 0, 0)
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "Cuff", 0.2)
-	Wait(3500)
+    Wait(3500)
     TaskPlayAnim(ped, "mp_arrest_paired", "exit", 3.0, 3.0, -1, 48, 0, 0, 0, 0)
 end
 
@@ -45,11 +44,10 @@ local function GetCuffedAnimation(playerId)
     TriggerServerEvent("InteractSound_SV:PlayOnSource", "Cuff", 0.2)
     loadAnimDict("mp_arrest_paired")
     SetEntityCoords(ped, GetOffsetFromEntityInWorldCoords(cuffer, 0.0, 0.45, 0.0))
-
-	Wait(100)
-	SetEntityHeading(ped, heading)
-	TaskPlayAnim(ped, "mp_arrest_paired", "crook_p2_back_right", 3.0, 3.0, -1, 32, 0, 0, 0, 0 ,true, true, true)
-	Wait(2500)
+    Wait(100)
+    SetEntityHeading(ped, heading)
+    TaskPlayAnim(ped, "mp_arrest_paired", "crook_p2_back_right", 3.0, 3.0, -1, 32, 0, 0, 0, 0 ,true, true, true)
+    Wait(2500)
 end
 
 -- Events
@@ -63,22 +61,21 @@ end)
 
 RegisterNetEvent('police:client:PutInVehicle', function()
     local ped = PlayerPedId()
-    if isHandcuffed or isEscorted then
+    if isHandcuffed or isEscorted or QBCore.Functions.GetPlayerData().metadata['isdead'] then
         local vehicle = QBCore.Functions.GetClosestVehicle()
         if DoesEntityExist(vehicle) then
-			for i = GetVehicleMaxNumberOfPassengers(vehicle), 1, -1 do
+            for i = GetVehicleMaxNumberOfPassengers(vehicle), 1, -1 do
                 if IsVehicleSeatFree(vehicle, i) then
                     isEscorted = false
                     TriggerEvent('hospital:client:isEscorted', isEscorted)
                     ClearPedTasks(ped)
                     DetachEntity(ped, true, false)
-
                     Wait(100)
                     SetPedIntoVehicle(ped, vehicle, i)
                     return
                 end
             end
-		end
+        end
     end
 end)
 
@@ -112,7 +109,6 @@ RegisterNetEvent('police:client:SeizeDriverLicense', function()
         QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
     end
 end)
-
 
 RegisterNetEvent('police:client:RobPlayer', function()
     local player, distance = QBCore.Functions.GetClosestPlayer()
@@ -174,8 +170,10 @@ RegisterNetEvent('police:client:JailPlayer', function()
                 }
             }
         })
-        if tonumber(dialog['jailtime']) > 0 then
-            TriggerServerEvent("police:server:JailPlayer", playerId, tonumber(dialog['jailtime']))
+        if not dialog or not next(dialog) then return end
+        dialog['jailtime'] = tonumber(dialog['jailtime'])
+        if dialog['jailtime'] > 0 then
+            TriggerServerEvent("police:server:JailPlayer", playerId, dialog['jailtime'])
         else
             QBCore.Functions.Notify(Lang:t("error.time_higher"), "error")
         end
@@ -200,8 +198,10 @@ RegisterNetEvent('police:client:BillPlayer', function()
                 }
             }
         })
-        if tonumber(dialog['bill']) > 0 then
-            TriggerServerEvent("police:server:BillPlayer", playerId, tonumber(dialog['bill']))
+        if not dialog or not next(dialog) then return end
+        dialog['bill'] = tonumber(dialog['bill'])
+        if dialog['bill'] > 0 then
+            TriggerServerEvent("police:server:BillPlayer", playerId, dialog['bill'])
         else
             QBCore.Functions.Notify(Lang:t("error.amount_higher"), "error")
         end
@@ -337,11 +337,7 @@ RegisterNetEvent('police:client:GetKidnappedTarget', function(playerId)
                 isEscorted = true
                 draggerId = playerId
                 local dragger = GetPlayerPed(GetPlayerFromServerId(playerId))
-                RequestAnimDict("nm")
-
-                while not HasAnimDictLoaded("nm") do
-                    Wait(10)
-                end
+                loadAnimDict("nm")
                 AttachEntityToEntity(ped, dragger, 0, 0.27, 0.15, 0.63, 0.5, 0.5, 0.0, false, false, false, false, 2, false)
                 TaskPlayAnim(ped, "nm", "firemans_carry", 8.0, -8.0, 100000, 33, 0, false, false, false)
             else
@@ -359,11 +355,7 @@ RegisterNetEvent('police:client:GetKidnappedDragger', function(playerId)
         if not isEscorting then
             draggerId = playerId
             local dragger = PlayerPedId()
-            RequestAnimDict("missfinale_c2mcs_1")
-
-            while not HasAnimDictLoaded("missfinale_c2mcs_1") do
-                Wait(10)
-            end
+            loadAnimDict("missfinale_c2mcs_1")
             TaskPlayAnim(dragger, "missfinale_c2mcs_1", "fin_c2_mcs_1_camman", 8.0, -8.0, 100000, 49, 0, false, false, false)
             isEscorting = true
         else
@@ -410,11 +402,12 @@ end)
 -- Threads
 CreateThread(function()
     while true do
-        Wait(1)
+        local sleep = 2000
         if isEscorted then
+            sleep = 0
             DisableAllControlActions(0)
             EnableControlAction(0, 1, true)
-			EnableControlAction(0, 2, true)
+            EnableControlAction(0, 2, true)
             EnableControlAction(0, 245, true)
             EnableControlAction(0, 38, true)
             EnableControlAction(0, 322, true)
@@ -423,40 +416,41 @@ CreateThread(function()
         end
 
         if isHandcuffed then
+            sleep = 0
             DisableControlAction(0, 24, true) -- Attack
-			DisableControlAction(0, 257, true) -- Attack 2
-			DisableControlAction(0, 25, true) -- Aim
-			DisableControlAction(0, 263, true) -- Melee Attack 1
+            DisableControlAction(0, 257, true) -- Attack 2
+            DisableControlAction(0, 25, true) -- Aim
+            DisableControlAction(0, 263, true) -- Melee Attack 1
 
-			DisableControlAction(0, 45, true) -- Reload
-			DisableControlAction(0, 22, true) -- Jump
-			DisableControlAction(0, 44, true) -- Cover
-			DisableControlAction(0, 37, true) -- Select Weapon
-			DisableControlAction(0, 23, true) -- Also 'enter'?
+            DisableControlAction(0, 45, true) -- Reload
+            DisableControlAction(0, 22, true) -- Jump
+            DisableControlAction(0, 44, true) -- Cover
+            DisableControlAction(0, 37, true) -- Select Weapon
+            DisableControlAction(0, 23, true) -- Also 'enter'?
 
-			DisableControlAction(0, 288, true) -- Disable phone
-			DisableControlAction(0, 289, true) -- Inventory
-			DisableControlAction(0, 170, true) -- Animations
-			DisableControlAction(0, 167, true) -- Job
+            DisableControlAction(0, 288, true) -- Disable phone
+            DisableControlAction(0, 289, true) -- Inventory
+            DisableControlAction(0, 170, true) -- Animations
+            DisableControlAction(0, 167, true) -- Job
 
-			DisableControlAction(0, 26, true) -- Disable looking behind
-			DisableControlAction(0, 73, true) -- Disable clearing animation
-			DisableControlAction(2, 199, true) -- Disable pause screen
+            DisableControlAction(0, 26, true) -- Disable looking behind
+            DisableControlAction(0, 73, true) -- Disable clearing animation
+            DisableControlAction(2, 199, true) -- Disable pause screen
 
-			DisableControlAction(0, 59, true) -- Disable steering in vehicle
-			DisableControlAction(0, 71, true) -- Disable driving forward in vehicle
-			DisableControlAction(0, 72, true) -- Disable reversing in vehicle
+            DisableControlAction(0, 59, true) -- Disable steering in vehicle
+            DisableControlAction(0, 71, true) -- Disable driving forward in vehicle
+            DisableControlAction(0, 72, true) -- Disable reversing in vehicle
 
-			DisableControlAction(2, 36, true) -- Disable going stealth
+            DisableControlAction(2, 36, true) -- Disable going stealth
 
-			DisableControlAction(0, 264, true) -- Disable melee
-			DisableControlAction(0, 257, true) -- Disable melee
-			DisableControlAction(0, 140, true) -- Disable melee
-			DisableControlAction(0, 141, true) -- Disable melee
-			DisableControlAction(0, 142, true) -- Disable melee
-			DisableControlAction(0, 143, true) -- Disable melee
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
+            DisableControlAction(0, 264, true) -- Disable melee
+            DisableControlAction(0, 257, true) -- Disable melee
+            DisableControlAction(0, 140, true) -- Disable melee
+            DisableControlAction(0, 141, true) -- Disable melee
+            DisableControlAction(0, 142, true) -- Disable melee
+            DisableControlAction(0, 143, true) -- Disable melee
+            DisableControlAction(0, 75, true)  -- Disable exit vehicle
+            DisableControlAction(27, 75, true) -- Disable exit vehicle
             EnableControlAction(0, 249, true) -- Added for talking while cuffed
             EnableControlAction(0, 46, true)  -- Added for talking while cuffed
 
@@ -465,8 +459,6 @@ CreateThread(function()
                 TaskPlayAnim(PlayerPedId(), "mp_arresting", "idle", 8.0, -8, -1, cuffType, 0, 0, 0, 0)
             end
         end
-        if not isHandcuffed and not isEscorted then
-            Wait(2000)
-        end
+        Wait(sleep)
     end
 end)
