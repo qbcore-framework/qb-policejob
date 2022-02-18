@@ -106,7 +106,6 @@ local Translations = {
         scan_fingerprint = '[~g~E~s~] Scansiona Impronta',
         trash = 'Cestino',
         trash_enter = '[~g~E~s~] Cestino',
-        stash = 'Armadietto',
         stash_enter = '[~g~E~s~] Entra Armadietto',
         target_location = 'La posizione di ${firstname} ${lastname} è marcata sulla mappa',
         anklet_location = 'Posizione cavigliera',
