@@ -101,16 +101,14 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    PlayerJob = JobInfo
-    TriggerServerEvent("police:server:UpdateBlips")
-    if JobInfo.name == "police" then
-        if PlayerJob.onduty then
+    if JobInfo.name == "police" and PlayerJob.name ~= "police" then
+        if JobInfo.onduty then
             TriggerServerEvent("QBCore:ToggleDuty")
             onDuty = false
         end
     end
 
-    if (PlayerJob ~= nil) and PlayerJob.name ~= "police" then
+    if JobInfo.name ~= "police" then
         if DutyBlips then
             for k, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -118,6 +116,8 @@ RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
         end
         DutyBlips = {}
     end
+    PlayerJob = JobInfo
+    TriggerServerEvent("police:server:UpdateBlips")
 end)
 
 RegisterNetEvent('police:client:sendBillingMail', function(amount)
