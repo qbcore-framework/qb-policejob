@@ -788,7 +788,14 @@ CreateThread(function()
                             end
                             if IsControlJustReleased(0, 38) then
                                 if IsPedInAnyVehicle(PlayerPedId(), false) then
-                                    QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                                    local plate = QBCore.Functions.GetPlate(GetVehiclePedIsIn(PlayerPedId()))
+                                    QBCore.Functions.TriggerCallback('qb-garage:server:checkVehicle', function(cb)
+                                        if cb then
+                                            QBCore.Functions.Notify("You cannot store player cars in storage!", "error", 3500)
+                                        else
+                                            QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                                        end
+                                    end, plate)
                                 end
                             end
                         else
