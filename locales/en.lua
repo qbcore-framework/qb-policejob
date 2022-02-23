@@ -25,6 +25,7 @@ local Translations = {
         have_evidence_bag = 'You must have an empty evidence bag with you',
         no_driver_license = 'No drivers license',
         not_cuffed_dead = 'Civilian isn\'t cuffed or dead',
+        store_error = 'You cannot store player cars in storage!',
     },
     success = {
         uncuffed = 'You have been uncuffed',
