@@ -468,10 +468,7 @@ CreateThread(function()
                             DrawText3D(v.x, v.y, v.z, Lang:t('info.off_duty'))
                         end
                         if IsControlJustReleased(0, 38) then
-                            onDuty = not onDuty
-                            TriggerServerEvent("police:server:UpdateCurrentCops")
-                            TriggerServerEvent("QBCore:ToggleDuty")
-                            TriggerServerEvent("police:server:UpdateBlips")
+                            TriggerEvent('qb-policejob:ToggleDuty')
                         end
                     elseif #(pos - v) < 2.5 then
                         DrawText3D(v.x, v.y, v.z, Lang:t('info.onoff_duty'))
