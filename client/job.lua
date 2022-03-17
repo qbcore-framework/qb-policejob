@@ -374,42 +374,25 @@ RegisterNetEvent('police:client:CheckStatus', function()
 end)
 
 RegisterNetEvent("police:client:VehicleMenuHeader", function (data)
-    local ped = PlayerPedId()
-    local pos = GetEntityCoords(ped)
-    local takeDist = Config.Locations['vehicle'][data.currentSelection]
-    takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
-    if #(pos - takeDist) <= 1.5 then
-        MenuGarage(data.currentSelection)
-        currentGarage = data.currentSelection
-    end
+    MenuGarage(data.currentSelection)
+    currentGarage = data.currentSelection
 end)
 
 
 RegisterNetEvent("police:client:ImpoundMenuHeader", function (data)
-    local pos = GetEntityCoords(PlayerPedId())
-    local takeDist = Config.Locations['impound'][data.currentSelection]
-    takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
-    if #(pos - takeDist) <= 1.5 then
-        MenuImpound(data.currentSelection)
-        currentGarage = data.currentSelection
-    end
+    MenuImpound(data.currentSelection)
+    currentGarage = data.currentSelection
 end)
 
 RegisterNetEvent('police:client:TakeOutImpound', function(data)
-    local pos = GetEntityCoords(PlayerPedId())
-    local takeDist = Config.Locations['impound'][data.currentSelection]
-    takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
-    if #(pos - takeDist) <= 1.5 then
+    if inImpound then
         local vehicle = data.vehicle
         TakeOutImpound(vehicle)
     end
 end)
 
 RegisterNetEvent('police:client:TakeOutVehicle', function(data)
-    local pos = GetEntityCoords(PlayerPedId())
-    local takeDist = Config.Locations['vehicle'][data.currentSelection]
-    takeDist = vector3(takeDist.x, takeDist.y,  takeDist.z)
-    if #(pos - takeDist) <= 1.5 then
+    if inGarage then
         local vehicle = data.vehicle
         TakeOutVehicle(vehicle)
     end
