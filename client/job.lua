@@ -492,7 +492,6 @@ end)
 -- Threads
 
 if Config.UseTarget then
-
     CreateThread(function()
         -- Toggle Duty
         for k, v in pairs(Config.Locations["duty"]) do
@@ -500,8 +499,8 @@ if Config.UseTarget then
                 name = "PoliceDuty_"..k,
                 heading = 11,
                 debugPoly = false,
-                minZ = 30.6,
-                maxZ = 33,
+                minZ = v.z - 1,
+                maxZ = v.z + 1,
             }, {
                 options = {
                     {
@@ -523,9 +522,11 @@ else
     local dutyZones = {}
     for k, v in pairs(Config.Locations["duty"]) do
         dutyZones[#dutyZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 5, 1, {
+            vector3(vector3(v.x, v.y, v.z)), 1, 1, {
             name="box_zone",
-            debugPoly=false,
+            debugPoly = false,
+            minZ = v.z - 1,
+            maxZ = v.z + 1,
         })
     end
 
@@ -571,7 +572,9 @@ CreateThread(function()
         evidenceZones[#evidenceZones+1] = BoxZone:Create(
             vector3(vector3(v.x, v.y, v.z)), 1, 1, {
             name="box_zone",
-            debugPoly=false,
+            debugPoly = false,
+            minZ = v.z - 1,
+            maxZ = v.z + 1,
         })
     end
 
@@ -610,7 +613,9 @@ CreateThread(function()
         stashZones[#stashZones+1] = BoxZone:Create(
             vector3(vector3(v.x, v.y, v.z)), 1, 1, {
             name="box_zone",
-            debugPoly=false,
+            debugPoly = false,
+            minZ = v.z - 1,
+            maxZ = v.z + 1,
         })
     end
 
@@ -629,9 +634,11 @@ CreateThread(function()
     local trashZones = {}
     for k, v in pairs(Config.Locations["trash"]) do
         trashZones[#trashZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 5, 1, {
+            vector3(vector3(v.x, v.y, v.z)), 1, 1, {
             name="box_zone",
-            debugPoly=false,
+            debugPoly = false,
+            minZ = v.z - 1,
+            maxZ = v.z + 1,
         })
     end
 
@@ -652,9 +659,11 @@ CreateThread(function()
     local fingerprintZones = {}
     for k, v in pairs(Config.Locations["fingerprint"]) do
         fingerprintZones[#fingerprintZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 5, 1, {
+            vector3(vector3(v.x, v.y, v.z)), 2, 1, {
             name="box_zone",
-            debugPoly=false,
+            debugPoly = false,
+            minZ = v.z - 1,
+            maxZ = v.z + 1,
         })
     end
 
@@ -677,7 +686,9 @@ CreateThread(function()
         armouryZones[#armouryZones+1] = BoxZone:Create(
             vector3(vector3(v.x, v.y, v.z)), 5, 1, {
             name="box_zone",
-            debugPoly=false,
+            debugPoly = false,
+            minZ = v.z - 1,
+            maxZ = v.z + 1,
         })
     end
 
@@ -700,7 +711,9 @@ CreateThread(function()
         helicopterZones[#helicopterZones+1] = BoxZone:Create(
             vector3(vector3(v.x, v.y, v.z)), 10, 10, {
             name="box_zone",
-            debugPoly=false,
+            debugPoly = false,
+            minZ = v.z - 1,
+            maxZ = v.z + 1,
         })
     end
 
@@ -728,7 +741,9 @@ CreateThread(function()
         impoundZones[#impoundZones+1] = BoxZone:Create(
             vector3(v.x, v.y, v.z), 1, 1, {
             name="box_zone",
-            debugPoly=false,
+            debugPoly = false,
+            minZ = v.z - 1,
+            maxZ = v.z + 1,
         })
     end
 
@@ -773,7 +788,9 @@ CreateThread(function()
         garageZones[#garageZones+1] = BoxZone:Create(
             vector3(v.x, v.y, v.z), 3, 3, {
             name="box_zone",
-            debugPoly=false,
+            debugPoly = false,
+            minZ = v.z - 1,
+            maxZ = v.z + 1,
         })
     end
 
