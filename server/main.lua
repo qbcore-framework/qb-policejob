@@ -431,26 +431,6 @@ QBCore.Commands.Add("ankletlocation", Lang:t("commands.ankletlocation"), {{name 
     end
 end)
 
-QBCore.Commands.Add("removeanklet", Lang:t("commands.removeanklet"), {{name = "cid", help = Lang:t('info.citizen_id')}}, true,function(source, args)
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
-        if args[1] then
-            local citizenid = args[1]
-            local Target = QBCore.Functions.GetPlayerByCitizenId(citizenid)
-            if Target then
-                if Target.PlayerData.metadata["tracker"] then
-                    TriggerClientEvent("police:client:SendTrackerLocation", Target.PlayerData.source, src)
-                else
-                    TriggerClientEvent('QBCore:Notify', src, Lang:t("error.no_anklet"), 'error')
-                end
-            end
-        end
-    else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.on_duty_police_only"), 'error')
-    end
-end)
-
 QBCore.Commands.Add("takedrivinglicense", Lang:t("commands.drivinglicense"), {}, false, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
