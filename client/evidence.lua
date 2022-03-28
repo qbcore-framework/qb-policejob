@@ -264,7 +264,7 @@ CreateThread(function()
             local pos = GetEntityCoords(PlayerPedId())
             if #(pos - vector3(Blooddrops[CurrentBlooddrop].coords.x, Blooddrops[CurrentBlooddrop].coords.y,
                 Blooddrops[CurrentBlooddrop].coords.z)) < 1.5 then
-                DrawText3D(Blooddrops[CurrentBlooddrop].coords.x, Blooddrops[CurrentBlooddrop].coords.y, Blooddrops[CurrentBlooddrop].coords.z, Lang:t('blood_text', {value = DnaHash(Blooddrops[CurrentBlooddrop].citizenid)}))
+                DrawText3D(Blooddrops[CurrentBlooddrop].coords.x, Blooddrops[CurrentBlooddrop].coords.y, Blooddrops[CurrentBlooddrop].coords.z, Lang:t('info.blood_text', {value = DnaHash(Blooddrops[CurrentBlooddrop].citizenid)}))
                 if IsControlJustReleased(0, 47) then
                     local s1, s2 = GetStreetNameAtCoord(Blooddrops[CurrentBlooddrop].coords.x, Blooddrops[CurrentBlooddrop].coords.y, Blooddrops[CurrentBlooddrop].coords.z)
                     local street1 = GetStreetNameFromHashKey(s1)
