@@ -11,6 +11,9 @@ shared_scripts {
 }
 
 client_scripts {
+	'@PolyZone/client.lua',
+	'@PolyZone/BoxZone.lua',
+	'@PolyZone/ComboZone.lua',
 	'client/main.lua',
 	'client/camera.lua',
 	'client/interactions.lua',
