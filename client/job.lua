@@ -522,7 +522,7 @@ else
     local dutyZones = {}
     for k, v in pairs(Config.Locations["duty"]) do
         dutyZones[#dutyZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1, 1, {
+            vector3(vector3(v.x, v.y, v.z)), 1.75, 1, {
             name="box_zone",
             debugPoly = false,
             minZ = v.z - 1,
@@ -565,12 +565,13 @@ else
         end
     end)
 end
+
 CreateThread(function()
     -- Evidence Storage
     local evidenceZones = {}
     for k, v in pairs(Config.Locations["evidence"]) do
         evidenceZones[#evidenceZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1, 1, {
+            vector3(vector3(v.x, v.y, v.z)), 2, 1, {
             name="box_zone",
             debugPoly = false,
             minZ = v.z - 1,
@@ -611,7 +612,7 @@ CreateThread(function()
     local stashZones = {}
     for k, v in pairs(Config.Locations["stash"]) do
         stashZones[#stashZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1, 1, {
+            vector3(vector3(v.x, v.y, v.z)), 1.5, 1.5, {
             name="box_zone",
             debugPoly = false,
             minZ = v.z - 1,
@@ -634,7 +635,7 @@ CreateThread(function()
     local trashZones = {}
     for k, v in pairs(Config.Locations["trash"]) do
         trashZones[#trashZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1, 1, {
+            vector3(vector3(v.x, v.y, v.z)), 1, 1.75, {
             name="box_zone",
             debugPoly = false,
             minZ = v.z - 1,
