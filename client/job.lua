@@ -434,9 +434,9 @@ end)
 -- Toggle Duty in an event.
 RegisterNetEvent('qb-policejob:ToggleDuty', function()
     onDuty = not onDuty
+    TriggerServerEvent("QBCore:ToggleDuty")
     TriggerServerEvent("police:server:UpdateCurrentCops")
     TriggerServerEvent("police:server:UpdateBlips")
-    TriggerServerEvent("QBCore:ToggleDuty")
 end)
 
 RegisterNetEvent('qb-police:client:scanFingerPrint', function()
