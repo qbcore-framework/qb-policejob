@@ -34,8 +34,9 @@ Easy to install, added SASP and BCSO
         { coords = vector3(624.81, 8.12, 84.39), length = 1.0, width = 1.0, heading = 351.0, minZ = 83, maxZ = 85 } ,
     },
     
+    3) Added job grades in qb-core/shared/jobs.lua
     
-    3) Run the SQL
+    4) Run the SQL
 
     INSERT INTO `management_funds` (`job_name`, `amount`, `type`) VALUES
     ('bcso', 0, 'boss'),
