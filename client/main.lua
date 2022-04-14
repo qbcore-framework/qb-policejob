@@ -22,7 +22,7 @@ local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
         ShowHeadingIndicatorOnBlip(blip, true)
         SetBlipRotation(blip, math.ceil(playerLocation.w))
         SetBlipScale(blip, 1.0)
-        if playerJob == "police" then
+        if (playerJob == "police" or playerJob == "bcso" or playerJob == "sasp") then
             SetBlipColour(blip, 38)
         else
             SetBlipColour(blip, 5)
@@ -73,7 +73,7 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
         TriggerEvent('qb-clothing:client:loadOutfit', trackerClothingData)
     end
 
-    if PlayerJob and PlayerJob.name ~= "police" then
+    if PlayerJob and (PlayerJob.name ~= "police" or PlayerJob.name ~= "bcso" or PlayerJob.name ~= "sasp") then
         if DutyBlips then
             for k, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -101,14 +101,14 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    if JobInfo.name == "police" and PlayerJob.name ~= "police" then
+    if (JobInfo.name == "police" and PlayerJob.name ~= "police" or JobInfo.name == "bcso" and PlayerJob.name ~= "bcso" or JobInfo.name == "sasp" and PlayerJob.name ~= "sasp") then
         if JobInfo.onduty then
             TriggerServerEvent("QBCore:ToggleDuty")
             onDuty = false
         end
     end
 
-    if JobInfo.name ~= "police" then
+    if (JobInfo.name ~= "police" or JobInfo.name ~= "bcso" or JobInfo.name ~= "sasp") then
         if DutyBlips then
             for k, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -137,7 +137,7 @@ RegisterNetEvent('police:client:sendBillingMail', function(amount)
 end)
 
 RegisterNetEvent('police:client:UpdateBlips', function(players)
-    if PlayerJob and (PlayerJob.name == 'police' or PlayerJob.name == 'ambulance') and
+    if PlayerJob and (PlayerJob.name == 'police' or PlayerJob.name == 'ambulance' or PlayerJob.name == 'bcso' or PlayerJob.name == 'sasp') and
         onDuty then
         if DutyBlips then
             for k, v in pairs(DutyBlips) do
