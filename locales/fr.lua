@@ -107,10 +107,11 @@ local Translations = {
         trash = 'Poubelle',
         trash_enter = '[~g~E~s~] Poubelle',
         stash_enter = '[~g~E~s~] Entrer dans le Casier',
-        target_location = 'La position de ${firstname} ${lastname} à été marqué sur votre carte.',
+        target_location = 'La position de %{firstname} %{lastname} à été marqué sur votre carte.',
         anklet_location = 'Position du bracelet',
         new_call = 'Nouvel appel',
-    },
+        officer_down = 'Officier %{lastname} | %{callsign} Au sol'
+ },
     evidence = {
         red_hands = 'Mains rouges',
         wide_pupils = 'Pupilles dilatées',
