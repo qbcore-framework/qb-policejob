@@ -65,9 +65,7 @@ Police Job for QB-Core Framework :police_officer:
 - /spikestrip - Places spike strip on ground.
 - /pobject [pion/barier/schotten/tent/light/delete] - Places or deletes an object on/from ground.
 - /cuff - Cuffs/Uncuffs nearby player
-- /palert [text] - Sends an alert.
 - /escort - Escorts nearby plyer.
-- /mdt - Opens the MDT.
 - /callsign [text] - Sets the player a callsign on database.
 - /clearcasings - Clears nearby bullet casings.
 - /jail [id] [time] - Sends a player to the jail.

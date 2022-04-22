@@ -137,7 +137,7 @@ QBCore.Commands.Add("grantlicense", Lang:t("commands.license_grant"), {{name = "
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license_type"), "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_license", "error"))
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_license"), "error")
     end
 end)
 
@@ -161,7 +161,7 @@ QBCore.Commands.Add("revokelicense", Lang:t("commands.license_revoke"), {{name =
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.error_license"), "error")
         end
     else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_revoke", "error"))
+        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.rank_revoke"), "error")
     end
 end)
 
@@ -412,26 +412,6 @@ QBCore.Commands.Add("anklet", Lang:t("commands.anklet"), {}, false, function(sou
 end)
 
 QBCore.Commands.Add("ankletlocation", Lang:t("commands.ankletlocation"), {{name = "cid", help = Lang:t('info.citizen_id')}}, true, function(source, args)
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
-        if args[1] then
-            local citizenid = args[1]
-            local Target = QBCore.Functions.GetPlayerByCitizenId(citizenid)
-            if Target then
-                if Target.PlayerData.metadata["tracker"] then
-                    TriggerClientEvent("police:client:SendTrackerLocation", Target.PlayerData.source, src)
-                else
-                    TriggerClientEvent('QBCore:Notify', src, Lang:t("error.no_anklet"), 'error')
-                end
-            end
-        end
-    else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t("error.on_duty_police_only"), 'error')
-    end
-end)
-
-QBCore.Commands.Add("removeanklet", Lang:t("commands.removeanklet"), {{name = "cid", help = Lang:t('info.citizen_id')}}, true,function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -750,7 +730,7 @@ RegisterNetEvent('police:server:BillPlayer', function(playerId, price)
     if Player.PlayerData.job.name == "police" then
         if OtherPlayer then
             OtherPlayer.Functions.RemoveMoney("bank", price, "paid-bills")
-            TriggerEvent('qb-bossmenu:server:addAccountMoney', "police", price)
+		exports['qb-management']:AddMoney("police", price)
             TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, Lang:t("info.fine_received", {fine = price}))
         end
     end
