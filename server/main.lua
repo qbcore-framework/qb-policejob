@@ -304,6 +304,13 @@ QBCore.Commands.Add("flagplate", Lang:t("commands.flagplate"), {{name = "plate",
     end
 end)
 
+RegisterNetEvent('police:server:speedFlag', function(plate,reason)
+    Plates[plate:upper()] = {
+        isflagged = true,
+        reason = table.concat(reason, " ")
+    }
+end)
+
 QBCore.Commands.Add("unflagplate", Lang:t("commands.unflagplate"), {{name = "plate", help = Lang:t('info.plate_number')}}, true, function(source, args)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -505,7 +512,7 @@ QBCore.Commands.Add("911r", Lang:t("commands.emergency_respond"), {{name="id", h
     end
     if OtherPlayer ~= nil then 
         TriggerClientEvent('chatMessage', OtherPlayer.PlayerData.source, "("..Prefix..") " ..Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname, "error", message)
-        TriggerClientEvent('police:server:ReplyEmergencyMessageCheck', -1, Player, message)
+        TriggerClientEvent('police:client:ReplyEmergencyMessageCheck', -1, Player, message)
         TriggerClientEvent("police:client:EmergencySound", OtherPlayer.PlayerData.source)
         TriggerClientEvent("police:client:CallAnim", source)
     end

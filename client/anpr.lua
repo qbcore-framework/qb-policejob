@@ -31,7 +31,11 @@ function HandlespeedCam(speedCam, hasBeenBusted)
 						end
                     end, plate)
 					rangeSpeed = speed - speedCam.speed
-					SpeedRange(rangeSpeed, fine)
+					if speedCam.fineplayer then
+						SpeedRange(rangeSpeed, fine)
+					else
+						TriggerServerEvent('police:server:speedFlag', plate, 'Felony Speeding')
+					end
 				end
 			end
 		end
