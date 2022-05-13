@@ -310,7 +310,6 @@ RegisterNetEvent('police:client:GetEscorted', function(playerId)
         if PlayerData.metadata["isdead"] or isHandcuffed or PlayerData.metadata["inlaststand"] then
             if not isEscorted then
                 isEscorted = true
-                draggerId = playerId
                 local dragger = GetPlayerPed(GetPlayerFromServerId(playerId))
                 SetEntityCoords(ped, GetOffsetFromEntityInWorldCoords(dragger, 0.0, 0.45, 0.0))
                 AttachEntityToEntity(ped, dragger, 11816, 0.45, 0.45, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
@@ -335,7 +334,6 @@ RegisterNetEvent('police:client:GetKidnappedTarget', function(playerId)
         if PlayerData.metadata["isdead"] or PlayerData.metadata["inlaststand"] or isHandcuffed then
             if not isEscorted then
                 isEscorted = true
-                draggerId = playerId
                 local dragger = GetPlayerPed(GetPlayerFromServerId(playerId))
                 RequestAnimDict("nm")
 
@@ -354,10 +352,9 @@ RegisterNetEvent('police:client:GetKidnappedTarget', function(playerId)
     end)
 end)
 
-RegisterNetEvent('police:client:GetKidnappedDragger', function(playerId)
-    QBCore.Functions.GetPlayerData(function(PlayerData)
+RegisterNetEvent('police:client:GetKidnappedDragger', function()
+    QBCore.Functions.GetPlayerData(function(_)
         if not isEscorting then
-            draggerId = playerId
             local dragger = PlayerPedId()
             RequestAnimDict("missfinale_c2mcs_1")
 
