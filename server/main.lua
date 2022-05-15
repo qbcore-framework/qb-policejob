@@ -11,7 +11,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 local function UpdateBlips()
     local dutyPlayers = {}
     local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
+    for _, v in pairs(players) do
         if (v.PlayerData.job.name == "police" or v.PlayerData.job.name == "ambulance") and v.PlayerData.job.onduty then
             local coords = GetEntityCoords(GetPlayerPed(v.PlayerData.source))
             local heading = GetEntityHeading(GetPlayerPed(v.PlayerData.source))
@@ -91,7 +91,7 @@ end
 local function GetCurrentCops()
     local amount = 0
     local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
+    for _, v in pairs(players) do
         if v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
             amount = amount + 1
         end
@@ -188,7 +188,7 @@ QBCore.Commands.Add("pobject", Lang:t("commands.place_object"), {{name = "type",
     end
 end)
 
-QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(source, args)
+QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(source, _)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -198,7 +198,7 @@ QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(
     end
 end)
 
-QBCore.Commands.Add("escort", Lang:t("commands.escort"), {}, false, function(source, args)
+QBCore.Commands.Add("escort", Lang:t("commands.escort"), {}, false, function(source, _)
     local src = source
     TriggerClientEvent("police:client:EscortPlayer", src)
 end)
@@ -431,7 +431,7 @@ QBCore.Commands.Add("ankletlocation", Lang:t("commands.ankletlocation"), {{name 
     end
 end)
 
-QBCore.Commands.Add("takedrivinglicense", Lang:t("commands.drivinglicense"), {}, false, function(source, args)
+QBCore.Commands.Add("takedrivinglicense", Lang:t("commands.drivinglicense"), {}, false, function(source, _)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -479,11 +479,12 @@ end)
 
 QBCore.Commands.Add('911p', Lang:t("commands.police_report"), {{name='message', help=Lang:t("commands.message_sent")}}, false, function(source, args)
 	local src = source
+    local message
 	if args[1] then message = table.concat(args, " ") else message = Lang:t("commands.civilian_call") end
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
     local players = QBCore.Functions.GetQBPlayers()
-    for k,v in pairs(players) do
+    for _, v in pairs(players) do
         if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
             local alertData = {title = Lang:t("commands.emergency_call"), coords = {coords.x, coords.y, coords.z}, description = message}
             TriggerClientEvent("qb-phone:client:addPoliceAlert", v.PlayerData.source, alertData)
@@ -516,17 +517,17 @@ QBCore.Functions.CreateUseableItem("moneybag", function(source, item)
 end)
 
 -- Callbacks
-QBCore.Functions.CreateCallback('police:server:isPlayerDead', function(source, cb, playerId)
+QBCore.Functions.CreateCallback('police:server:isPlayerDead', function(_, cb, playerId)
     local Player = QBCore.Functions.GetPlayer(playerId)
     cb(Player.PlayerData.metadata["isdead"])
 end)
 
-QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(source, cb, playerId)
+QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(_, cb, playerId)
     local Player = QBCore.Functions.GetPlayer(playerId)
     local statList = {}
     if Player then
         if PlayerStatus[Player.PlayerData.source] and next(PlayerStatus[Player.PlayerData.source]) then
-            for k, v in pairs(PlayerStatus[Player.PlayerData.source]) do
+            for k, _ in pairs(PlayerStatus[Player.PlayerData.source]) do
                 statList[#statList+1] = PlayerStatus[Player.PlayerData.source][k].text
             end
         end
@@ -540,7 +541,7 @@ QBCore.Functions.CreateCallback('police:IsSilencedWeapon', function(source, cb, 
     local retval = false
     if itemInfo then
         if itemInfo.info and itemInfo.info.attachments then
-            for k, v in pairs(itemInfo.info.attachments) do
+            for k, _ in pairs(itemInfo.info.attachments) do
                 if itemInfo.info.attachments[k].component == "COMPONENT_AT_AR_SUPP_02" or
                     itemInfo.info.attachments[k].component == "COMPONENT_AT_AR_SUPP" or
                     itemInfo.info.attachments[k].component == "COMPONENT_AT_PI_SUPP_02" or
@@ -553,10 +554,10 @@ QBCore.Functions.CreateCallback('police:IsSilencedWeapon', function(source, cb, 
     cb(retval)
 end)
 
-QBCore.Functions.CreateCallback('police:GetDutyPlayers', function(source, cb)
+QBCore.Functions.CreateCallback('police:GetDutyPlayers', function(_, cb)
     local dutyPlayers = {}
     local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
+    for _, v in pairs(players) do
         if v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
             dutyPlayers[#dutyPlayers+1] = {
                 source = Player.PlayerData.source,
@@ -568,7 +569,7 @@ QBCore.Functions.CreateCallback('police:GetDutyPlayers', function(source, cb)
     cb(dutyPlayers)
 end)
 
-QBCore.Functions.CreateCallback('police:GetImpoundedVehicles', function(source, cb)
+QBCore.Functions.CreateCallback('police:GetImpoundedVehicles', function(_, cb)
     local vehicles = {}
     MySQL.Async.fetchAll('SELECT * FROM player_vehicles WHERE state = ?', {2}, function(result)
         if result[1] then
@@ -578,7 +579,7 @@ QBCore.Functions.CreateCallback('police:GetImpoundedVehicles', function(source, 
     end)
 end)
 
-QBCore.Functions.CreateCallback('police:IsPlateFlagged', function(source, cb, plate)
+QBCore.Functions.CreateCallback('police:IsPlateFlagged', function(_, cb, plate)
     local retval = false
     if Plates and Plates[plate] then
         if Plates[plate].isflagged then
@@ -588,10 +589,10 @@ QBCore.Functions.CreateCallback('police:IsPlateFlagged', function(source, cb, pl
     cb(retval)
 end)
 
-QBCore.Functions.CreateCallback('police:GetCops', function(source, cb)
+QBCore.Functions.CreateCallback('police:GetCops', function(_, cb)
     local amount = 0
     local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
+    for _, v in pairs(players) do
         if v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
             amount = amount + 1
         end
@@ -599,10 +600,10 @@ QBCore.Functions.CreateCallback('police:GetCops', function(source, cb)
     cb(amount)
 end)
 
-QBCore.Functions.CreateCallback('police:server:IsPoliceForcePresent', function(source, cb)
+QBCore.Functions.CreateCallback('police:server:IsPoliceForcePresent', function(_, cb)
     local retval = false
     local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
+    for _, v in pairs(players) do
         if v.PlayerData.job.name == "police" and v.PlayerData.job.grade.level >= 2 then
             retval = true
             break
@@ -625,7 +626,7 @@ RegisterNetEvent('police:server:policeAlert', function(text)
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
     local players = QBCore.Functions.GetQBPlayers()
-    for k,v in pairs(players) do
+    for _, v in pairs(players) do
         if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
             local alertData = {title = Lang:t('info.new_call'), coords = {coords.x, coords.y, coords.z}, description = text}
             TriggerClientEvent("qb-phone:client:addPoliceAlert", v.PlayerData.source, alertData)
@@ -672,7 +673,7 @@ RegisterNetEvent('police:server:KidnapPlayer', function(playerId)
         if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or
             EscortPlayer.PlayerData.metadata["inlaststand"] then
             TriggerClientEvent("police:client:GetKidnappedTarget", EscortPlayer.PlayerData.source, Player.PlayerData.source)
-            TriggerClientEvent("police:client:GetKidnappedDragger", Player.PlayerData.source, EscortPlayer.PlayerData.source)
+            TriggerClientEvent("police:client:GetKidnappedDragger", Player.PlayerData.source)
         else
             TriggerClientEvent('QBCore:Notify', src, Lang:t("error.not_cuffed_dead"), 'error')
         end
@@ -681,7 +682,6 @@ end)
 
 RegisterNetEvent('police:server:SetPlayerOutVehicle', function(playerId)
     local src = source
-    local Player = QBCore.Functions.GetPlayer(source)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if EscortPlayer then
         if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] then
@@ -844,7 +844,7 @@ end)
 
 RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, body, engine, fuel)
     local src = source
-    local price = price and price or 0
+    price = price and price or 0
     if IsVehicleOwned(plate) then
         if not fullImpound then
             MySQL.Async.execute(
@@ -884,7 +884,7 @@ end)
 
 RegisterNetEvent('evidence:server:ClearBlooddrops', function(blooddropList)
     if blooddropList and next(blooddropList) then
-        for k, v in pairs(blooddropList) do
+        for _, v in pairs(blooddropList) do
             TriggerClientEvent("evidence:client:RemoveBlooddrop", -1, v)
             BloodDrops[v] = nil
         end
@@ -939,7 +939,7 @@ end)
 RegisterNetEvent('police:server:UpdateCurrentCops', function()
     local amount = 0
     local players = QBCore.Functions.GetQBPlayers()
-    for k, v in pairs(players) do
+    for _, v in pairs(players) do
         if v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
             amount = amount + 1
         end
@@ -949,7 +949,7 @@ end)
 
 RegisterNetEvent('evidence:server:ClearCasings', function(casingList)
     if casingList and next(casingList) then
-        for k, v in pairs(casingList) do
+        for _, v in pairs(casingList) do
             TriggerClientEvent("evidence:client:RemoveCasing", -1, v)
             Casings[v] = nil
         end

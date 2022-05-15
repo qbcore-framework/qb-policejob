@@ -1,4 +1,5 @@
 local lastRadar = nil
+local HasAlreadyEnteredMarker = false
 -- Determines if player is close enough to trigger cam
 function HandlespeedCam(speedCam, hasBeenBusted)
 	local myPed = PlayerPedId()
