@@ -274,9 +274,10 @@ function closeMenuFull()
 end
 
 --NUI Callbacks
-RegisterNUICallback('closeFingerprint', function()
+RegisterNUICallback('closeFingerprint', function(_, cb)
     SetNuiFocus(false, false)
     inFingerprint = false
+    cb('ok')
 end)
 
 --Events
