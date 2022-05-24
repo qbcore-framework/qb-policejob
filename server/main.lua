@@ -187,7 +187,7 @@ QBCore.Commands.Add("pobject", Lang:t("commands.place_object"), {{name = "type",
     end
 end)
 
-QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(source, _)
+QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -197,7 +197,7 @@ QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(
     end
 end)
 
-QBCore.Commands.Add("escort", Lang:t("commands.escort"), {}, false, function(source, _)
+QBCore.Commands.Add("escort", Lang:t("commands.escort"), {}, false, function(source)
     local src = source
     TriggerClientEvent("police:client:EscortPlayer", src)
 end)
@@ -222,7 +222,7 @@ QBCore.Commands.Add("jail", Lang:t("commands.jail_player"), {}, false, function(
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
-        TriggerClientEvent("police:client:JailPlayer", src, playerId, time)
+        TriggerClientEvent("police:client:JailPlayer", src)
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.on_duty_police_only"), 'error')
     end
@@ -420,7 +420,7 @@ QBCore.Commands.Add("ankletlocation", Lang:t("commands.ankletlocation"), {{name 
     end
 end)
 
-QBCore.Commands.Add("takedrivinglicense", Lang:t("commands.drivinglicense"), {}, false, function(source, _)
+QBCore.Commands.Add("takedrivinglicense", Lang:t("commands.drivinglicense"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
