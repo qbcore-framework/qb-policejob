@@ -85,7 +85,7 @@ local function CreateObjectId()
 end
 
 local function IsVehicleOwned(plate)
-    local result = MySQL.Sync.fetchScalar('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
+    local result = MySQL.scalar.await('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
     return result
 end
 
@@ -187,7 +187,7 @@ QBCore.Commands.Add("pobject", Lang:t("commands.place_object"), {{name = "type",
     end
 end)
 
-QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(source, args)
+QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(source, _)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -197,7 +197,7 @@ QBCore.Commands.Add("cuff", Lang:t("commands.cuff_player"), {}, false, function(
     end
 end)
 
-QBCore.Commands.Add("escort", Lang:t("commands.escort"), {}, false, function(source, args)
+QBCore.Commands.Add("escort", Lang:t("commands.escort"), {}, false, function(source, _)
     local src = source
     TriggerClientEvent("police:client:EscortPlayer", src)
 end)
@@ -420,7 +420,7 @@ QBCore.Commands.Add("ankletlocation", Lang:t("commands.ankletlocation"), {{name 
     end
 end)
 
-QBCore.Commands.Add("takedrivinglicense", Lang:t("commands.drivinglicense"), {}, false, function(source, args)
+QBCore.Commands.Add("takedrivinglicense", Lang:t("commands.drivinglicense"), {}, false, function(source, _)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty then
@@ -464,15 +464,16 @@ RegisterNetEvent('police:server:SendTrackerLocation', function(coords, requestId
     TriggerClientEvent("qb-phone:client:addPoliceAlert", requestId, alertData)
 end)
 
-QBCore.Commands.Add('911p', Lang:t("commands.police_report"), {{name='message', help=Lang:t("commands.message_sent")}}, false, function(source, args)
+QBCore.Commands.Add('911p', Lang:t("commands.police_report"), {{name='message', help= Lang:t("commands.message_sent")}}, false, function(source, args)
 	local src = source
+    local message
 	if args[1] then message = table.concat(args, " ") else message = Lang:t("commands.civilian_call") end
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
     local players = QBCore.Functions.GetQBPlayers()
     for _, v in pairs(players) do
         if v and v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
-            local alertData = {title = Lang:t("commands.emergency_call"), coords = {coords.x, coords.y, coords.z}, description = message}
+            local alertData = {title = Lang:t("commands.emergency_call"), coords = {x = coords.x, y = coords.y, z = coords.z}, description = message}
             TriggerClientEvent("qb-phone:client:addPoliceAlert", v.PlayerData.source, alertData)
             TriggerClientEvent('police:client:policeAlert', v.PlayerData.source, coords, message)
         end
@@ -549,7 +550,7 @@ end)
 
 QBCore.Functions.CreateCallback('police:GetImpoundedVehicles', function(_, cb)
     local vehicles = {}
-    MySQL.Async.fetchAll('SELECT * FROM player_vehicles WHERE state = ?', {2}, function(result)
+    MySQL.query('SELECT * FROM player_vehicles WHERE state = ?', {2}, function(result)
         if result[1] then
             vehicles = result
         end
@@ -594,7 +595,7 @@ end)
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         CreateThread(function()
-            MySQL.Async.execute("DELETE FROM stashitems WHERE stash = 'policetrash'")
+            MySQL.query("DELETE FROM stashitems WHERE stash = 'policetrash'")
         end)
     end
 end)
@@ -606,7 +607,7 @@ RegisterNetEvent('police:server:policeAlert', function(text)
     local players = QBCore.Functions.GetQBPlayers()
     for _, v in pairs(players) do
         if v and v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
-            local alertData = {title = Lang:t('info.new_call'), coords = {coords.x, coords.y, coords.z}, description = text}
+            local alertData = {title = Lang:t('info.new_call'), coords = {x = coords.x, y = coords.y, z = coords.z}, description = text}
             TriggerClientEvent("qb-phone:client:addPoliceAlert", v.PlayerData.source, alertData)
             TriggerClientEvent('police:client:policeAlert', v.PlayerData.source, coords, text)
         end
@@ -620,7 +621,7 @@ RegisterNetEvent('police:server:TakeOutImpound', function(plate, garage)
     local targetCoords = Config.Locations["impound"][garage]
     if #(playerCoords - targetCoords) > 10.0 then return DropPlayer(src, "Attempted exploit abuse") end
 
-    MySQL.Async.execute('UPDATE player_vehicles SET state = ? WHERE plate = ?', {0, plate})
+    MySQL.update('UPDATE player_vehicles SET state = ? WHERE plate = ?', {0, plate})
     TriggerClientEvent('QBCore:Notify', src, Lang:t("success.impound_vehicle_removed"), 'success')
 end)
 
@@ -670,8 +671,7 @@ RegisterNetEvent('police:server:KidnapPlayer', function(playerId)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if not Player or EscortPlayer then return end
 
-    if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or
-        EscortPlayer.PlayerData.metadata["inlaststand"] then
+    if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or EscortPlayer.PlayerData.metadata["inlaststand"] then
         TriggerClientEvent("police:client:GetKidnappedTarget", EscortPlayer.PlayerData.source, Player.PlayerData.source)
         TriggerClientEvent("police:client:GetKidnappedDragger", Player.PlayerData.source, EscortPlayer.PlayerData.source)
     else
@@ -887,15 +887,15 @@ end)
 
 RegisterNetEvent('police:server:Impound', function(plate, fullImpound, price, body, engine, fuel)
     local src = source
-    local price = price and price or 0
+    price = price and price or 0
     if IsVehicleOwned(plate) then
         if not fullImpound then
-            MySQL.Async.execute(
+            MySQL.query(
                 'UPDATE player_vehicles SET state = ?, depotprice = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
                 {0, price, body, engine, fuel, plate})
             TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_taken_depot", {price = price}))
         else
-            MySQL.Async.execute(
+            MySQL.query(
                 'UPDATE player_vehicles SET state = ?, body = ?, engine = ?, fuel = ? WHERE plate = ?',
                 {2, body, engine, fuel, plate})
             TriggerClientEvent('QBCore:Notify', src, Lang:t("info.vehicle_seized"))
@@ -927,7 +927,7 @@ end)
 
 RegisterNetEvent('evidence:server:ClearBlooddrops', function(blooddropList)
     if blooddropList and next(blooddropList) then
-        for k, v in pairs(blooddropList) do
+        for _, v in pairs(blooddropList) do
             TriggerClientEvent("evidence:client:RemoveBlooddrop", -1, v)
             BloodDrops[v] = nil
         end

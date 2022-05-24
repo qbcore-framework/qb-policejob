@@ -10,7 +10,7 @@ local function GetClosestPoliceObject()
     local current = nil
     local dist = nil
 
-    for id, data in pairs(ObjectList) do
+    for id, _ in pairs(ObjectList) do
         local dist2 = #(pos - ObjectList[id].coords)
         if current then
             if dist2 < dist then
@@ -28,8 +28,9 @@ end
 function GetClosestSpike()
     local pos = GetEntityCoords(PlayerPedId(), true)
     local current = nil
+    local dist = nil
 
-    for id, data in pairs(SpawnedSpikes) do
+    for id, _ in pairs(SpawnedSpikes) do
         if current then
             if #(pos - vector3(SpawnedSpikes[id].coords.x, SpawnedSpikes[id].coords.y, SpawnedSpikes[id].coords.z)) < dist then
                 current = id
