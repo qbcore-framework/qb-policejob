@@ -15,10 +15,14 @@ end
 
 local function IsTargetDead(playerId)
     local retval = false
+    local hasReturned = false
     QBCore.Functions.TriggerCallback('police:server:isPlayerDead', function(result)
         retval = result
+        hasReturned = true
     end, playerId)
-    Wait(100)
+    while not hasReturned do
+      Wait(10)
+    end
     return retval
 end
 
