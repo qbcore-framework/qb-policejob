@@ -154,14 +154,6 @@ RegisterNetEvent('police:client:RobPlayer', function()
     end
 end)
 
-RegisterNetEvent('police:client:JailCommand', function(playerId, time)
-    TriggerServerEvent("police:server:JailPlayer", playerId, tonumber(time))
-end)
-
-RegisterNetEvent('police:client:BillCommand', function(playerId, price)
-    TriggerServerEvent("police:server:BillPlayer", playerId, tonumber(price))
-end)
-
 RegisterNetEvent('police:client:JailPlayer', function()
     local player, distance = QBCore.Functions.GetClosestPlayer()
     if player ~= -1 and distance < 2.5 then
