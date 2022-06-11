@@ -217,7 +217,7 @@ CreateThread(function() -- Gunpowder Status when shooting
     while true do
         Wait(1)
         local ped = PlayerPedId()
-        if IsPedShooting(ped) or IsPedDoingDriveby(ped) then
+        if IsPedShooting(ped) then
             local weapon = GetSelectedPedWeapon(ped)
             if not WhitelistedWeapon(weapon) then
                 shotAmount = shotAmount + 1
