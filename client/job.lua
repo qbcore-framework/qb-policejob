@@ -336,9 +336,23 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
         local pos = GetEntityCoords(ped)
         local vehpos = GetEntityCoords(vehicle)
         if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
-            local plate = QBCore.Functions.GetPlate(vehicle)
-            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
-            QBCore.Functions.DeleteVehicle(vehicle)
+            QBCore.Functions.Progressbar("impound_vehicle", "Impounding Vehicle..", 10000, false, true, {
+                disableMovement = true,
+                disableCarMovement = false,
+                disableMouse = false,
+                disableCombat = true,
+            }, {
+                TriggerEvent('animations:client:EmoteCommandStart', {"clipboard"})
+            }, {}, {}, function() -- Done
+                local plate = QBCore.Functions.GetPlate(vehicle)
+                TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
+                QBCore.Functions.DeleteVehicle(vehicle)
+                TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+                QBCore.Functions.Notify(Lang:t("success.impounded_vehicle"), 'success')
+            end, function() -- Cancel
+                TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+                QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
+            end)
         end
     end
 end)
@@ -349,13 +363,26 @@ RegisterNetEvent('police:client:CheckStatus', function()
             local player, distance = GetClosestPlayer()
             if player ~= -1 and distance < 5.0 then
                 local playerId = GetPlayerServerId(player)
-                QBCore.Functions.TriggerCallback('police:GetPlayerStatus', function(result)
-                    if result then
-                        for _, v in pairs(result) do
-                            QBCore.Functions.Notify(''..v..'')
+                QBCore.Functions.Progressbar("police_status", "Impounding Vehicle..", 10000, false, true, {
+                    disableMovement = true,
+                    disableCarMovement = false,
+                    disableMouse = false,
+                    disableCombat = true,
+                }, {
+                    TriggerEvent('animations:client:EmoteCommandStart', {"tablet"})
+                }, {}, {}, function() -- Done
+                    QBCore.Functions.TriggerCallback('police:GetPlayerStatus', function(result)
+                        if result then
+                            for _, v in pairs(result) do
+                                QBCore.Functions.Notify(''..v..'')
+                            end
                         end
-                    end
-                end, playerId)
+                    end, playerId)
+                    TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+                end, function() -- Cancel
+                    TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+                    QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
+                end)
             else
                 QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
             end

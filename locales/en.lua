@@ -25,6 +25,8 @@ local Translations = {
         have_evidence_bag = 'You must have an empty evidence bag with you',
         no_driver_license = 'No drivers license',
         not_cuffed_dead = 'Civilian isn\'t cuffed or dead',
+        invalid_amount = 'Invalid Amount!',
+        not_awake = 'This Citizen is not awake!',
     },
     success = {
         uncuffed = 'You have been uncuffed',
@@ -40,6 +42,7 @@ local Translations = {
         put_anklet_on = 'You put on an ankle tracker on %{firstname} %{lastname}',
         vehicle_flagged = 'Vehicle %{plate} has been flagged for %{reason}',
         impound_vehicle_removed = 'Vehicle taken out of impound!',
+        impounded_vehicle = 'Vehicle has been impounded!',
     },
     info = {
         mr = 'Mr.',
