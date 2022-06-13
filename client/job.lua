@@ -363,7 +363,7 @@ RegisterNetEvent('police:client:CheckStatus', function()
             local player, distance = GetClosestPlayer()
             if player ~= -1 and distance < 5.0 then
                 local playerId = GetPlayerServerId(player)
-                QBCore.Functions.Progressbar("police_status", "Impounding Vehicle..", 10000, false, true, {
+                QBCore.Functions.Progressbar("police_status", "Checking person..", 10000, false, true, {
                     disableMovement = true,
                     disableCarMovement = false,
                     disableMouse = false,
