@@ -194,7 +194,7 @@ QBCore.Commands.Add("fine", "Fine Criminal Scum (Police Only)", {{name="id", hel
     local price = tonumber(args[2])
 
     if Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "trooper" or Player.PlayerData.job.name == "bcso" or Player.PlayerData.job.name == "doc" and Player.PlayerData.job.onduty then
-        if OtherPlayer ~= nil then
+        if OtherPlayer then
             if price and price > 0 then
                 OtherPlayer.Functions.RemoveMoney('bank', price, "paid-fines")
                 Player.Functions.AddMoney('bank', price / 10)
