@@ -130,7 +130,15 @@ RegisterNetEvent('police:client:EnableAllCameras', function()
 end)
 
 RegisterNetEvent('police:client:SetCamera', function(key, isOnline)
-    Config.SecurityCameras.cameras[key].isOnline = isOnline
+    if type(key) == 'table' and table.type(key) == 'array' then
+        for _, v in pairs(key) do
+            Config.SecurityCameras.cameras[v].isOnline = isOnline
+        end
+    elseif type(key) == 'number' then
+        Config.SecurityCameras.cameras[key].isOnline = isOnline
+    else
+        error('police:client:SetCamera did not receive the right type of key\nreceived type: ' .. type(key) .. '\nreceived value: ' .. key)
+    end
 end)
 
 -- Threads
