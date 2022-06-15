@@ -710,7 +710,7 @@ CreateThread(function()
     helicopterCombo:onPlayerInOut(function(isPointInside)
         if isPointInside then
             inHelicopter = true
-            if onDuty then
+            if onDuty and PlayerJob.name == 'police' then
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                     exports['qb-core']:HideText()
                     exports['qb-core']:DrawText(Lang:t('info.store_heli'), 'left')
