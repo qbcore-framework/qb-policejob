@@ -40,7 +40,8 @@ local Translations = {
         put_anklet_on = 'You put on an ankle tracker on %{firstname} %{lastname}',
         vehicle_flagged = 'Vehicle %{plate} has been flagged for %{reason}',
         impound_vehicle_removed = 'Vehicle taken out of impound!',
-    },
+        impounded = 'Vehicle impounded',
+ },
     info = {
         mr = 'Mr.',
         mrs = 'Mrs.',
@@ -179,6 +180,7 @@ local Translations = {
         robbing = 'Robbing Person...',
         place_object = 'Placing object..',
         remove_object = 'Removing object..',
+        impound = 'Impounding Vehicle..',
     },
 }
 

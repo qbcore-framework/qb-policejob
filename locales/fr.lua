@@ -40,6 +40,7 @@ local Translations = {
         put_anklet_on = 'Vous avez mis un bracelet éléctronique sur %{firstname} %{lastname}.',
         vehicle_flagged = 'Vehicule %{plate} à été signalé pour %{reason}',
         impound_vehicle_removed = 'Le véhicule à été sortis de la fourrière!',
+        impounded = 'Vehicule mis en fourrière',
     },
     info = {
         mr = 'Mr.',
@@ -179,6 +180,7 @@ local Translations = {
         robbing = 'Dépouille la personne...',
         place_object = 'Place un objet..',
         remove_object = 'Retire un objet..',
+        impound = 'Met le véhicule en fourrière..',
     },
 }
 
