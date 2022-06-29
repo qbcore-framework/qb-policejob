@@ -336,9 +336,35 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
         local pos = GetEntityCoords(ped)
         local vehpos = GetEntityCoords(vehicle)
         if #(pos - vehpos) < 5.0 and not IsPedInAnyVehicle(ped) then
-            local plate = QBCore.Functions.GetPlate(vehicle)
-            TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
-            QBCore.Functions.DeleteVehicle(vehicle)
+           QBCore.Functions.Progressbar('impound', Lang:t('progressbar.impound'), 5000, false, true, {
+                disableMovement = true,
+                disableCarMovement = true,
+                disableMouse = false,
+                disableCombat = true,
+            }, {
+                animDict = 'missheistdockssetup1clipboard@base',
+                anim = 'base',
+                flags = 1,
+            }, {
+                model = 'prop_notepad_01',
+                bone = 18905,
+                coords = { x = 0.1, y = 0.02, z = 0.05 },
+                rotation = { x = 10.0, y = 0.0, z = 0.0 },
+            },{
+                model = 'prop_pencil_01',
+                bone = 58866,
+                coords = { x = 0.11, y = -0.02, z = 0.001 },
+                rotation = { x = -120.0, y = 0.0, z = 0.0 },
+            }, function() -- Play When Done
+                local plate = QBCore.Functions.GetPlate(vehicle)
+                TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
+                QBCore.Functions.DeleteVehicle(vehicle)
+                TriggerEvent('QBCore:Notify', Lang:t('success.impounded'), 'success')
+                ClearPedTasks(ped)
+            end, function() -- Play When Cancel
+                ClearPedTasks(ped)
+                TriggerEvent('QBCore:Notify', Lang:t('error.canceled'), 'error')
+            end)
         end
     end
 end)
