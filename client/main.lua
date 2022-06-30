@@ -163,7 +163,7 @@ RegisterNetEvent('police:client:policeAlert', function(coords, text)
     local transG = 250
     local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
     local blip2 = AddBlipForCoord(coords.x, coords.y, coords.z)
-    local blipText = Lang:t('info.blip_text', {value = text})
+    local blipText = Lang:t('info.blip_text', {text = text})
     SetBlipSprite(blip, 60)
     SetBlipSprite(blip2, 161)
     SetBlipColour(blip, 1)
