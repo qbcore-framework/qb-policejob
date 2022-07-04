@@ -194,19 +194,24 @@ QBCore.Commands.Add("fine", "Fine Criminal Scum (Police Only)", {{name="id", hel
     local price = tonumber(args[2])
 
     if Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "trooper" or Player.PlayerData.job.name == "bcso" or Player.PlayerData.job.name == "doc" and Player.PlayerData.job.onduty then
-        if OtherPlayer then
-            if price and price > 0 then
+        local Player, distance = QBCore.Functions.GetClosestPlayer()
+        if Player ~= -1 and distance < 2.5 then
+            if OtherPlayer then
+                if price and price > 0 then
                 OtherPlayer.Functions.RemoveMoney('bank', price, "paid-fines")
                 Player.Functions.AddMoney('bank', price / 10)
                 exports['qb-management']:AddMoney(Player.PlayerData.job.name, price)
                 TriggerClientEvent('QBCore:Notify', src, "You fined the Criminal for $" .. price .. " and you were paid $" .. price / 10 , 'success', 5000)
                 TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, "You received a fine of $" .. price)
                 TriggerEvent('qb-log:server:CreateLog', 'policefines', 'Police Fines', 'rd', "**"..GetPlayerName(Player.PlayerData.source) .. " (citizenid: "..Player.PlayerData.citizenid.." | id: "..Player.PlayerData.source..")**" .. " FINED **"..GetPlayerName(OtherPlayer.PlayerData.source) .. " (citizenid: "..OtherPlayer.PlayerData.citizenid.." | id: "..OtherPlayer.PlayerData.source..")**" .. " for $" ..price)
-            else
+                else
                 TriggerClientEvent('QBCore:Notify', src, Lang:t("error.invalid_amount") ,'error')
+                end
+            else
+                TriggerClientEvent('QBCore:Notify', src, Lang:t("error.not_awake") ,'error')
             end
         else
-            TriggerClientEvent('QBCore:Notify', src, Lang:t("error.not_awake") ,'error')
+            QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
         end
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.on_duty_police_only") ,'error')
