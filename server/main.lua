@@ -193,7 +193,7 @@ QBCore.Commands.Add("fine", "Fine Criminal Scum (Police Only)", {{name="id", hel
     local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
     local price = tonumber(args[2])
 
-    if Player.PlayerData.job.name == "police" or Player.PlayerData.job.name == "trooper" or Player.PlayerData.job.name == "bcso" or Player.PlayerData.job.name == "doc" and Player.PlayerData.job.onduty then
+    if PlayerData.job.type == "leo" and Player.PlayerData.job.onduty then
         local Player, distance = QBCore.Functions.GetClosestPlayer()
         if Player ~= -1 and distance < 2.5 then
             if OtherPlayer then
