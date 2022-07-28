@@ -220,7 +220,7 @@ Config.Items = {
             info = {
                 serie = "",
                 attachments = {
-                    {component = "COMPONENT_AT_PI_FLSH", label = "Flashlight"},
+                    {item = "pistol_flashlight", component = "COMPONENT_AT_PI_FLSH", label = "Flashlight"},
                 }
             },
             type = "weapon",
@@ -245,7 +245,7 @@ Config.Items = {
             info = {
                 serie = "",
                 attachments = {
-                    {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
+                    {item = 'rifle_flashlight', component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
                 }
             },
             type = "weapon",
@@ -259,8 +259,8 @@ Config.Items = {
             info = {
                 serie = "",
                 attachments = {
-                    {component = "COMPONENT_AT_SCOPE_MACRO_02", label = "1x Scope"},
-                    {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
+                    {item = 'smg_scope', component = "COMPONENT_AT_SCOPE_MACRO_02", label = "1x Scope"},
+                    {item = 'rifle_flashlight', component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
                 }
             },
             type = "weapon",
@@ -274,8 +274,8 @@ Config.Items = {
             info = {
                 serie = "",
                 attachments = {
-                    {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
-                    {component = "COMPONENT_AT_SCOPE_MEDIUM", label = "3x Scope"},
+                    {item = 'rifle_flashlight', component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
+                    {item = 'carbinerifle_scope', component = "COMPONENT_AT_SCOPE_MEDIUM", label = "3x Scope"},
                 }
             },
             type = "weapon",
