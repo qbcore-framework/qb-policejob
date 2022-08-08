@@ -190,11 +190,28 @@
             .take-fingerprint:hover {
                 background: rgba(250, 250, 250, 0.65);
             }
+            .fingerprint-lname {
+                position: absolute;
+                width: 22vh;
+                height: 13vh;
+                top: 20vh;
+                margin: 0 auto;
+                left: 0;
+                right: 0;
+                text-align: center;
+                padding-top: 2vh;
+                font-family: 'Roboto Mono';
+                font-weight: bold;
+            }
+            .fingerprint-lname > p {
+                padding-top: 1vh;
+                font-weight: lighter;
+            }
             .fingerprint-id {
                 position: absolute;
                 width: 22vh;
                 height: 13vh;
-                top: 23vh;
+                top: 27vh;
                 margin: 0 auto;
                 left: 0;
                 right: 0;
@@ -204,7 +221,7 @@
                 font-weight: bold;
             }
             .fingerprint-id > p {
-                padding-top: 2vh;
+                padding-top: 1vh;
                 font-weight: lighter;
             }
         </style>
@@ -231,6 +248,10 @@
                 <img src="./fingerprint.png" alt="fingerprint" class="fingerprint-frame">
                 <div class="fingerprint-id">
                     Fingerprint ID
+                    <p>No result</p>
+                </div>
+                <div class="fingerprint-lname">
+                    Full Name
                     <p>No result</p>
                 </div>
                 <div class="take-fingerprint"></div>
