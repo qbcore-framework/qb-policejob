@@ -108,6 +108,7 @@ Databank.Close = function() {
 Fingerprint.Open = function() {
     $(".fingerprint-container").fadeIn(150);
     $(".fingerprint-id").html("Fingerprint ID<p>No result</p>");
+    $(".fingerprint-lname").html("Name<p>No result</p>");
 }
 
 Fingerprint.Close = function() {
@@ -117,6 +118,7 @@ Fingerprint.Close = function() {
 
 Fingerprint.Update = function(data) {
     $(".fingerprint-id").html("Fingerprint ID<p>"+data.fingerprintId+"</p>");
+    $(".fingerprint-lname").html("Name<p>"+data.lastname+"</p>");
 }
 
 $(document).on('click', '.take-fingerprint', function(){
