@@ -527,7 +527,11 @@ if Config.UseTarget then
                         event = "qb-policejob:ToggleDuty",
                         icon = "fas fa-sign-in-alt",
                         label = "Sign In",
-                        job = "police",
+						canInteract = function()
+							local PlayerData = QBCore.Functions.GetPlayerData()
+							if PlayerData.job.type == "leo" then return true; end
+							return false;
+						end,
                     },
                 },
                 distance = 1.5

@@ -19,7 +19,7 @@ local function UpdateBlips()
             dutyPlayers[#dutyPlayers+1] = {
                 source = v.PlayerData.source,
                 label = v.PlayerData.metadata["callsign"],
-                job = v.PlayerData.job.name,
+                job = v.PlayerData.job.type,
                 location = {
                     x = coords.x,
                     y = coords.y,
@@ -635,7 +635,7 @@ RegisterNetEvent('police:server:CuffPlayer', function(playerId, isSoftcuff)
 
     local Player = QBCore.Functions.GetPlayer(src)
     local CuffedPlayer = QBCore.Functions.GetPlayer(playerId)
-    if not Player or not CuffedPlayer or (not Player.Functions.GetItemByName("handcuffs") and Player.PlayerData.job.name ~= "police") then return end
+    if not Player or not CuffedPlayer or (not Player.Functions.GetItemByName("handcuffs") and Player.PlayerData.job.name ~= "leo") then return end
 
     TriggerClientEvent("police:client:GetCuffed", CuffedPlayer.PlayerData.source, Player.PlayerData.source, isSoftcuff)
 end)
