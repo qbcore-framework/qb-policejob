@@ -40,6 +40,7 @@ local Translations = {
         put_anklet_on = '%{firstname} %{lastname} وضع تعقب على',
         vehicle_flagged = '%{plate} | %{reason} تم الابلاغ عن',
         impound_vehicle_removed = 'اخرجت السيارة من الحجز',
+        impounded = 'السيارة محجوزة',
     },
     info = {
         mr = 'السيد.',
@@ -177,8 +178,9 @@ local Translations = {
         blood_clear = 'تطهير الدم',
         bullet_casing = 'إزالة أغلفة الرصاص',
         robbing = 'سرقة شخص',
-        place_object = 'اضافة في الارض',
+        place_object = 'إضافة في الارض',
         remove_object = 'حدف الارض',
+        impound = 'يتم حجز السيارة..',
     },
 }
 
