@@ -311,7 +311,7 @@ Config.CarItems = { -- Default Trunk Items for Police Vehicles
     },
 }
 
-Config.Items = { -- Items to be displayed on Armory
+Config.Items = {
     label = "Police Armory",
     slots = 30,
     items = {
@@ -321,6 +321,7 @@ Config.Items = { -- Items to be displayed on Armory
             amount = 1,
             info = {
                 serie = "",
+                quality = 100,
                 attachments = {
                     {component = "COMPONENT_AT_PI_FLSH", label = "Flashlight"},
                 }
@@ -335,6 +336,7 @@ Config.Items = { -- Items to be displayed on Armory
             amount = 1,
             info = {
                 serie = "",
+                quality = 100,
             },
             type = "weapon",
             slot = 2,
@@ -346,6 +348,7 @@ Config.Items = { -- Items to be displayed on Armory
             amount = 1,
             info = {
                 serie = "",
+                quality = 100,
                 attachments = {
                     {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
                 }
@@ -360,6 +363,7 @@ Config.Items = { -- Items to be displayed on Armory
             amount = 1,
             info = {
                 serie = "",
+                quality = 100,
                 attachments = {
                     {component = "COMPONENT_AT_SCOPE_MACRO_02", label = "1x Scope"},
                     {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
@@ -375,6 +379,7 @@ Config.Items = { -- Items to be displayed on Armory
             amount = 1,
             info = {
                 serie = "",
+                quality = 100,
                 attachments = {
                     {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
                     {component = "COMPONENT_AT_SCOPE_MEDIUM", label = "3x Scope"},
