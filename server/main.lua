@@ -669,7 +669,7 @@ RegisterNetEvent('police:server:KidnapPlayer', function(playerId)
 
     local Player = QBCore.Functions.GetPlayer(source)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
-    if not Player or EscortPlayer then return end
+    if not Player or not EscortPlayer then return end
 
     if EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or EscortPlayer.PlayerData.metadata["inlaststand"] then
         TriggerClientEvent("police:client:GetKidnappedTarget", EscortPlayer.PlayerData.source, Player.PlayerData.source)
