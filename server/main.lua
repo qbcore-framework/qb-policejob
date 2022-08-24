@@ -393,6 +393,33 @@ QBCore.Commands.Add("paylawyer", Lang:t("commands.paylawyer"), {{name = "id",hel
     end
 end)
 
+QBCore.Commands.Add('fine', 'Fine A Person', {{name = 'id', help = 'Player ID'}, {name = 'amount', help = 'Fine Amount'}}, false, function(source, args)
+    local biller = QBCore.Functions.GetPlayer(source)
+    local Ply = QBCore.Functions.GetPlayer(tonumber(args[1]))
+    local billed = QBCore.Functions.GetPlayer(tonumber(args[1]))
+    local amount = tonumber(args[2])
+    if biller.PlayerData.job.name == "police" then
+        if billed ~= nil then
+            if biller.PlayerData.citizenid ~= billed.PlayerData.citizenid then
+                if amount and amount > 0 then
+                    Ply.Functions.RemoveMoney('bank', amount, "paid-fine")
+                    TriggerClientEvent('QBCore:Notify', source, 'Fine has been issued to offender succesfully', 'success')
+                    TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, 'State Debt Recovery has automatically recovered the fines owed...')
+                    TriggerEvent('qb-bossmenu:server:addAccountMoney', 'police', amount)
+                else
+                    TriggerClientEvent('QBCore:Notify', source, 'Must Be A Valid Amount Above 0', 'error')
+                end
+            else
+                TriggerClientEvent('QBCore:Notify', source, 'You Cannot Fine Yourself', 'error')
+            end
+        else
+            TriggerClientEvent('QBCore:Notify', source, 'Person Not Online', 'error')
+        end
+    else
+        TriggerClientEvent('QBCore:Notify', source, 'No Access', 'error')
+    end
+end)
+
 QBCore.Commands.Add("anklet", Lang:t("commands.anklet"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
