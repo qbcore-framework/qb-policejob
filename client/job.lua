@@ -762,6 +762,7 @@ CreateThread(function()
             debugPoly = false,
             minZ = v.z - 1,
             maxZ = v.z + 1,
+            heading = 180,
         })
     end
 
