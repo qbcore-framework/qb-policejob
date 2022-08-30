@@ -14,7 +14,7 @@ Config.HandCuffItem = 'handcuffs'
 
 Config.LicenseRank = 2
 
-Config.UseTarget = GetConvar('UseTarget', 'true') == 'true'
+Config.UseTarget = GetConvar('UseTarget', 'false') == 'true'
 Config.Locations = {
     ["duty"] = {
         [1] = vector3(440.085, -974.924, 30.689),
@@ -30,7 +30,7 @@ Config.Locations = {
     },
     ["impound"] = {
         [1] = vector3(436.68, -1007.42, 27.32),
-        [2] = vector4(-436.14, 5982.63, 31.34),
+        [2] = vector3(-436.14, 5982.63, 31.34),
     },
     ["helicopter"] = {
         [1] = vector4(449.168, -981.325, 43.691, 87.234),
