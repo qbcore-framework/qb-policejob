@@ -2,7 +2,6 @@
 local currentGarage = 0
 local inFingerprint = false
 local FingerPrintSessionId = nil
-local inDuty = false
 local inStash = false
 local inTrash = false
 local inAmoury = false
@@ -13,7 +12,7 @@ local inGarage = false
 local function loadAnimDict(dict) -- interactions, job,
     while (not HasAnimDictLoaded(dict)) do
         RequestAnimDict(dict)
-        Citizen.Wait(10)
+        Wait(10)
     end
 end
 
@@ -81,7 +80,7 @@ local function doCarDamage(currentVehicle, veh)
 	if body < 920.0 then damageOutside = true end
 	if body < 920.0 then damageOutside2 = true end
 
-    Citizen.Wait(100)
+    Wait(100)
     SetVehicleEngineHealth(currentVehicle, engine)
 
 	if smash then
@@ -315,10 +314,10 @@ RegisterNetEvent('police:client:CallAnim', function()
     local callCount = 5
     loadAnimDict("cellphone@")
     TaskPlayAnim(PlayerPedId(), 'cellphone@', 'cellphone_call_listen_base', 3.0, -1, -1, 49, 0, false, false, false)
-    Citizen.Wait(1000)
-    Citizen.CreateThread(function()
+    Wait(1000)
+    CreateThread(function()
         while isCalling do
-            Citizen.Wait(1000)
+            Wait(1000)
             callCount = callCount - 1
             if callCount <= 0 then
                 isCalling = false
@@ -575,7 +574,7 @@ else
     local dutyCombo = ComboZone:Create(dutyZones, {name = "dutyCombo", debugPoly = false})
     dutyCombo:onPlayerInOut(function(isPointInside)
         if isPointInside then
-            inDuty = true
+            dutylisten = true
             if not onDuty then
                 exports['qb-core']:DrawText(Lang:t('info.on_duty'),'left')
                 dutylistener()
