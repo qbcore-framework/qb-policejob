@@ -537,6 +537,29 @@ if Config.UseTarget then
     end)
 
 else
+
+    local dutylisten = false
+    function dutylistener()
+        dutylisten = true
+        CreateThread(function()
+            while dutylisten do
+                if PlayerJob.name == "police" then
+                    if IsControlJustReleased(0, 38) then
+                        onDuty = not onDuty
+                        TriggerServerEvent("police:server:UpdateCurrentCops")
+                        TriggerServerEvent("QBCore:ToggleDuty")
+                        TriggerServerEvent("police:server:UpdateBlips")
+                        dutylisten = false
+                        break
+                    end
+                else
+                    break
+                end
+                Wait(0)
+            end
+        end)
+    end
+
     -- Toggle Duty
     local dutyZones = {}
     for _, v in pairs(Config.Locations["duty"]) do
@@ -555,8 +578,10 @@ else
             inDuty = true
             if not onDuty then
                 exports['qb-core']:DrawText(Lang:t('info.on_duty'),'left')
+                dutylistener()
             else
                 exports['qb-core']:DrawText(Lang:t('info.off_duty'),'left')
+                dutylistener()
             end
         else
             inDuty = false
@@ -564,23 +589,6 @@ else
         end
     end)
 
-    -- Toggle Duty Thread
-    CreateThread(function ()
-        Wait(1000)
-        while true do
-            local sleep = 1000
-            if inDuty and PlayerJob.name == "police" then
-                sleep = 5
-                if IsControlJustReleased(0, 38) then
-                    onDuty = not onDuty
-                    TriggerServerEvent("police:server:UpdateCurrentCops")
-                    TriggerServerEvent("QBCore:ToggleDuty")
-                    TriggerServerEvent("police:server:UpdateBlips")
-                end
-            end
-            Wait(sleep)
-        end
-    end)
 end
 
 CreateThread(function()
@@ -642,6 +650,7 @@ CreateThread(function()
         if isPointInside then
             inStash = true
             exports['qb-core']:DrawText(Lang:t('info.stash_enter'), 'left')
+            stash()
         else
             exports['qb-core']:HideText()
             inStash = false
@@ -666,6 +675,7 @@ CreateThread(function()
             inTrash = true
             if onDuty then
                 exports['qb-core']:DrawText(Lang:t('info.trash_enter'),'left')
+                trash()
             end
         else
             inTrash = false
@@ -691,6 +701,7 @@ CreateThread(function()
             inFingerprint = true
             if onDuty then
                 exports['qb-core']:DrawText(Lang:t('info.scan_fingerprint'),'left')
+                fingerprint()
             end
         else
             inFingerprint = false
@@ -716,6 +727,7 @@ CreateThread(function()
             inAmoury = true
             if onDuty then
                 exports['qb-core']:DrawText(Lang:t('info.enter_armory'),'left')
+                armoury()
             end
         else
             inAmoury = false
@@ -743,8 +755,10 @@ CreateThread(function()
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                     exports['qb-core']:HideText()
                     exports['qb-core']:DrawText(Lang:t('info.store_heli'), 'left')
+                    heli()
                 else
                     exports['qb-core']:DrawText(Lang:t('info.take_heli'), 'left')
+                    heli()
                 end
             end
         else
@@ -773,6 +787,7 @@ CreateThread(function()
             if onDuty then
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                     exports['qb-core']:DrawText(Lang:t('info.impound_veh'), 'left')
+                    impound()
                 else
                     local currentSelection = 0
 
@@ -850,129 +865,136 @@ CreateThread(function()
 end)
 
 -- Personal Stash Thread
-CreateThread(function ()
-    Wait(1000)
-    while true do
-        local sleep = 1000
-        if inStash and PlayerJob.name == "police" then
-            if onDuty then sleep = 5 end
-            if IsControlJustReleased(0, 38) then
-                TriggerServerEvent("inventory:server:OpenInventory", "stash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
-                TriggerEvent("inventory:client:SetCurrentStash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
+function stash()
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if inStash and PlayerJob.name == "police" then
+                if onDuty then sleep = 5 end
+                if IsControlJustReleased(0, 38) then
+                    TriggerServerEvent("inventory:server:OpenInventory", "stash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
+                    TriggerEvent("inventory:client:SetCurrentStash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
+                    break
+                end
+            else
+                break
             end
-        else
-            sleep = 1000
         end
-        Wait(sleep)
-    end
-end)
+    end)
+end
 
 -- Police Trash Thread
-CreateThread(function ()
-    Wait(1000)
-    while true do
-        local sleep = 1000
-        if inTrash and PlayerJob.name == "police" then
-            if onDuty then sleep = 5 end
-            if IsControlJustReleased(0, 38) then
-                TriggerServerEvent("inventory:server:OpenInventory", "stash", "policetrash", {
-                    maxweight = 4000000,
-                    slots = 300,
-                })
-                TriggerEvent("inventory:client:SetCurrentStash", "policetrash")
+function trash()
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if inTrash and PlayerJob.name == "police" then
+                if onDuty then sleep = 5 end
+                if IsControlJustReleased(0, 38) then
+                    TriggerServerEvent("inventory:server:OpenInventory", "stash", "policetrash", {
+                        maxweight = 4000000,
+                        slots = 300,
+                    })
+                    TriggerEvent("inventory:client:SetCurrentStash", "policetrash")
+                    break
+                end
+            else
+                break
             end
-        else
-            sleep = 1000
         end
-        Wait(sleep)
-    end
-end)
+    end)
+end
 
 -- Fingerprint Thread
-CreateThread(function ()
-    Wait(1000)
-    while true do
-        local sleep = 1000
-        if inFingerprint and PlayerJob.name == "police" then
-            if onDuty then sleep = 5 end
-            if IsControlJustReleased(0, 38) then
-                TriggerEvent("qb-police:client:scanFingerPrint")
+function fingerprint()
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if inFingerprint and PlayerJob.name == "police" then
+                if onDuty then sleep = 5 end
+                if IsControlJustReleased(0, 38) then
+                    TriggerEvent("qb-police:client:scanFingerPrint")
+                    break
+                end
+            else
+                break
             end
-        else
-            sleep = 1000
         end
-        Wait(sleep)
-    end
-end)
+    end)
+end
 
 -- Armoury Thread
-CreateThread(function ()
-    Wait(1000)
-    while true do
-        local sleep = 1000
-        if inAmoury and PlayerJob.name == "police" then
-            if onDuty then sleep = 5 end
-            if IsControlJustReleased(0, 38) then
-                TriggerEvent("qb-police:client:openArmoury")
+function armoury()
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if inAmoury and PlayerJob.name == "police" then
+                if onDuty then sleep = 5 end
+                if IsControlJustReleased(0, 38) then
+                    TriggerEvent("qb-police:client:openArmoury")
+                    break
+                end
+            else
+                break
             end
-        else
-            sleep = 1000
         end
-        Wait(sleep)
-    end
-end)
+    end)
+end
 
 -- Helicopter Thread
-CreateThread(function ()
-    Wait(1000)
-    while true do
-        local sleep = 1000
-        if inHelicopter and PlayerJob.name == "police" then
-            if onDuty then sleep = 5 end
-            if IsControlJustReleased(0, 38) then
-                TriggerEvent("qb-police:client:spawnHelicopter")
+function heli()
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if inHelicopter and PlayerJob.name == "police" then
+                if onDuty then sleep = 5 end
+                if IsControlJustReleased(0, 38) then
+                    TriggerEvent("qb-police:client:spawnHelicopter")
+                    break
+                end
+            else
+                break
             end
-        else
-            sleep = 1000
         end
-        Wait(sleep)
-    end
-end)
+    end)
+end
 
 -- Police Impound Thread
-CreateThread(function ()
-    Wait(1000)
-    while true do
-        local sleep = 1000
-        if inImpound and PlayerJob.name == "police" then
-            if onDuty then sleep = 5 end
-            if IsPedInAnyVehicle(PlayerPedId(), false) then
-                if IsControlJustReleased(0, 38) then
-                    QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+function impound()
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if inImpound and PlayerJob.name == "police" then
+                if onDuty then sleep = 5 end
+                if IsPedInAnyVehicle(PlayerPedId(), false) then
+                    if IsControlJustReleased(0, 38) then
+                        QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                        break
+                    end
                 end
+            else
+                break
             end
-        else
-            sleep = 1000
         end
-        Wait(sleep)
-    end
-end)
+    end)
+end
 
 -- Police Garage Thread
-CreateThread(function ()
-    Wait(1000)
-    while true do
-        local sleep = 1000
-        if inGarage and PlayerJob.name == "police" then
-            if onDuty then sleep = 5 end
-            if IsPedInAnyVehicle(PlayerPedId(), false) then
-                if IsControlJustReleased(0, 38) then
-                    QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+function garage()
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if inGarage and PlayerJob.name == "police" then
+                if onDuty then sleep = 5 end
+                if IsPedInAnyVehicle(PlayerPedId(), false) then
+                    if IsControlJustReleased(0, 38) then
+                        QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                        break
+                    end
                 end
+            else
+                break
             end
-        else
-            sleep = 1000
         end
-        Wait(sleep)
-    end
-end)
+    end)
+end
