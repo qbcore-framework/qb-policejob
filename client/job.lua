@@ -834,6 +834,7 @@ CreateThread(function()
             if onDuty and PlayerJob.name == 'police' then
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                     exports['qb-core']:DrawText(Lang:t('info.store_veh'), 'left')
+		    garage()
                 else
                     local currentSelection = 0
 
