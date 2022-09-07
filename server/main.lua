@@ -566,9 +566,9 @@ QBCore.Functions.CreateCallback('police:GetDutyPlayers', function(_, cb)
     for _, v in pairs(players) do
         if v and v.PlayerData.job.name == "police" and v.PlayerData.job.onduty then
             dutyPlayers[#dutyPlayers+1] = {
-                source = Player.PlayerData.source,
-                label = Player.PlayerData.metadata["callsign"],
-                job = Player.PlayerData.job.name
+                source = v.PlayerData.source,
+                label = v.PlayerData.metadata["callsign"],
+                job = v.PlayerData.job.name
             }
         end
     end
