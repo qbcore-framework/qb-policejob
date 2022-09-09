@@ -448,6 +448,36 @@ QBCore.Commands.Add("takedna", Lang:t("commands.takedna"), {{name = "id", help =
     end
 end)
 
+QBCore.Commands.Add("fine", "Fine Criminal Scum (LEO Only)", {{name="id", help="Player ID"}, {name="amount", help="Fine Amount"}}, false, function(source, args)
+	local src = source
+	local Player = QBCore.Functions.GetPlayer(src)
+	local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
+	local price = tonumber(args[2])
+		
+	if player ~= -1 and distance < 5.0 then
+		if PlayerData.job.type == "leo" and Player.PlayerData.job.onduty then
+			if OtherPlayer then
+				if price and price > 0 then
+					OtherPlayer.Functions.RemoveMoney('bank', price, "paid-fines")
+					Player.Functions.AddMoney('bank', price / 10)
+					exports['qb-management']:AddMoney(Player.PlayerData.job.name, price)
+					TriggerClientEvent('QBCore:Notify', src, "You fined the Criminal for $" .. price .. " and you were paid $" .. price / 10 , 'success', 5000)
+					TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, "You received a fine of $" .. price)
+					-- TriggerEvent('qb-log:server:CreateLog', 'policefines', 'Police Fines', 'rd', "**"..GetPlayerName(Player.PlayerData.source) .. " (citizenid: "..Player.PlayerData.citizenid.." | id: "..Player.PlayerData.source..")**" .. " FINED **"..GetPlayerName(OtherPlayer.PlayerData.source) .. " (citizenid: "..OtherPlayer.PlayerData.citizenid.." | id: "..OtherPlayer.PlayerData.source..")**" .. " for $" ..price)
+				else
+					TriggerClientEvent('QBCore:Notify', src, 'invalid amount' ,'error')
+				end
+			else
+				TriggerClientEvent('QBCore:Notify', src, 'This Citizen is not awake!' ,'error')
+			end
+		else
+			TriggerClientEvent('QBCore:Notify', src, 'You must be on duty to fine people!' ,'error')
+		end
+	else
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
+    end
+end)
+
 RegisterNetEvent('police:server:SendTrackerLocation', function(coords, requestId)
     local Target = QBCore.Functions.GetPlayer(source)
     local msg = Lang:t('info.target_location', {firstname = Target.PlayerData.charinfo.firstname, lastname = Target.PlayerData.charinfo.lastname})
