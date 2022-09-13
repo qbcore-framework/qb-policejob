@@ -70,7 +70,7 @@ RegisterNetEvent('police:client:PutInVehicle', function()
     if isHandcuffed or isEscorted then
         local vehicle = QBCore.Functions.GetClosestVehicle()
         if DoesEntityExist(vehicle) then
-			for i = GetVehicleMaxNumberOfPassengers(vehicle), 1, -1 do
+            for i = GetVehicleMaxNumberOfPassengers(vehicle), 0, -1 do
                 if IsVehicleSeatFree(vehicle, i) then
                     isEscorted = false
                     TriggerEvent('hospital:client:isEscorted', isEscorted)
@@ -82,7 +82,7 @@ RegisterNetEvent('police:client:PutInVehicle', function()
                     return
                 end
             end
-		end
+        end
     end
 end)
 
