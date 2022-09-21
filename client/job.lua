@@ -877,7 +877,7 @@ else
     local fingerprintZones = {}
     for _, v in pairs(Config.Locations["fingerprint"]) do
         fingerprintZones[#fingerprintZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 2, 1 {
+            vector3(vector3(v.x, v.y, v.z)), 2, 1, {
             name="box_zone",
             debugPoly = false,
             minZ = v.z - 1,
