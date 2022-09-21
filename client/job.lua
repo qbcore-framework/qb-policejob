@@ -838,9 +838,9 @@ else
         if isPointInside then
             inStash = true
             if PlayerJob.name == 'police' and PlayerJob.onduty then
-            	exports['qb-core']:DrawText(Lang:t('info.stash_enter'), 'left')
-            	stash()
-	    end
+                exports['qb-core']:DrawText(Lang:t('info.stash_enter'), 'left')
+                stash()
+            end
         else
             inStash = false
             exports['qb-core']:HideText()
