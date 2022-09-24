@@ -38,7 +38,6 @@ local Translations = {
         took_anklet_from = 'You took off %{firstname} %{lastname} tracker',
         put_anklet = 'You put on an ankle tracker.',
         put_anklet_on = 'You put on an ankle tracker on %{firstname} %{lastname}',
-        vehicle_flagged = 'Vehicle %{plate} has been flagged for %{reason}',
         impound_vehicle_removed = 'Vehicle taken out of impound!',
         impounded = 'Vehicle impounded',
  },
