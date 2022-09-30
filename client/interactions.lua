@@ -422,6 +422,8 @@ CreateThread(function()
 			DisableControlAction(0, 263, true) -- Melee Attack 1
 
 			DisableControlAction(0, 45, true) -- Reload
+            DisableControlAction(0, 47,true) -- disable weapon
+            DisableControlAction(0, 58,true) -- disable weaponc
 			DisableControlAction(0, 22, true) -- Jump
 			DisableControlAction(0, 44, true) -- Cover
 			DisableControlAction(0, 37, true) -- Select Weapon
