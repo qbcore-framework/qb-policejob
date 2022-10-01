@@ -968,7 +968,13 @@ function impound()
                 if onDuty then sleep = 5 end
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                     if IsControlJustReleased(0, 38) then
-                        QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                        local veh = GetVehiclePedIsIn(PlayerPedId())
+                        local plate = QBCore.Functions.GetPlate(veh)
+                        local bodyDamage = math.ceil(GetVehicleBodyHealth(veh))
+                        local engineDamage = math.ceil(GetVehicleEngineHealth(veh))
+                        local totalFuel = exports['LegacyFuel']:GetFuel(veh)
+                        TriggerServerEvent("police:server:Impound", plate, true, 0, bodyDamage, engineDamage, totalFuel)
+                        QBCore.Functions.DeleteVehicle(veh)
                         break
                     end
                 end
