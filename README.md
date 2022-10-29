@@ -21,7 +21,8 @@ Police Job for QB-Core Framework :police_officer:
 
 ## Dependencies
 - [qb-core](https://github.com/qbcore-framework/qb-core)
-- [qb-bossmenu](https://github.com/qbcore-framework/qb-bossmenu) - For the boss menu
+- (Deprecated) [qb-bossmenu](https://github.com/qbcore-framework/qb-bossmenu) - For the boss menu
+- (Replace qb-bossmenu) [qb-management](https://github.com/qbcore-framework/qb-management) - For the boss/gang menu
 - [qb-garages](https://github.com/qbcore-framework/qb-garages) - For the vehicle spawner
 - [qb-clothing](https://github.com/qbcore-framework/qb-clothing) - For the locker room
 - [qb-phone](https://github.com/qbcore-framework/qb-phone) - For the MEOS app and notifications etc.
