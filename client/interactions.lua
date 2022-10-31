@@ -279,8 +279,8 @@ RegisterNetEvent('police:client:CuffPlayer', function()
     if not IsPedRagdoll(PlayerPedId()) then
         local player, distance = QBCore.Functions.GetClosestPlayer()
         if player ~= -1 and distance < 1.5 then
-            QBCore.Functions.TriggerCallback('QBCore:HasItem', function(result)
-                if result then
+            local hasItem = QBCore.Functions.HasItem(Config.HandCuffItem)
+    		if hasItem then
                     local playerId = GetPlayerServerId(player)
                     if not IsPedInAnyVehicle(GetPlayerPed(player)) and not IsPedInAnyVehicle(PlayerPedId()) then
                         TriggerServerEvent("police:server:CuffPlayer", playerId, false)
@@ -291,7 +291,6 @@ RegisterNetEvent('police:client:CuffPlayer', function()
                 else
                     QBCore.Functions.Notify(Lang:t("error.no_cuff"), "error")
                 end
-            end, Config.HandCuffItem)
         else
             QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
         end
