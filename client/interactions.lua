@@ -280,7 +280,7 @@ RegisterNetEvent('police:client:CuffPlayer', function()
         local player, distance = QBCore.Functions.GetClosestPlayer()
         if player ~= -1 and distance < 1.5 then
             local hasItem = QBCore.Functions.HasItem(Config.HandCuffItem)
-    		if hasItem then
+    	        if hasItem then
                     local playerId = GetPlayerServerId(player)
                     if not IsPedInAnyVehicle(GetPlayerPed(player)) and not IsPedInAnyVehicle(PlayerPedId()) then
                         TriggerServerEvent("police:server:CuffPlayer", playerId, false)
