@@ -818,7 +818,7 @@ else
                 dutylistener()
             end
         else
-            inDuty = false
+            dutylisten = false
             exports['qb-core']:HideText()
         end
     end)
