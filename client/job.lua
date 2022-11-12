@@ -368,6 +368,10 @@ RegisterNetEvent('police:client:ImpoundVehicle', function(fullImpound, price)
             }, function() -- Play When Done
                 local plate = QBCore.Functions.GetPlate(vehicle)
                 TriggerServerEvent("police:server:Impound", plate, fullImpound, price, bodyDamage, engineDamage, totalFuel)
+                while NetworkGetEntityOwner(vehicle) ~= 128 do  -- Ensure we have entity ownership to prevent inconsistent vehicle deletion
+                    NetworkRequestControlOfEntity(vehicle)
+                    Wait(100)
+                end
                 QBCore.Functions.DeleteVehicle(vehicle)
                 TriggerEvent('QBCore:Notify', Lang:t('success.impounded'), 'success')
                 ClearPedTasks(ped)
@@ -847,7 +851,7 @@ else
                     dutylistener()
                 end
             else
-                inDuty = false
+                dutylisten = false
                 exports['qb-core']:HideText()
             end
         end)
