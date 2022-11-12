@@ -6,9 +6,9 @@ isEscorted = false
 PlayerJob = {}
 onDuty = false
 local DutyBlips = {}
-
 -- Functions
-local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
+local function CreateDutyBlips(playerId, playerLabel, playerJob, playerType, playerLocation)
+    if QBCore.Shared.QBJobsStatus then return end
     local ped = GetPlayerPed(playerId)
     local blip = GetBlipFromEntity(ped)
     if not DoesBlipExist(blip) then
@@ -21,7 +21,7 @@ local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
         ShowHeadingIndicatorOnBlip(blip, true)
         SetBlipRotation(blip, math.ceil(playerLocation.w))
         SetBlipScale(blip, 1.0)
-        if playerJob == "police" then
+        if playerJob == "police" or playerType == "leo" then
             SetBlipColour(blip, 38)
         else
             SetBlipColour(blip, 5)
@@ -32,7 +32,6 @@ local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
         EndTextCommandSetBlipName(blip)
         DutyBlips[#DutyBlips+1] = blip
     end
-
     if GetBlipFromEntity(PlayerPedId()) == blip then
         -- Ensure we remove our own blip.
         RemoveBlip(blip)
@@ -46,9 +45,8 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     onDuty = player.job.onduty
     isHandcuffed = false
     TriggerServerEvent("police:server:SetHandcuffStatus", false)
-    TriggerServerEvent("police:server:UpdateBlips")
+    if not QBCore.Shared.QBJobsStatus then TriggerServerEvent("police:server:UpdateBlips") end
     TriggerServerEvent("police:server:UpdateCurrentCops")
-
     if player.metadata.tracker then
         local trackerClothingData = {
             outfitData = {
@@ -70,8 +68,8 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
         }
         TriggerEvent('qb-clothing:client:loadOutfit', trackerClothingData)
     end
-
-    if PlayerJob and PlayerJob.name ~= "police" then
+    if QBCore.Shared.QBJobsStatus then return end
+    if PlayerJob and (PlayerJob.name ~= "police" or PlayerJob.type ~= "leo") then
         if DutyBlips then
             for _, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -90,6 +88,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     onDuty = false
     ClearPedTasks(PlayerPedId())
     DetachEntity(PlayerPedId(), true, false)
+    if QBCore.Shared.QBJobsStatus then return end
     if DutyBlips then
         for _, v in pairs(DutyBlips) do
             RemoveBlip(v)
@@ -99,15 +98,15 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    if JobInfo.name == "police" and PlayerJob.name ~= "police" then
-        if JobInfo.onduty then
+    if QBCore.Shared.QBJobsStatus then return end
+    if JobInfo.name == "police" and PlayerJob.name ~= "police" or JobInfo.type == "leo" and PlayerJob.type ~= "leo" then
+    if JobInfo.onduty then
             TriggerServerEvent("QBCore:ToggleDuty")
             onDuty = false
         end
     end
-
-    if JobInfo.name ~= "police" then
-        if DutyBlips then
+    if JobInfo.name ~= "police" or JobInfo.type ~= "leo" then
+    if DutyBlips then
             for _, v in pairs(DutyBlips) do
                 RemoveBlip(v)
             end
@@ -118,7 +117,7 @@ RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     TriggerServerEvent("police:server:UpdateBlips")
 end)
 
-RegisterNetEvent('police:client:sendBillingMail', function(amount)
+RegisterNetEvent('police:client:sendBillingMail', function(amount) -- move this event into future court jobs
     SetTimeout(math.random(2500, 4000), function()
         local gender = Lang:t('info.mr')
         if QBCore.Functions.GetPlayerData().charinfo.gender == 1 then
@@ -135,8 +134,8 @@ RegisterNetEvent('police:client:sendBillingMail', function(amount)
 end)
 
 RegisterNetEvent('police:client:UpdateBlips', function(players)
-    if PlayerJob and (PlayerJob.name == 'police' or PlayerJob.name == 'ambulance') and
-        onDuty then
+    if QBCore.Shared.QBJobsStatus then return end
+    if PlayerJob and (PlayerJob.name == "police" or PlayerJob.type == "leo" or PlayerJob.name == 'ambulance') and onDuty then
         if DutyBlips then
             for _, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -146,8 +145,7 @@ RegisterNetEvent('police:client:UpdateBlips', function(players)
         if players then
             for _, data in pairs(players) do
                 local id = GetPlayerFromServerId(data.source)
-                CreateDutyBlips(id, data.label, data.job, data.location)
-
+                CreateDutyBlips(id, data.label, data.job, data.type, data.location)
             end
         end
     end
@@ -208,6 +206,7 @@ end)
 
 -- Threads
 CreateThread(function()
+    if QBCore.Shared.QBJobsStatus then return end
     for _, station in pairs(Config.Locations["stations"]) do
         local blip = AddBlipForCoord(station.coords.x, station.coords.y, station.coords.z)
         SetBlipSprite(blip, 60)
