@@ -106,7 +106,6 @@ local function SetCarItemsInfo(data)
     if QBCore.Shared.QBJobsStatus then return end
 	local items = {}
     local index = 1
-    local player = QBCore.Functions.GetPlayerByCitizenId(data.citid)
     if Config.CarItems then
 	    for _,v in pairs(Config.CarItems) do
             local itemInfo = QBCore.Shared.Items[v.name:lower()]
