@@ -1,6 +1,7 @@
+-- Variables
 local currentCameraIndex = 0
 local createdCamera = 0
-
+-- Functions
 local function GetCurrentTime()
     local hours = GetClockHours()
     local minutes = GetClockMinutes()
@@ -12,13 +13,11 @@ local function GetCurrentTime()
     end
     return tostring(hours .. ":" .. minutes)
 end
-
 local function ChangeSecurityCamera(x, y, z, r)
     if createdCamera ~= 0 then
         DestroyCam(createdCamera, 0)
         createdCamera = 0
     end
-
     local cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", 1)
     SetCamCoord(cam, x, y, z)
     SetCamRot(cam, r.x, r.y, r.z, 2)
@@ -26,7 +25,6 @@ local function ChangeSecurityCamera(x, y, z, r)
     Wait(250)
     createdCamera = cam
 end
-
 local function CloseSecurityCamera()
     DestroyCam(createdCamera, 0)
     RenderScriptCams(0, 0, 1, 1, 1)
@@ -38,17 +36,14 @@ local function CloseSecurityCamera()
     end
     FreezeEntityPosition(GetPlayerPed(PlayerId()), false)
 end
-
 local function InstructionButton(ControlButton)
     ScaleformMovieMethodAddParamPlayerNameString(ControlButton)
 end
-
 local function InstructionButtonMessage(text)
     BeginTextCommandScaleformString("STRING")
     AddTextComponentScaleform(text)
     EndTextCommandScaleformString()
 end
-
 local function CreateInstuctionScaleform(scaleform)
     scaleform = RequestScaleformMovie(scaleform)
     while not HasScaleformMovieLoaded(scaleform) do
@@ -56,30 +51,24 @@ local function CreateInstuctionScaleform(scaleform)
     end
     PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
     PopScaleformMovieFunctionVoid()
-
     PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
     PushScaleformMovieFunctionParameterInt(200)
     PopScaleformMovieFunctionVoid()
-
     PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
     PushScaleformMovieFunctionParameterInt(1)
     InstructionButton(GetControlInstructionalButton(1, 194, true))
     InstructionButtonMessage(Lang:t('info.close_camera'))
     PopScaleformMovieFunctionVoid()
-
     PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
     PopScaleformMovieFunctionVoid()
-
     PushScaleformMovieFunction(scaleform, "SET_BACKGROUND_COLOUR")
     PushScaleformMovieFunctionParameterInt(0)
     PushScaleformMovieFunctionParameterInt(0)
     PushScaleformMovieFunctionParameterInt(0)
     PushScaleformMovieFunctionParameterInt(80)
     PopScaleformMovieFunctionVoid()
-
     return scaleform
 end
-
 -- Events
 RegisterNetEvent('police:client:ActiveCamera', function(cameraId)
     if Config.SecurityCameras.cameras[cameraId] then
@@ -116,19 +105,16 @@ RegisterNetEvent('police:client:ActiveCamera', function(cameraId)
         QBCore.Functions.Notify(Lang:t("error.no_camera"), "error")
     end
 end)
-
 RegisterNetEvent('police:client:DisableAllCameras', function()
     for k, _ in pairs(Config.SecurityCameras.cameras) do
         Config.SecurityCameras.cameras[k].isOnline = false
     end
 end)
-
 RegisterNetEvent('police:client:EnableAllCameras', function()
     for k, _ in pairs(Config.SecurityCameras.cameras) do
         Config.SecurityCameras.cameras[k].isOnline = true
     end
 end)
-
 RegisterNetEvent('police:client:SetCamera', function(key, isOnline)
     if type(key) == 'table' and table.type(key) == 'array' then
         for _, v in pairs(key) do
@@ -140,7 +126,6 @@ RegisterNetEvent('police:client:SetCamera', function(key, isOnline)
         error('police:client:SetCamera did not receive the right type of key\nreceived type: ' .. type(key) .. '\nreceived value: ' .. key)
     end
 end)
-
 -- Threads
 CreateThread(function()
     while true do
@@ -151,11 +136,9 @@ CreateThread(function()
             DrawScaleformMovieFullscreen(instructions, 255, 255, 255, 255, 0)
             SetTimecycleModifier("scanline_cam_cheap")
             SetTimecycleModifierStrength(1.0)
-
             if Config.SecurityCameras.hideradar then
                 DisplayRadar(false)
             end
-
             -- CLOSE CAMERAS
             if IsControlJustPressed(1, 177) then
                 DoScreenFadeOut(250)
@@ -168,7 +151,6 @@ CreateThread(function()
                 })
                 DoScreenFadeIn(250)
             end
-
             ---------------------------------------------------------------------------
             -- CAMERA ROTATION CONTROLS
             ---------------------------------------------------------------------------
@@ -181,19 +163,16 @@ CreateThread(function()
                         SetCamRot(createdCamera, getCameraRot.x + 0.7, 0.0, getCameraRot.z, 2)
                     end
                 end
-
                 -- ROTATE DOWN
                 if IsControlPressed(0, 8) then
                     if getCameraRot.x >= -50.0 then
                         SetCamRot(createdCamera, getCameraRot.x - 0.7, 0.0, getCameraRot.z, 2)
                     end
                 end
-
                 -- ROTATE LEFT
                 if IsControlPressed(0, 34) then
                     SetCamRot(createdCamera, getCameraRot.x, 0.0, getCameraRot.z + 0.7, 2)
                 end
-
                 -- ROTATE RIGHT
                 if IsControlPressed(0, 9) then
                     SetCamRot(createdCamera, getCameraRot.x, 0.0, getCameraRot.z - 0.7, 2)

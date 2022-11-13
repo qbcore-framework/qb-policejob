@@ -3,7 +3,6 @@ local ObjectList = {}
 local SpawnedSpikes = {}
 local spikemodel = `P_ld_stinger_s`
 local ClosestSpike = nil
-
 -- Functions
 local function GetClosestPoliceObject()
     local pos = GetEntityCoords(PlayerPedId(), true)
@@ -24,7 +23,6 @@ local function GetClosestPoliceObject()
     end
     return current, dist
 end
-
 function GetClosestSpike()
     local pos = GetEntityCoords(PlayerPedId(), true)
     local current = nil
@@ -42,7 +40,6 @@ function GetClosestSpike()
     end
     ClosestSpike = current
 end
-
 local function DrawText3D(x, y, z, text)
 	SetTextScale(0.35, 0.35)
     SetTextFont(4)
@@ -57,103 +54,7 @@ local function DrawText3D(x, y, z, text)
     DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
     ClearDrawOrigin()
 end
-
 -- Events
-RegisterNetEvent('police:client:spawnCone', function()
-    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true,
-    }, {
-        animDict = "anim@narcotics@trash",
-        anim = "drop_front",
-        flags = 16,
-    }, {}, {}, function() -- Done
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        TriggerServerEvent("police:server:spawnObject", "cone")
-    end, function() -- Cancel
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
-    end)
-end)
-
-RegisterNetEvent('police:client:spawnBarrier', function()
-    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true,
-    }, {
-        animDict = "anim@narcotics@trash",
-        anim = "drop_front",
-        flags = 16,
-    }, {}, {}, function() -- Done
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        TriggerServerEvent("police:server:spawnObject", "barrier")
-    end, function() -- Cancel
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
-    end)
-end)
-
-RegisterNetEvent('police:client:spawnRoadSign', function()
-    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true,
-    }, {
-        animDict = "anim@narcotics@trash",
-        anim = "drop_front",
-        flags = 16,
-    }, {}, {}, function() -- Done
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        TriggerServerEvent("police:server:spawnObject", "roadsign")
-    end, function() -- Cancel
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
-    end)
-end)
-
-RegisterNetEvent('police:client:spawnTent', function()
-    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true,
-    }, {
-        animDict = "anim@narcotics@trash",
-        anim = "drop_front",
-        flags = 16,
-    }, {}, {}, function() -- Done
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        TriggerServerEvent("police:server:spawnObject", "tent")
-    end, function() -- Cancel
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
-    end)
-end)
-
-RegisterNetEvent('police:client:spawnLight', function()
-    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true,
-    }, {
-        animDict = "anim@narcotics@trash",
-        anim = "drop_front",
-        flags = 16,
-    }, {}, {}, function() -- Done
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        TriggerServerEvent("police:server:spawnObject", "light")
-    end, function() -- Cancel
-        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
-        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
-    end)
-end)
-
 RegisterNetEvent('police:client:deleteObject', function()
     local objectId, dist = GetClosestPoliceObject()
     if dist < 5.0 then
@@ -175,13 +76,65 @@ RegisterNetEvent('police:client:deleteObject', function()
         end)
     end
 end)
-
 RegisterNetEvent('police:client:removeObject', function(objectId)
     NetworkRequestControlOfEntity(ObjectList[objectId].object)
     DeleteObject(ObjectList[objectId].object)
     ObjectList[objectId] = nil
 end)
-
+RegisterNetEvent('police:client:spawnBarrier', function()
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
+        disableMovement = true,
+        disableCarMovement = true,
+        disableMouse = false,
+        disableCombat = true,
+    }, {
+        animDict = "anim@narcotics@trash",
+        anim = "drop_front",
+        flags = 16,
+    }, {}, {}, function() -- Done
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        TriggerServerEvent("police:server:spawnObject", "barrier")
+    end, function() -- Cancel
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
+    end)
+end)
+RegisterNetEvent('police:client:spawnCone', function()
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
+        disableMovement = true,
+        disableCarMovement = true,
+        disableMouse = false,
+        disableCombat = true,
+    }, {
+        animDict = "anim@narcotics@trash",
+        anim = "drop_front",
+        flags = 16,
+    }, {}, {}, function() -- Done
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        TriggerServerEvent("police:server:spawnObject", "cone")
+    end, function() -- Cancel
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
+    end)
+end)
+RegisterNetEvent('police:client:spawnLight', function()
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
+        disableMovement = true,
+        disableCarMovement = true,
+        disableMouse = false,
+        disableCombat = true,
+    }, {
+        animDict = "anim@narcotics@trash",
+        anim = "drop_front",
+        flags = 16,
+    }, {}, {}, function() -- Done
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        TriggerServerEvent("police:server:spawnObject", "light")
+    end, function() -- Cancel
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
+    end)
+end)
 RegisterNetEvent('police:client:spawnObject', function(objectId, type, player)
     local coords = GetEntityCoords(GetPlayerPed(GetPlayerFromServerId(player)))
     local heading = GetEntityHeading(GetPlayerPed(GetPlayerFromServerId(player)))
@@ -197,7 +150,24 @@ RegisterNetEvent('police:client:spawnObject', function(objectId, type, player)
         coords = vector3(x, y, z - 0.3),
     }
 end)
-
+RegisterNetEvent('police:client:spawnRoadSign', function()
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
+        disableMovement = true,
+        disableCarMovement = true,
+        disableMouse = false,
+        disableCombat = true,
+    }, {
+        animDict = "anim@narcotics@trash",
+        anim = "drop_front",
+        flags = 16,
+    }, {}, {}, function() -- Done
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        TriggerServerEvent("police:server:spawnObject", "roadsign")
+    end, function() -- Cancel
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
+    end)
+end)
 RegisterNetEvent('police:client:SpawnSpikeStrip', function()
     if #SpawnedSpikes + 1 < Config.MaxSpikes then
         if (PlayerJob.name == "police" or PlayerJob.type == "leo") and PlayerJob.onduty then
@@ -219,11 +189,27 @@ RegisterNetEvent('police:client:SpawnSpikeStrip', function()
         QBCore.Functions.Notify(Lang:t("error.no_spikestripe"), 'error')
     end
 end)
-
+RegisterNetEvent('police:client:spawnTent', function()
+    QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
+        disableMovement = true,
+        disableCarMovement = true,
+        disableMouse = false,
+        disableCombat = true,
+    }, {
+        animDict = "anim@narcotics@trash",
+        anim = "drop_front",
+        flags = 16,
+    }, {}, {}, function() -- Done
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        TriggerServerEvent("police:server:spawnObject", "tent")
+    end, function() -- Cancel
+        StopAnimTask(PlayerPedId(), "anim@narcotics@trash", "drop_front", 1.0)
+        QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
+    end)
+end)
 RegisterNetEvent('police:client:SyncSpikes', function(table)
     SpawnedSpikes = table
 end)
-
 -- Threads
 CreateThread(function()
     while true do
@@ -233,7 +219,6 @@ CreateThread(function()
         Wait(500)
     end
 end)
-
 CreateThread(function()
     while true do
         if LocalPlayer.state.isLoggedIn then
@@ -246,7 +231,6 @@ CreateThread(function()
                     {bone = "wheel_lr", index = 4},
                     {bone = "wheel_rr", index = 5}
                 }
-
                 for a = 1, #tires do
                     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
                     local tirePos = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, tires[a].bone))
@@ -262,11 +246,9 @@ CreateThread(function()
                 end
             end
         end
-
         Wait(3)
     end
 end)
-
 CreateThread(function()
     while true do
         local sleep = 1000

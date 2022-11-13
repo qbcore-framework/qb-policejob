@@ -8,11 +8,9 @@ function HandlespeedCam(speedCam, hasBeenBusted)
 	if #(playerPos - vector3(speedCam.x, speedCam.y, speedCam.z)) < 20.0 then
 		isInMarker  = true
 	end
-
 	if isInMarker and not HasAlreadyEnteredMarker and lastRadar == nil then
 		HasAlreadyEnteredMarker = true
 		lastRadar = hasBeenBusted
-
 		local vehicle = GetPlayersLastVehicle() -- gets the current vehicle the player is in.
 		if IsPedInAnyVehicle(myPed, false) then
 			if GetPedInVehicleSeat(vehicle, -1) == myPed then
@@ -40,13 +38,11 @@ function HandlespeedCam(speedCam, hasBeenBusted)
 			end
 		end
 	end
-
 	if not isInMarker and HasAlreadyEnteredMarker and lastRadar == hasBeenBusted then
 		HasAlreadyEnteredMarker = false
 		lastRadar = nil
 	end
 end
-
 CreateThread(function()
 	while true do
 		Wait(1)

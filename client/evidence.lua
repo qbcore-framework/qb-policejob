@@ -7,7 +7,6 @@ local CurrentBlooddrop = nil
 local Fingerprints = {}
 local CurrentFingerprint = 0
 local shotAmount = 0
-
 local StatusList = {
     ['fight'] = Lang:t('evidence.red_hands'),
     ['widepupils'] = Lang:t('evidence.wide_pupils'),
@@ -23,7 +22,6 @@ local StatusList = {
     ["heavyalcohol"] = Lang:t('evidence.heavy_alcohol'),
     ["agitated"] = Lang:t('evidence.agitated')
 }
-
 local WhitelistedWeapons = {
     `weapon_unarmed`,
     `weapon_snowball`,
@@ -32,7 +30,6 @@ local WhitelistedWeapons = {
     `weapon_hazardcan`,
     `weapon_fireextinguisher`
 }
-
 -- Functions
 local function DrawText3D(x, y, z, text)
     SetTextScale(0.35, 0.35)
@@ -48,7 +45,6 @@ local function DrawText3D(x, y, z, text)
     DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
     ClearDrawOrigin()
 end
-
 local function WhitelistedWeapon(weapon)
     for i=1, #WhitelistedWeapons do
         if WhitelistedWeapons[i] == weapon then
@@ -57,7 +53,6 @@ local function WhitelistedWeapon(weapon)
     end
     return false
 end
-
 local function DropBulletCasing(weapon, ped)
     local randX = math.random() + math.random(-1, 1)
     local randY = math.random() + math.random(-1, 1)
@@ -65,31 +60,13 @@ local function DropBulletCasing(weapon, ped)
     TriggerServerEvent('evidence:server:CreateCasing', weapon, coords)
     Wait(300)
 end
-
 local function DnaHash(s)
     local h = string.gsub(s, '.', function(c)
         return string.format('%02x', string.byte(c))
     end)
     return h
 end
-
 -- Events
-RegisterNetEvent('evidence:client:SetStatus', function(statusId, time)
-    if time > 0 and StatusList[statusId] then
-        if (CurrentStatusList == nil or CurrentStatusList[statusId] == nil) or
-            (CurrentStatusList[statusId] and CurrentStatusList[statusId].time < 20) then
-            CurrentStatusList[statusId] = {
-                text = StatusList[statusId],
-                time = time
-            }
-            QBCore.Functions.Notify(CurrentStatusList[statusId].text, 'error')
-        end
-    elseif StatusList[statusId] then
-        CurrentStatusList[statusId] = nil
-    end
-    TriggerServerEvent('evidence:server:UpdateStatus', CurrentStatusList)
-end)
-
 RegisterNetEvent('evidence:client:AddBlooddrop', function(bloodId, citizenid, bloodtype, coords)
     Blooddrops[bloodId] = {
         citizenid = citizenid,
@@ -101,12 +78,17 @@ RegisterNetEvent('evidence:client:AddBlooddrop', function(bloodId, citizenid, bl
         }
     }
 end)
-
-RegisterNetEvent('evidence:client:RemoveBlooddrop', function(bloodId)
-    Blooddrops[bloodId] = nil
-    CurrentBlooddrop = 0
+RegisterNetEvent('evidence:client:AddCasing', function(casingId, weapon, coords, serie)
+    Casings[casingId] = {
+        type = weapon,
+        serie = serie and serie or Lang:t('evidence.serial_not_visible'),
+        coords = {
+            x = coords.x,
+            y = coords.y,
+            z = coords.z - 0.9
+        }
+    }
 end)
-
 RegisterNetEvent('evidence:client:AddFingerPrint', function(fingerId, fingerprint, coords)
     Fingerprints[fingerId] = {
         fingerprint = fingerprint,
@@ -117,12 +99,6 @@ RegisterNetEvent('evidence:client:AddFingerPrint', function(fingerId, fingerprin
         }
     }
 end)
-
-RegisterNetEvent('evidence:client:RemoveFingerprint', function(fingerId)
-    Fingerprints[fingerId] = nil
-    CurrentFingerprint = 0
-end)
-
 RegisterNetEvent('evidence:client:ClearBlooddropsInArea', function()
     local pos = GetEntityCoords(PlayerPedId())
     local blooddropList = {}
@@ -147,24 +123,6 @@ RegisterNetEvent('evidence:client:ClearBlooddropsInArea', function()
         QBCore.Functions.Notify(Lang:t("error.blood_not_cleared"), "error")
     end)
 end)
-
-RegisterNetEvent('evidence:client:AddCasing', function(casingId, weapon, coords, serie)
-    Casings[casingId] = {
-        type = weapon,
-        serie = serie and serie or Lang:t('evidence.serial_not_visible'),
-        coords = {
-            x = coords.x,
-            y = coords.y,
-            z = coords.z - 0.9
-        }
-    }
-end)
-
-RegisterNetEvent('evidence:client:RemoveCasing', function(casingId)
-    Casings[casingId] = nil
-    CurrentCasing = 0
-end)
-
 RegisterNetEvent('evidence:client:ClearCasingsInArea', function()
     local pos = GetEntityCoords(PlayerPedId())
     local casingList = {}
@@ -183,15 +141,40 @@ RegisterNetEvent('evidence:client:ClearCasingsInArea', function()
             end
             TriggerServerEvent('evidence:server:ClearCasings', casingList)
             QBCore.Functions.Notify(Lang:t("success.bullet_casing_removed"), "success")
-            
+
         end
     end, function() -- Cancel
         QBCore.Functions.Notify(Lang:t("error.bullet_casing_not_removed"), "error")
     end)
 end)
-
+RegisterNetEvent('evidence:client:RemoveBlooddrop', function(bloodId)
+    Blooddrops[bloodId] = nil
+    CurrentBlooddrop = 0
+end)
+RegisterNetEvent('evidence:client:RemoveCasing', function(casingId)
+    Casings[casingId] = nil
+    CurrentCasing = 0
+end)
+RegisterNetEvent('evidence:client:RemoveFingerprint', function(fingerId)
+    Fingerprints[fingerId] = nil
+    CurrentFingerprint = 0
+end)
+RegisterNetEvent('evidence:client:SetStatus', function(statusId, time)
+    if time > 0 and StatusList[statusId] then
+        if (CurrentStatusList == nil or CurrentStatusList[statusId] == nil) or
+            (CurrentStatusList[statusId] and CurrentStatusList[statusId].time < 20) then
+            CurrentStatusList[statusId] = {
+                text = StatusList[statusId],
+                time = time
+            }
+            QBCore.Functions.Notify(CurrentStatusList[statusId].text, 'error')
+        end
+    elseif StatusList[statusId] then
+        CurrentStatusList[statusId] = nil
+    end
+    TriggerServerEvent('evidence:server:UpdateStatus', CurrentStatusList)
+end)
 -- Threads
-
 CreateThread(function()
     while true do
         Wait(10000)
@@ -212,7 +195,6 @@ CreateThread(function()
         end
     end
 end)
-
 CreateThread(function() -- Gunpowder Status when shooting
     while true do
         Wait(1)
@@ -231,7 +213,6 @@ CreateThread(function() -- Gunpowder Status when shooting
         end
     end
 end)
-
 CreateThread(function()
     while true do
         Wait(1)
@@ -259,7 +240,6 @@ CreateThread(function()
                 end
             end
         end
-
         if CurrentBlooddrop and CurrentBlooddrop ~= 0 then
             local pos = GetEntityCoords(PlayerPedId())
             if #(pos - vector3(Blooddrops[CurrentBlooddrop].coords.x, Blooddrops[CurrentBlooddrop].coords.y,
@@ -284,7 +264,6 @@ CreateThread(function()
                 end
             end
         end
-
         if CurrentFingerprint and CurrentFingerprint ~= 0 then
             local pos = GetEntityCoords(PlayerPedId())
             if #(pos - vector3(Fingerprints[CurrentFingerprint].coords.x, Fingerprints[CurrentFingerprint].coords.y,
@@ -310,7 +289,6 @@ CreateThread(function()
         end
     end
 end)
-
 CreateThread(function()
     while true do
         Wait(10)

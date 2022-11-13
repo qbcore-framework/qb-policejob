@@ -1,3 +1,4 @@
+-- Variables
 local fov_max = 80.0
 local fov_min = 10.0 -- max zoom level (smaller fov is more zoom)
 local zoomspeed = 2.0 -- camera zoom speed
@@ -9,44 +10,24 @@ local toggle_rappel = 154 -- control id to rappel out of the heli. Default: INPU
 local toggle_spotlight = 74 -- control id to toggle the front spotlight Default: INPUT_VEH_HEADLIGHT (H)
 local toggle_lock_on = 22 -- control id to lock onto a vehicle with the camera. Default is INPUT_SPRINT (spacebar)
 local spotlight_state = false
-
 -- Script starts here
 local helicam = false
 local fov = (fov_max+fov_min)*0.5
 local vision_state = 0 -- 0 is normal, 1 is nightmode, 2 is thermal vision
-
 local isScanning = false
 local isScanned = false
 local scanValue = 0
-
 local vehicle_detected = nil
 local locked_on_vehicle = nil
-
 -- Functions
 local function IsPlayerInPolmav()
 	local lPed = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(lPed)
 	return IsVehicleModel(vehicle, GetHashKey(Config.PoliceHelicopter))
 end
-
 local function IsHeliHighEnough(heli)
 	return GetEntityHeightAboveGround(heli) > 1.5
 end
-
-local function ChangeVision()
-	if vision_state == 0 then
-		SetNightvision(true)
-		vision_state = 1
-	elseif vision_state == 1 then
-		SetNightvision(false)
-		SetSeethrough(true)
-		vision_state = 2
-	else
-		SetSeethrough(false)
-		vision_state = 0
-	end
-end
-
 local function HideHUDThisFrame()
 	HideHelpTextThisFrame()
 	HideHudAndRadarThisFrame()
@@ -61,7 +42,6 @@ local function HideHUDThisFrame()
 	HideHudComponentThisFrame(15) -- Subtitle Text
 	HideHudComponentThisFrame(18) -- Game Stream
 end
-
 local function CheckInputRotation(cam, zoomvalue)
 	local rightAxisX = GetDisabledControlNormal(0, 220)
 	local rightAxisY = GetDisabledControlNormal(0, 221)
@@ -72,7 +52,6 @@ local function CheckInputRotation(cam, zoomvalue)
 		SetCamRot(cam, new_x, 0.0, new_z, 2)
 	end
 end
-
 local function HandleZoom(cam)
 	if IsControlJustPressed(0,241) then -- Scrollup
 		fov = math.max(fov - zoomspeed, fov_min)
@@ -86,14 +65,12 @@ local function HandleZoom(cam)
 	end
 	SetCamFov(cam, current_fov + (fov - current_fov)*0.05) -- Smoothing of camera zoom
 end
-
 local function RotAnglesToVec(rot) -- input vector3
 	local z = math.rad(rot.z)
 	local x = math.rad(rot.x)
 	local num = math.abs(math.cos(x))
 	return vector3(-math.sin(z)*num, math.cos(z)*num, math.sin(x))
 end
-
 local function GetVehicleInView(cam)
 	local coords = GetCamCoord(cam)
 	local forward_vector = RotAnglesToVec(GetCamRot(cam, 2))
@@ -106,7 +83,6 @@ local function GetVehicleInView(cam)
 		return nil
 	end
 end
-
 local function RenderVehicleInfo(vehicle)
 	local pos = GetEntityCoords(vehicle)
 	local model = GetEntityModel(vehicle)
@@ -126,13 +102,11 @@ local function RenderVehicleInfo(vehicle)
 		street = streetLabel,
 	})
 end
-
 -- Events
 RegisterNetEvent('heli:spotlight', function(serverID, state)
 	local heli = GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(serverID)), false)
 	SetVehicleSearchlight(heli, state, false)
 end)
-
 -- Threads
 CreateThread(function()
 	while true do
@@ -142,7 +116,6 @@ CreateThread(function()
 				if IsPlayerInPolmav() then
 					local lPed = PlayerPedId()
 					local heli = GetVehiclePedIsIn(lPed)
-
 					if IsHeliHighEnough(heli) then
 						if IsControlJustPressed(0, toggle_helicam) then -- Toggle Helicam
 							PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
@@ -151,7 +124,6 @@ CreateThread(function()
 								type = "heliopen",
 							})
 						end
-
 						if IsControlJustPressed(0, toggle_rappel) then -- Initiate rappel
 							if GetPedInVehicleSeat(heli, 1) == lPed or GetPedInVehicleSeat(heli, 2) == lPed then
 								PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
@@ -159,13 +131,11 @@ CreateThread(function()
 							end
 						end
 					end
-
 					if IsControlJustPressed(0, toggle_spotlight) and (GetPedInVehicleSeat(heli, -1) == lPed or GetPedInVehicleSeat(heli, 0) == lPed) then
 						spotlight_state = not spotlight_state
 						TriggerServerEvent("heli:spotlight", spotlight_state)
 						PlaySoundFrontend(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET", false)
 					end
-
 					if helicam then
 						SetTimecycleModifier("heliGunCam")
 						SetTimecycleModifierStrength(0.3)
@@ -268,7 +238,6 @@ CreateThread(function()
 		end
 	end
 end)
-
 CreateThread(function()
 	while true do
 		Wait(1)

@@ -6,7 +6,7 @@ isEscorted = false
 PlayerJob = {}
 onDuty = false
 local DutyBlips = {}
--- Functions
+-- Deprecated functions due to qb-jobs
 local function CreateDutyBlips(playerId, playerLabel, playerJob, playerType, playerLocation)
     if QBCore.Shared.QBJobsStatus then return end
     local ped = GetPlayerPed(playerId)
@@ -37,7 +37,6 @@ local function CreateDutyBlips(playerId, playerLabel, playerJob, playerType, pla
         RemoveBlip(blip)
     end
 end
-
 -- Events
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
     local player = QBCore.Functions.GetPlayerData()
@@ -78,7 +77,6 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
         DutyBlips = {}
     end
 end)
-
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     TriggerServerEvent('police:server:UpdateBlips')
     TriggerServerEvent("police:server:SetHandcuffStatus", false)
@@ -96,7 +94,6 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
         DutyBlips = {}
     end
 end)
-
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     if QBCore.Shared.QBJobsStatus then return end
     if JobInfo.name == "police" and PlayerJob.name ~= "police" or JobInfo.type == "leo" and PlayerJob.type ~= "leo" then
@@ -116,41 +113,6 @@ RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     PlayerJob = JobInfo
     TriggerServerEvent("police:server:UpdateBlips")
 end)
-
-RegisterNetEvent('police:client:sendBillingMail', function(amount) -- move this event into future court jobs
-    SetTimeout(math.random(2500, 4000), function()
-        local gender = Lang:t('info.mr')
-        if QBCore.Functions.GetPlayerData().charinfo.gender == 1 then
-            gender = Lang:t('info.mrs')
-        end
-        local charinfo = QBCore.Functions.GetPlayerData().charinfo
-        TriggerServerEvent('qb-phone:server:sendNewMail', {
-            sender = Lang:t('email.sender'),
-            subject = Lang:t('email.subject'),
-            message = Lang:t('email.message', {value = gender, value2 = charinfo.lastname, value3 = amount}),
-            button = {}
-        })
-    end)
-end)
-
-RegisterNetEvent('police:client:UpdateBlips', function(players)
-    if QBCore.Shared.QBJobsStatus then return end
-    if PlayerJob and (PlayerJob.name == "police" or PlayerJob.type == "leo" or PlayerJob.name == 'ambulance') and onDuty then
-        if DutyBlips then
-            for _, v in pairs(DutyBlips) do
-                RemoveBlip(v)
-            end
-        end
-        DutyBlips = {}
-        if players then
-            for _, data in pairs(players) do
-                local id = GetPlayerFromServerId(data.source)
-                CreateDutyBlips(id, data.label, data.job, data.type, data.location)
-            end
-        end
-    end
-end)
-
 RegisterNetEvent('police:client:policeAlert', function(coords, text)
     local street1, street2 = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
     local street1name = GetStreetNameFromHashKey(street1)
@@ -188,7 +150,26 @@ RegisterNetEvent('police:client:policeAlert', function(coords, text)
         end
     end
 end)
-
+RegisterNetEvent('police:client:sendBillingMail', function(amount) -- move this event into future court jobs
+    SetTimeout(math.random(2500, 4000), function()
+        local gender = Lang:t('info.mr')
+        if QBCore.Functions.GetPlayerData().charinfo.gender == 1 then
+            gender = Lang:t('info.mrs')
+        end
+        local charinfo = QBCore.Functions.GetPlayerData().charinfo
+        TriggerServerEvent('qb-phone:server:sendNewMail', {
+            sender = Lang:t('email.sender'),
+            subject = Lang:t('email.subject'),
+            message = Lang:t('email.message', {value = gender, value2 = charinfo.lastname, value3 = amount}),
+            button = {}
+        })
+    end)
+end)
+RegisterNetEvent('police:client:SendPoliceEmergencyAlert', function()
+    local Player = QBCore.Functions.GetPlayerData()
+    TriggerServerEvent('police:server:policeAlert', Lang:t('info.officer_down', {lastname = Player.charinfo.lastname, callsign = Player.metadata.callsign}))
+    TriggerServerEvent('hospital:server:ambulanceAlert', Lang:t('info.officer_down', {lastname = Player.charinfo.lastname, callsign = Player.metadata.callsign}))
+end)
 RegisterNetEvent('police:client:SendToJail', function(time)
     TriggerServerEvent("police:server:SetHandcuffStatus", false)
     isHandcuffed = false
@@ -197,24 +178,22 @@ RegisterNetEvent('police:client:SendToJail', function(time)
     DetachEntity(PlayerPedId(), true, false)
     TriggerEvent("prison:client:Enter", time)
 end)
-
-RegisterNetEvent('police:client:SendPoliceEmergencyAlert', function()
-    local Player = QBCore.Functions.GetPlayerData()
-    TriggerServerEvent('police:server:policeAlert', Lang:t('info.officer_down', {lastname = Player.charinfo.lastname, callsign = Player.metadata.callsign}))
-    TriggerServerEvent('hospital:server:ambulanceAlert', Lang:t('info.officer_down', {lastname = Player.charinfo.lastname, callsign = Player.metadata.callsign}))
-end)
-
--- Threads
-CreateThread(function()
+-- Deprecated events
+RegisterNetEvent('police:client:UpdateBlips', function(players)
     if QBCore.Shared.QBJobsStatus then return end
-    for _, station in pairs(Config.Locations["stations"]) do
-        local blip = AddBlipForCoord(station.coords.x, station.coords.y, station.coords.z)
-        SetBlipSprite(blip, 60)
-        SetBlipAsShortRange(blip, true)
-        SetBlipScale(blip, 0.8)
-        SetBlipColour(blip, 29)
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString(station.label)
-        EndTextCommandSetBlipName(blip)
+    if PlayerJob and (PlayerJob.name == "police" or PlayerJob.type == "leo" or PlayerJob.name == 'ambulance') and onDuty then
+        if DutyBlips then
+            for _, v in pairs(DutyBlips) do
+                RemoveBlip(v)
+            end
+        end
+        DutyBlips = {}
+        if players then
+            for _, data in pairs(players) do
+                local id = GetPlayerFromServerId(data.source)
+                CreateDutyBlips(id, data.label, data.job, data.type, data.location)
+            end
+        end
     end
 end)
+-- Threads moved to qb-police/job.lua with the other deprecated threads
