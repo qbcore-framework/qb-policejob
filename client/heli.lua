@@ -23,7 +23,21 @@ local locked_on_vehicle = nil
 local function IsPlayerInPolmav()
 	local lPed = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(lPed)
-	return IsVehicleModel(vehicle, GetHashKey(Config.PoliceHelicopter))
+	if QBCore.Shared.QBJobsStatus then
+		local data = exports['qb-jobs']:AddJobs()
+		if PlayerJob.type == "leo" then
+			for k,v in pairs(data[PlayerJob.name].Vehicles) do
+				for k1,v1 in pairs(v) do
+				    if v1.type == "helicopter" and IsVehicleModel(vehicle, GetHashKey(k1)) then
+						return IsVehicleModel(vehicle, GetHashKey(k1))
+					end
+				end
+			end
+		end
+	else
+		return IsVehicleModel(vehicle, GetHashKey(Config.PoliceHelicopter))
+	end
+	return false
 end
 local function IsHeliHighEnough(heli)
 	return GetEntityHeightAboveGround(heli) > 1.5
