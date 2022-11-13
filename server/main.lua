@@ -102,7 +102,7 @@ local function UpdateBlips()
     end
     TriggerClientEvent("police:client:UpdateBlips", -1, dutyPlayers)
 end
-local function SetCarItemsInfo(data)
+local function SetCarItemsInfo()
     if QBCore.Shared.QBJobsStatus then return end
 	local items = {}
     local index = 1
@@ -241,14 +241,6 @@ RegisterNetEvent('evidence:server:AddCasingToInventory', function(casingId, casi
         end
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.have_evidence_bag"), "error")
-    end
-end)
-RegisterNetEvent('police:server:addVehItems', function(data)
-    if QBCore.Shared.QBJobsStatus then return end
-    data.inv = "trunk"
-    local trunkItems = SetCarItemsInfo(data)
-    if trunkItems then
-        exports['qb-inventory']:addTrunkItems(data.plate, trunkItems)
     end
 end)
 RegisterNetEvent('police:server:BillPlayer', function(playerId, price) -- Send to future QB-Corut System
@@ -567,6 +559,15 @@ RegisterNetEvent('police:server:UpdateCurrentCops', function()
     end
     TriggerClientEvent("police:SetCopCount", -1, amount)
     updatingCops = false
+end)
+-- Deprecated Events due to qb-jobs
+RegisterNetEvent('police:server:addVehItems', function(data)
+    if QBCore.Shared.QBJobsStatus then return end
+    data.inv = "trunk"
+    local trunkItems = SetCarItemsInfo()
+    if trunkItems then
+        exports['qb-inventory']:addTrunkItems(data.plate, trunkItems)
+    end
 end)
 -- Callbacks
 QBCore.Functions.CreateCallback('police:GetCops', function(_, cb)
