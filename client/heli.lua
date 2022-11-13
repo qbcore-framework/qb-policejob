@@ -26,7 +26,7 @@ local function IsPlayerInPolmav()
 	if QBCore.Shared.QBJobsStatus then
 		local data = exports['qb-jobs']:AddJobs()
 		if PlayerJob.type == "leo" then
-			for k,v in pairs(data[PlayerJob.name].Vehicles) do
+			for _,v in pairs(data[PlayerJob.name].Vehicles) do
 				for k1,v1 in pairs(v) do
 				    if v1.type == "helicopter" and IsVehicleModel(vehicle, GetHashKey(k1)) then
 						return IsVehicleModel(vehicle, GetHashKey(k1))
@@ -38,6 +38,19 @@ local function IsPlayerInPolmav()
 		return IsVehicleModel(vehicle, GetHashKey(Config.PoliceHelicopter))
 	end
 	return false
+end
+local function ChangeVision()
+	if vision_state == 0 then
+		SetNightvision(true)
+		vision_state = 1
+	elseif vision_state == 1 then
+		SetNightvision(false)
+		SetSeethrough(true)
+		vision_state = 2
+	else
+		SetSeethrough(false)
+		vision_state = 0
+	end
 end
 local function IsHeliHighEnough(heli)
 	return GetEntityHeightAboveGround(heli) > 1.5

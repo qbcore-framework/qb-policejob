@@ -267,12 +267,8 @@ local function TakeOutVehicle(data)
             closeMenuFull()
             data.plate = QBCore.Functions.GetPlate(veh)
             if Config.VehicleSettings[data.vehicle] ~= nil then
-                if Config.VehicleSettings[data.vehicle].extras ~= nil then
-			        QBCore.Shared.SetDefaultVehicleExtras(veh, Config.VehicleSettings[data.vehicle].extras)
-	        	end
-	    	    if Config.VehicleSettings[data.vehicle].livery ~= nil then
-			        SetVehicleLivery(veh, Config.VehicleSettings[data.vehicle].livery)
-		        end
+                if Config.VehicleSettings[data.vehicle].extras ~= nil then QBCore.Shared.SetDefaultVehicleExtras(veh, Config.VehicleSettings[data.vehicle].extras) end
+                if Config.VehicleSettings[data.vehicle].livery ~= nil then SetVehicleLivery(veh, Config.VehicleSettings[data.vehicle].livery) end
             end
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
             TriggerEvent("vehiclekeys:client:SetOwner", data.plate)
@@ -282,45 +278,41 @@ local function TakeOutVehicle(data)
     end
 end
 local function dutylistener()
-    QBCore.Functions.GetPlayerData(function(PlayerData)
-        dutylisten = true
-        CreateThread(function()
-            while dutylisten do
-                if PlayerJob.name == "police" or PlayerJob.type == "leo" then
-                    if IsControlJustReleased(0, 38) then
-                        onDuty = not onDuty
-                        TriggerServerEvent("police:server:UpdateCurrentCops")
-                        TriggerServerEvent("QBCore:ToggleDuty")
-                        TriggerServerEvent("police:server:UpdateBlips")
-                        dutylisten = false
-                        break
-                    end
-                else
+    dutylisten = true
+    CreateThread(function()
+        while dutylisten do
+            if PlayerJob.name == "police" or PlayerJob.type == "leo" then
+                if IsControlJustReleased(0, 38) then
+                    onDuty = not onDuty
+                    TriggerServerEvent("police:server:UpdateCurrentCops")
+                    TriggerServerEvent("QBCore:ToggleDuty")
+                    TriggerServerEvent("police:server:UpdateBlips")
+                    dutylisten = false
                     break
                 end
-                Wait(0)
+            else
+                break
             end
-        end)
+            Wait(0)
+        end
     end)
 end
 local function stash()
     if QBCore.Shared.QBJobsStatus then return end
-    QBCore.Functions.GetPlayerData(function(PlayerData)
-        CreateThread(function()
-            while true do
-                Wait(0)
-                if inStash and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
-                    if onDuty then sleep = 5 end
-                    if IsControlJustReleased(0, 38) then
-                        TriggerServerEvent("inventory:server:OpenInventory", "stash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
-                        TriggerEvent("inventory:client:SetCurrentStash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
-                        break
-                    end
-                else
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if inStash and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
+                if onDuty then sleep = 5 end
+                if IsControlJustReleased(0, 38) then
+                    TriggerServerEvent("inventory:server:OpenInventory", "stash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
+                    TriggerEvent("inventory:client:SetCurrentStash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
                     break
                 end
+            else
+                break
             end
-        end)
+        end
     end)
 end
 local function trash()
@@ -362,21 +354,19 @@ local function armoury()
     end)
 end
 local function heli()
-    QBCore.Functions.GetPlayerData(function(PlayerData)
-        CreateThread(function()
-            while true do
-                Wait(0)
-                if inHelicopter and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
-                    if onDuty then sleep = 5 end
-                    if IsControlJustReleased(0, 38) then
-                        TriggerEvent("qb-police:client:spawnHelicopter")
-                        break
-                    end
-                else
+    CreateThread(function()
+        while true do
+            Wait(0)
+            if inHelicopter and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
+                if onDuty then sleep = 5 end
+                if IsControlJustReleased(0, 38) then
+                    TriggerEvent("qb-police:client:spawnHelicopter")
                     break
                 end
+            else
+                break
             end
-        end)
+        end
     end)
 end
 local function garage()
@@ -417,23 +407,21 @@ RegisterNetEvent('police:client:CallAnim', function()
     end)
 end)
 RegisterNetEvent('police:client:CheckStatus', function()
-    QBCore.Functions.GetPlayerData(function(PlayerData)
-        if (PlayerJob.name == "police" or PlayerJob.type == "leo") then
-            local player, distance = GetClosestPlayer()
-            if player ~= -1 and distance < 5.0 then
-                local playerId = GetPlayerServerId(player)
-                QBCore.Functions.TriggerCallback('police:GetPlayerStatus', function(result)
-                    if result then
-                        for _, v in pairs(result) do
-                            QBCore.Functions.Notify(''..v..'')
-                        end
+    if (PlayerJob.name == "police" or PlayerJob.type == "leo") then
+        local player, distance = GetClosestPlayer()
+        if player ~= -1 and distance < 5.0 then
+            local playerId = GetPlayerServerId(player)
+            QBCore.Functions.TriggerCallback('police:GetPlayerStatus', function(result)
+                if result then
+                    for _, v in pairs(result) do
+                        QBCore.Functions.Notify(''..v..'')
                     end
-                end, playerId)
-            else
-                QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
-            end
+                end
+            end, playerId)
+        else
+            QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
         end
-    end)
+    end
 end)
 RegisterNetEvent('police:client:EmergencySound', function()
     PlaySound(-1, "Event_Start_Text", "GTAO_FM_Events_Soundset", 0, 0, 1)

@@ -107,9 +107,8 @@ local function SetCarItemsInfo(data)
 	local items = {}
     local index = 1
     local player = QBCore.Functions.GetPlayerByCitizenId(data.citid)
-    local PlayerJob = player.PlayerData.job
     if Config.CarItems then
-	    for k,v in pairs(Config.CarItems) do
+	    for _,v in pairs(Config.CarItems) do
             local itemInfo = QBCore.Shared.Items[v.name:lower()]
             items[index] = {
                 name = itemInfo["name"],
