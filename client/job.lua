@@ -45,26 +45,6 @@ local function openFingerprintUI()
     SetNuiFocus(true, true)
 end
 
-local function SetCarItemsInfo()
-	local items = {}
-	for _, item in pairs(Config.CarItems) do
-		local itemInfo = QBCore.Shared.Items[item.name:lower()]
-		items[item.slot] = {
-			name = itemInfo["name"],
-			amount = tonumber(item.amount),
-			info = item.info,
-			label = itemInfo["label"],
-			description = itemInfo["description"] and itemInfo["description"] or "",
-			weight = itemInfo["weight"],
-			type = itemInfo["type"],
-			unique = itemInfo["unique"],
-			useable = itemInfo["useable"],
-			image = itemInfo["image"],
-			slot = item.slot,
-		}
-	end
-	Config.CarItems = items
-end
 
 local function doCarDamage(currentVehicle, veh)
 	local smash = false
@@ -130,29 +110,26 @@ function TakeOutImpound(vehicle)
     end
 end
 
-function TakeOutVehicle(vehicleInfo)
+local function TakeOutVehicle(data)
+    if QBCore.Shared.QBJobsStatus then return end
     local coords = Config.Locations["vehicle"][currentGarage]
     if coords then
         QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)
             local veh = NetToVeh(netId)
-            SetCarItemsInfo()
             SetVehicleNumberPlateText(veh, Lang:t('info.police_plate')..tostring(math.random(1000, 9999)))
             SetEntityHeading(veh, coords.w)
             exports['LegacyFuel']:SetFuel(veh, 100.0)
             closeMenuFull()
-            if Config.VehicleSettings[vehicleInfo] ~= nil then
-                if Config.VehicleSettings[vehicleInfo].extras ~= nil then
-			QBCore.Shared.SetDefaultVehicleExtras(veh, Config.VehicleSettings[vehicleInfo].extras)
-		end
-		if Config.VehicleSettings[vehicleInfo].livery ~= nil then
-			SetVehicleLivery(veh, Config.VehicleSettings[vehicleInfo].livery)
-		end
+            data.plate = QBCore.Functions.GetPlate(veh)
+            if Config.VehicleSettings[data.vehicle] ~= nil then
+                if Config.VehicleSettings[data.vehicle].extras ~= nil then QBCore.Shared.SetDefaultVehicleExtras(veh, Config.VehicleSettings[data.vehicle].extras) end
+                if Config.VehicleSettings[data.vehicle].livery ~= nil then SetVehicleLivery(veh, Config.VehicleSettings[data.vehicle].livery) end
             end
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-            TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
-            TriggerServerEvent("inventory:server:addTrunkItems", QBCore.Functions.GetPlate(veh), Config.CarItems)
+            TriggerEvent("vehiclekeys:client:SetOwner", data.plate)
+            TriggerServerEvent("police:server:addVehItems",data.plate)
             SetVehicleEngineOn(veh, true, true)
-        end, vehicleInfo, coords, true)
+        end, data.vehicle, coords, true)
     end
 end
 
@@ -414,8 +391,7 @@ end)
 
 RegisterNetEvent('police:client:TakeOutVehicle', function(data)
     if inGarage then
-        local vehicle = data.vehicle
-        TakeOutVehicle(vehicle)
+        TakeOutVehicle(data)
     end
 end)
 

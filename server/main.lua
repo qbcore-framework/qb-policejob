@@ -84,6 +84,32 @@ local function CreateObjectId()
     end
 end
 
+local function SetCarItemsInfo()
+    if QBCore.Shared.QBJobsStatus then return end
+	local items = {}
+    local index = 1
+    if Config.CarItems then
+	    for _,v in pairs(Config.CarItems) do
+            local itemInfo = QBCore.Shared.Items[v.name:lower()]
+            items[index] = {
+                name = itemInfo["name"],
+                amount = tonumber(v.amount),
+                info = v.info,
+                label = itemInfo["label"],
+                description = itemInfo["description"] and itemInfo["description"] or "",
+                weight = itemInfo["weight"],
+                type = itemInfo["type"],
+                unique = itemInfo["unique"],
+                useable = itemInfo["useable"],
+                image = itemInfo["image"],
+                slot = index,
+            }
+            index = index + 1
+	    end
+    end
+	return items
+end
+
 local function IsVehicleOwned(plate)
     local result = MySQL.scalar.await('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
     return result
@@ -592,6 +618,15 @@ QBCore.Functions.CreateCallback('police:server:IsPoliceForcePresent', function(_
 end)
 
 -- Events
+
+RegisterNetEvent('police:server:addVehItems', function(plate)
+    if QBCore.Shared.QBJobsStatus then return end
+    local trunkItems = SetCarItemsInfo()
+    if trunkItems then
+        exports['qb-inventory']:addTrunkItems(plate, trunkItems)
+    end
+end)
+
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         CreateThread(function()
