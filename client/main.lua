@@ -219,3 +219,38 @@ CreateThread(function()
         EndTextCommandSetBlipName(blip)
     end
 end)
+
+Citizen.CreateThread(function()
+    while true do 
+          local wait_time = 1000
+          local ply = PlayerPedId()
+          local pos = GetEntityCoords(ply)
+
+          for k,v in pairs(Config.Locations['vehicle']) do 
+              if #(pos - v.xyz) <= 20.0 then 
+                  wait_time = 0 
+                  DrawMarker(36, v.x,v.y,v.z, 0.0, 0.0, 0.0, 0.0,0.0,0.0, 0.5,0.5,0.5, 0 ,255, 0, 1.0, false, true, true, nil,nil,false)
+
+              end
+          end
+        Wait(wait_time)
+    end
+end)
+
+
+Citizen.CreateThread(function()
+    while true do 
+          local wait_time = 1000
+          local ply = PlayerPedId()
+          local pos = GetEntityCoords(ply)
+
+          for k,v in pairs(Config.Locations['impound']) do 
+              if #(pos - v.xyz) <= 20.0 then 
+                  wait_time = 0 
+                  DrawMarker(36, v.x,v.y,v.z, 0.0, 0.0, 0.0, 0.0,0.0,0.0, 0.5,0.5,0.5, 255 , 0 , 0, 1.0, false, true, true, nil,nil,false)
+
+              end
+          end
+        Wait(wait_time)
+    end
+end)
