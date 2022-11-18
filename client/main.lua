@@ -221,7 +221,7 @@ CreateThread(function()
 end)
 
 Citizen.CreateThread(function()
-    while true do 
+    while true do
           local wait_time = 1000
           local ply = PlayerPedId()
           local pos = GetEntityCoords(ply)
@@ -230,16 +230,16 @@ Citizen.CreateThread(function()
               if #(pos - v.xyz) <= 20.0 then 
                   wait_time = 0 
                   DrawMarker(36, v.x,v.y,v.z, 0.0, 0.0, 0.0, 0.0,0.0,0.0, 0.5,0.5,0.5, 0 ,255, 0, 1.0, false, true, true, nil,nil,false)
-
               end
           end
+
         Wait(wait_time)
     end
 end)
 
 
 Citizen.CreateThread(function()
-    while true do 
+    while true do
           local wait_time = 1000
           local ply = PlayerPedId()
           local pos = GetEntityCoords(ply)
@@ -248,7 +248,6 @@ Citizen.CreateThread(function()
               if #(pos - v.xyz) <= 20.0 then 
                   wait_time = 0 
                   DrawMarker(36, v.x,v.y,v.z, 0.0, 0.0, 0.0, 0.0,0.0,0.0, 0.5,0.5,0.5, 255 , 0 , 0, 1.0, false, true, true, nil,nil,false)
-
               end
           end
         Wait(wait_time)
