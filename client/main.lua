@@ -225,7 +225,6 @@ Citizen.CreateThread(function()
           local wait_time = 1000
           local ply = PlayerPedId()
           local pos = GetEntityCoords(ply)
-
           for k,v in pairs(Config.Locations['vehicle']) do 
               if #(pos - v.xyz) <= 20.0 then 
                   wait_time = 0 
@@ -243,7 +242,6 @@ Citizen.CreateThread(function()
           local wait_time = 1000
           local ply = PlayerPedId()
           local pos = GetEntityCoords(ply)
-
           for k,v in pairs(Config.Locations['impound']) do 
               if #(pos - v.xyz) <= 20.0 then 
                   wait_time = 0 
