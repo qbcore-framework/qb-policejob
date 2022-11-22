@@ -4,6 +4,8 @@ local SpawnedSpikes = {}
 local spikemodel = `P_ld_stinger_s`
 local ClosestSpike = nil
 
+local objectexists = false
+
 -- Functions
 local function GetClosestPoliceObject()
     local pos = GetEntityCoords(PlayerPedId(), true)
@@ -156,25 +158,31 @@ end)
 
 RegisterNetEvent('police:client:deleteObject', function()
     local objectId, dist = GetClosestPoliceObject()
-    if dist < 5.0 then
-        QBCore.Functions.Progressbar("remove_object", Lang:t('progressbar.remove_object'), 2500, false, true, {
-            disableMovement = true,
-            disableCarMovement = true,
-            disableMouse = false,
-            disableCombat = true,
-        }, {
-            animDict = "weapons@first_person@aim_rng@generic@projectile@thermal_charge@",
-            anim = "plant_floor",
-            flags = 16,
-        }, {}, {}, function() -- Done
-            StopAnimTask(PlayerPedId(), "weapons@first_person@aim_rng@generic@projectile@thermal_charge@", "plant_floor", 1.0)
-            TriggerServerEvent("police:server:deleteObject", objectId)
-        end, function() -- Cancel
-            StopAnimTask(PlayerPedId(), "weapons@first_person@aim_rng@generic@projectile@thermal_charge@", "plant_floor", 1.0)
-            QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
-        end)
+    if objectexists then
+        if dist < 5.0 then
+            QBCore.Functions.Progressbar("remove_object", Lang:t('progressbar.remove_object'), 2500, false, true, {
+                disableMovement = true,
+                disableCarMovement = true,
+                disableMouse = false,
+                disableCombat = true,
+            }, {
+                animDict = "weapons@first_person@aim_rng@generic@projectile@thermal_charge@",
+                anim = "plant_floor",
+                flags = 16,
+            }, {}, {}, function() -- Done
+                StopAnimTask(PlayerPedId(), "weapons@first_person@aim_rng@generic@projectile@thermal_charge@", "plant_floor", 1.0)
+                TriggerServerEvent("police:server:deleteObject", objectId)
+                objectexists = false
+            end, function() -- Cancel
+                StopAnimTask(PlayerPedId(), "weapons@first_person@aim_rng@generic@projectile@thermal_charge@", "plant_floor", 1.0)
+                QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
+            end)
+        end
+    else
+        QBCore.Functions.Notify('Object doesn\'t exist', 'error', 7500)
     end
 end)
+
 
 RegisterNetEvent('police:client:removeObject', function(objectId)
     NetworkRequestControlOfEntity(ObjectList[objectId].object)
@@ -196,6 +204,7 @@ RegisterNetEvent('police:client:spawnObject', function(objectId, type, player)
         object = spawnedObj,
         coords = vector3(x, y, z - 0.3),
     }
+    objectexists = true
 end)
 
 RegisterNetEvent('police:client:SpawnSpikeStrip', function()
