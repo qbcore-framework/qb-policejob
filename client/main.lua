@@ -96,6 +96,10 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     end
 end)
 
+RegisterNetEvent("QBCore:Client:SetDuty", function(newDuty)
+    PlayerJob.onduty = newDuty
+end)
+
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     if JobInfo.name ~= "police" then
         if DutyBlips then
