@@ -25,6 +25,8 @@ local Translations = {
         have_evidence_bag = 'Sinulla on oltava tyhjä todistuspussi mukanasi',
         no_driver_license = 'Ei ajokorttia',
         not_cuffed_dead = 'Siviili ei ole raudoitettu tai kuollut',
+        fine_yourself = '???',
+        not_online = "???"
     },
     success = {
         uncuffed = 'Olet nyt vapaa',
@@ -111,7 +113,9 @@ local Translations = {
         target_location = 'Sijainti %{firstname} %{lastname} on nyt kartassasi',
         anklet_location = 'Nilkkapannan sijainti',
         new_call = 'Uusi Soitto',
-        officer_down = 'Virkamies %{lastname} | %{callsign} Kuoli'
+        officer_down = 'Virkamies %{lastname} | %{callsign} Kuoli',
+        fine_issued = '???',
+        received_fine = '???'
     },
     evidence = {
         red_hands = 'Punaiset kädet',
@@ -173,6 +177,7 @@ local Translations = {
         message_sent = 'Lähetettävä viesti',
         civilian_call = 'Siviilipuhelu',
         emergency_call = 'Uusi 112 hälytys',
+        fine = '???'
     },
     progressbar = {
         blood_clear = 'Veren puhdistaminen...',

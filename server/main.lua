@@ -393,7 +393,7 @@ QBCore.Commands.Add("paylawyer", Lang:t("commands.paylawyer"), {{name = "id",hel
     end
 end)
 
-QBCore.Commands.Add('fine', 'Fine A Person', {{name = 'id', help = 'Player ID'}, {name = 'amount', help = 'Fine Amount'}}, false, function(source, args)
+QBCore.Commands.Add('fine', Lang:t("commands.fine"), {{name = 'id', help = Lang:t('info.player_id')}, {name = 'amount', help = Lang:t('info.amount')}}, false, function(source, args)
     local biller = QBCore.Functions.GetPlayer(source)
     local billed = QBCore.Functions.GetPlayer(tonumber(args[1]))
     local amount = tonumber(args[2])
@@ -402,20 +402,20 @@ QBCore.Commands.Add('fine', 'Fine A Person', {{name = 'id', help = 'Player ID'},
             if biller.PlayerData.citizenid ~= billed.PlayerData.citizenid then
                 if amount and amount > 0 then
                     billed.Functions.RemoveMoney('bank', amount, "paid-fine")
-                    TriggerClientEvent('QBCore:Notify', source, 'Fine has been issued to offender succesfully', 'success')
-                    TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, 'State Debt Recovery has automatically recovered the fines owed...')
+                    TriggerClientEvent('QBCore:Notify', source, Lang:t("info.fine_issued"), 'success')
+                    TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, Lang:t("info.received_fine"))
                     exports['qb-management']:AddMoney('police', amount)
                 else
-                    TriggerClientEvent('QBCore:Notify', source, 'Must Be A Valid Amount Above 0', 'error')
+                    TriggerClientEvent('QBCore:Notify', source, Lang:t("error.amount_higher"), 'error')
                 end
             else
-                TriggerClientEvent('QBCore:Notify', source, 'You Cannot Fine Yourself', 'error')
+                TriggerClientEvent('QBCore:Notify', source, Lang:t("error.fine_yourself"), 'error')
             end
         else
-            TriggerClientEvent('QBCore:Notify', source, 'Person Not Online', 'error')
+            TriggerClientEvent('QBCore:Notify', source, Lang:t("error.not_online"), 'error')
         end
     else
-        TriggerClientEvent('QBCore:Notify', source, 'No Access', 'error')
+        TriggerClientEvent('QBCore:Notify', source, Lang:t("error.on_duty_police_only"), 'error')
     end
 end)
 

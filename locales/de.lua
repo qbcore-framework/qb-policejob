@@ -25,6 +25,8 @@ local Translations = {
         have_evidence_bag = 'Du brauchst einen Leeren-Beweisbeutel',
         no_driver_license = 'Keinen Führerschein',
         not_cuffed_dead = 'Person ist nicht gefesselt oder tot',
+        fine_yourself = '???',
+        not_online = "???"
     },
     success = {
         uncuffed = 'Du wurdest gefesselt',
@@ -111,7 +113,9 @@ local Translations = {
         target_location = 'Die Lage der %{firstname} %{lastname} ist auf Ihrer Karte markiert',
         anklet_location = 'Ort des Fußkettchens',
         new_call = 'Neuer Anruf',
-        officer_down = 'Polizist %{lastname} | %{callsign} am Boden'
+        officer_down = 'Polizist %{lastname} | %{callsign} am Boden',
+        fine_issued = '???',
+        received_fine = '???'
     },
     evidence = {
         red_hands = 'Blutige Hände',
@@ -173,6 +177,7 @@ local Translations = {
         message_sent = 'Nachricht',
         civilian_call = 'Zivilist in Not',
         emergency_call = 'Polizei NOTRUF',
+        fine = '???'
     },
     progressbar = {
         blood_clear = 'Blut entfernen...',
