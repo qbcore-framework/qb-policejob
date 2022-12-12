@@ -70,7 +70,7 @@ RegisterNetEvent('police:client:PutInVehicle', function()
     if isHandcuffed or isEscorted then
         local vehicle = QBCore.Functions.GetClosestVehicle()
         if DoesEntityExist(vehicle) then
-			for i = GetVehicleMaxNumberOfPassengers(vehicle), 1, -1 do
+            for i = GetVehicleMaxNumberOfPassengers(vehicle), 0, -1 do
                 if IsVehicleSeatFree(vehicle, i) then
                     isEscorted = false
                     TriggerEvent('hospital:client:isEscorted', isEscorted)
@@ -82,7 +82,7 @@ RegisterNetEvent('police:client:PutInVehicle', function()
                     return
                 end
             end
-		end
+        end
     end
 end)
 
@@ -279,19 +279,18 @@ RegisterNetEvent('police:client:CuffPlayer', function()
     if not IsPedRagdoll(PlayerPedId()) then
         local player, distance = QBCore.Functions.GetClosestPlayer()
         if player ~= -1 and distance < 1.5 then
-            QBCore.Functions.TriggerCallback('QBCore:HasItem', function(result)
-                if result then
-                    local playerId = GetPlayerServerId(player)
-                    if not IsPedInAnyVehicle(GetPlayerPed(player)) and not IsPedInAnyVehicle(PlayerPedId()) then
-                        TriggerServerEvent("police:server:CuffPlayer", playerId, false)
-                        HandCuffAnimation()
-                    else
-                        QBCore.Functions.Notify(Lang:t("error.vehicle_cuff"), "error")
-                    end
+            local result = QBCore.Functions.HasItem(Config.HandCuffItem)
+            if result then
+                local playerId = GetPlayerServerId(player)
+                if not IsPedInAnyVehicle(GetPlayerPed(player)) and not IsPedInAnyVehicle(PlayerPedId()) then
+                    TriggerServerEvent("police:server:CuffPlayer", playerId, false)
+                    HandCuffAnimation()
                 else
-                    QBCore.Functions.Notify(Lang:t("error.no_cuff"), "error")
+                    QBCore.Functions.Notify(Lang:t("error.vehicle_cuff"), "error")
                 end
-            end, Config.HandCuffItem)
+            else
+                QBCore.Functions.Notify(Lang:t("error.no_cuff"), "error")
+            end
         else
             QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
         end
