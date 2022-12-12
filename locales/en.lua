@@ -25,6 +25,8 @@ local Translations = {
         have_evidence_bag = 'You must have an empty evidence bag with you',
         no_driver_license = 'No drivers license',
         not_cuffed_dead = 'Civilian isn\'t cuffed or dead',
+        fine_yourself = 'You Cannot Fine Yourself',
+        not_online = "This person is not online"
     },
     success = {
         uncuffed = 'You have been uncuffed',
@@ -111,7 +113,9 @@ local Translations = {
         target_location = 'The location of %{firstname} %{lastname} is marked on your map',
         anklet_location = 'Anklet location',
         new_call = 'New Call',
-        officer_down = 'Officer %{lastname} | %{callsign} Down'
+        officer_down = 'Officer %{lastname} | %{callsign} Down',
+        fine_issued = 'Fine has been issued to offender succesfully',
+        received_fine = 'State Debt Recovery has automatically recovered the fines owed...'
     },
     evidence = {
         red_hands = 'Red hands',
@@ -173,6 +177,7 @@ local Translations = {
         message_sent = 'Message to be sent',
         civilian_call = 'Civilian Call',
         emergency_call = 'New 911 Call',
+        fine = 'Fine A Person'
     },
     progressbar = {
         blood_clear = 'Clearing Blood...',

@@ -25,6 +25,8 @@ local Translations = {
         have_evidence_bag = 'คุณต้องมีกระเป๋าหลักฐานที่ว่างเปล่า',
         no_driver_license = 'ไม่มีใบอนุญาตขับขี่',
         not_cuffed_dead = 'พลเรือนไม่ได้ถูกใส่กุญแจมือหรือตาย',
+        fine_yourself = '???',
+        not_online = "???"
     },
     success = {
         uncuffed = 'คุณได้รับการปลดกุญแจมือ',
@@ -111,7 +113,9 @@ local Translations = {
         target_location = 'ตำแหน่งของ %{firstname} %{lastname} แสดงอยู่บนแผนที่',
         anklet_location = 'ตำแหน่งกำไลข้อเท้า',
         new_call = 'โทร',
-        officer_down = 'เจ้าหน้าที่ %{lastname} | %{callsign} กองอยู่ที่พื้นละ'
+        officer_down = 'เจ้าหน้าที่ %{lastname} | %{callsign} กองอยู่ที่พื้นละ',
+        fine_issued = '???',
+        received_fine = '???'
     },
     evidence = {
         red_hands = 'มือแดง',
@@ -173,6 +177,7 @@ local Translations = {
         message_sent = 'ข้อความที่จะส่ง',
         civilian_call = 'โทรหาพลเรือน',
         emergency_call = 'โทรหา 911',
+        fine = '???'
     },
     progressbar = {
         blood_clear = 'กำลังฟอกเลือด...',
