@@ -405,7 +405,7 @@ QBCore.Commands.Add('fine', 'Fine A Person', {{name = 'id', help = 'Player ID'},
                     Ply.Functions.RemoveMoney('bank', amount, "paid-fine")
                     TriggerClientEvent('QBCore:Notify', source, 'Fine has been issued to offender succesfully', 'success')
                     TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, 'State Debt Recovery has automatically recovered the fines owed...')
-                    TriggerEvent('qb-bossmenu:server:addAccountMoney', 'police', amount)
+                    exports['qb-management']:AddMoney('police', amount)
                 else
                     TriggerClientEvent('QBCore:Notify', source, 'Must Be A Valid Amount Above 0', 'error')
                 end
