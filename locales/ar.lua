@@ -25,6 +25,8 @@ local Translations = {
         have_evidence_bag = 'يجب أن يكون معك حقيبة أدلة فارغة',
         no_driver_license = 'بدون رخصة قيادة',
         not_cuffed_dead = 'الشخص ليس مكلبش أو ميت',
+        fine_yourself = '???',
+        not_online = "???"
     },
     success = {
         uncuffed = 'أنت لست مكلبش',
@@ -111,7 +113,9 @@ local Translations = {
         target_location = '%{firstname} %{lastname} تم تسجيله في الخريطة',
         anklet_location = 'ﻊﺒﺘﺗ ﻝﺎﺨﻠﺧ',
         new_call = 'اتصال جديد',
-        officer_down = '%{lastname} | %{callsign} مات'
+        officer_down = '%{lastname} | %{callsign} مات',
+        fine_issued = '???',
+        received_fine = '???'
     },
     evidence = {
         red_hands = 'الأيدي حمراء',
@@ -173,6 +177,7 @@ local Translations = {
         message_sent = 'سيتم إرسال الرسالة',
         civilian_call = 'نداء مدني',
         emergency_call = '911 اتصال من',
+        fine = '???'
     },
     progressbar = {
         blood_clear = 'تطهير الدم',
