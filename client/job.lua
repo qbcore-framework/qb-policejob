@@ -116,19 +116,20 @@ local function TakeOutVehicle(data)
     if coords then
         QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)
             local veh = NetToVeh(netId)
-            SetVehicleNumberPlateText(veh, Lang:t('info.police_plate')..tostring(math.random(1000, 9999)))
-            SetEntityHeading(veh, coords.w)
-            exports['LegacyFuel']:SetFuel(veh, 100.0)
-            closeMenuFull()
-            data.plate = QBCore.Functions.GetPlate(veh)
-            if Config.VehicleSettings[data.vehicle] ~= nil then
-                if Config.VehicleSettings[data.vehicle].extras ~= nil then QBCore.Shared.SetDefaultVehicleExtras(veh, Config.VehicleSettings[data.vehicle].extras) end
-                if Config.VehicleSettings[data.vehicle].livery ~= nil then SetVehicleLivery(veh, Config.VehicleSettings[data.vehicle].livery) end
-            end
-            TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-            TriggerEvent("vehiclekeys:client:SetOwner", data.plate)
-            TriggerServerEvent("police:server:addVehItems",data.plate)
-            SetVehicleEngineOn(veh, true, true)
+            data.plate = Lang:t('info.police_plate')..tostring(math.random(1000, 9999))
+            SetVehicleNumberPlateText(veh, data.plate)
+            QBCore.Functions.TriggerCallback("police:server:addVehItems", function()
+                exports['LegacyFuel']:SetFuel(veh, 100.0)
+                SetEntityHeading(veh, coords.w)
+                closeMenuFull()
+                if Config.VehicleSettings[data.vehicle] ~= nil then
+                    if Config.VehicleSettings[data.vehicle].extras ~= nil then QBCore.Shared.SetDefaultVehicleExtras(veh, Config.VehicleSettings[data.vehicle].extras) end
+                    if Config.VehicleSettings[data.vehicle].livery ~= nil then SetVehicleLivery(veh, Config.VehicleSettings[data.vehicle].livery) end
+                end
+                TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+                TriggerEvent("vehiclekeys:client:SetOwner", data.plate)
+                SetVehicleEngineOn(veh, true, true)
+            end, data.plate)
         end, data.vehicle, coords, true)
     end
 end
@@ -390,7 +391,7 @@ RegisterNetEvent('police:client:TakeOutImpound', function(data)
 end)
 
 RegisterNetEvent('police:client:TakeOutVehicle', function(data)
-    if inGarage then
+    if inGarage and Config.AuthorizedVehicles[PlayerJob.grade.level][data.vehicle]  then
         TakeOutVehicle(data)
     end
 end)
