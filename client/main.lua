@@ -10,14 +10,20 @@ local DutyBlips = {}
 local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
     local ped = GetPlayerPed(playerId)
     local blip = GetBlipFromEntity(ped)
+    local pedinvehicle = IsPedInAnyVehicle(ped)
     if not DoesBlipExist(blip) then
         if NetworkIsPlayerActive(playerId) then
             blip = AddBlipForEntity(ped)
         else
             blip = AddBlipForCoord(playerLocation.x, playerLocation.y, playerLocation.z)
         end
-        SetBlipSprite(blip, 1)
-        ShowHeadingIndicatorOnBlip(blip, true)
+        if pedinvehicle then
+            SetBlipSprite(blip, 812)
+            ShowHeadingIndicatorOnBlip(blip, false)
+        else
+            SetBlipSprite(blip, 1)
+            ShowHeadingIndicatorOnBlip(blip, true)
+        end
         SetBlipRotation(blip, math.ceil(playerLocation.w))
         SetBlipScale(blip, 1.0)
         if playerJob == "police" then
