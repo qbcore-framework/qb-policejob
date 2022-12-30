@@ -397,14 +397,26 @@ QBCore.Commands.Add('fine', Lang:t("commands.fine"), {{name = 'id', help = Lang:
     local biller = QBCore.Functions.GetPlayer(source)
     local billed = QBCore.Functions.GetPlayer(tonumber(args[1]))
     local amount = tonumber(args[2])
-    if biller.PlayerData.job.name == "police" then
+    if biller.PlayerData.job.type == "leo" then
         if billed ~= nil then
             if biller.PlayerData.citizenid ~= billed.PlayerData.citizenid then
                 if amount and amount > 0 then
-                    billed.Functions.RemoveMoney('bank', amount, "paid-fine")
-                    TriggerClientEvent('QBCore:Notify', source, Lang:t("info.fine_issued"), 'success')
-                    TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, Lang:t("info.received_fine"))
-                    exports['qb-management']:AddMoney('police', amount)
+                    if billed.Functions.RemoveMoney('bank', amount, "paid-fine") then
+                        TriggerClientEvent('QBCore:Notify', source, Lang:t("info.fine_issued"), 'success')
+                        TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, Lang:t("info.received_fine"))
+                        exports['qb-management']:AddMoney(biller.PlayerData.job.name, amount)
+                    elseif billed.Functions.RemoveMoney('cash', amount, "paid-fine") then
+                        TriggerClientEvent('QBCore:Notify', source, Lang:t("info.fine_issued"), 'success')
+                        TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, Lang:t("info.received_fine"))
+                        exports['qb-management']:AddMoney(biller.PlayerData.job.name, amount)
+                    else
+                        MySQL.Async.insert('INSERT INTO phone_invoices (citizenid, amount, society, sender, sendercitizenid) VALUES (?, ?, ?, ?, ?)',{billed.PlayerData.citizenid, amount, biller.PlayerData.job.name, biller.PlayerData.charinfo.firstname, biller.PlayerData.citizenid}, function(id)
+                            if id then
+                                TriggerClientEvent('qb-phone:client:AcceptorDenyInvoice', billed.PlayerData.source, id, biller.PlayerData.charinfo.firstname, biller.PlayerData.job.name, biller.PlayerData.citizenid, amount, GetInvokingResource())
+                            end
+                        end)
+                        TriggerClientEvent('qb-phone:RefreshPhone', billed.PlayerData.source)
+                    end
                 else
                     TriggerClientEvent('QBCore:Notify', source, Lang:t("error.amount_higher"), 'error')
                 end
@@ -491,9 +503,9 @@ RegisterNetEvent('police:server:SendTrackerLocation', function(coords, requestId
 end)
 
 QBCore.Commands.Add('911p', Lang:t("commands.police_report"), {{name='message', help= Lang:t("commands.message_sent")}}, false, function(source, args)
-	local src = source
+    local src = source
     local message
-	if args[1] then message = table.concat(args, " ") else message = Lang:t("commands.civilian_call") end
+    if args[1] then message = table.concat(args, " ") else message = Lang:t("commands.civilian_call") end
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
     local players = QBCore.Functions.GetQBPlayers()
