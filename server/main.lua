@@ -110,6 +110,14 @@ local function SetCarItemsInfo()
 	return items
 end
 
+local function addTrunkItems(plate)
+    if QBCore.Shared.QBJobsStatus then return end
+    local trunkItems = SetCarItemsInfo()
+    if trunkItems then
+        exports['qb-inventory']:addTrunkItems(plate, trunkItems)
+    end
+end
+
 local function IsVehicleOwned(plate)
     local result = MySQL.scalar.await('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
     return result
@@ -419,6 +427,32 @@ QBCore.Commands.Add("paylawyer", Lang:t("commands.paylawyer"), {{name = "id",hel
     end
 end)
 
+QBCore.Commands.Add('fine', Lang:t("commands.fine"), {{name = 'id', help = Lang:t('info.player_id')}, {name = 'amount', help = Lang:t('info.amount')}}, false, function(source, args)
+    local biller = QBCore.Functions.GetPlayer(source)
+    local billed = QBCore.Functions.GetPlayer(tonumber(args[1]))
+    local amount = tonumber(args[2])
+    if biller.PlayerData.job.name == "police" then
+        if billed ~= nil then
+            if biller.PlayerData.citizenid ~= billed.PlayerData.citizenid then
+                if amount and amount > 0 then
+                    billed.Functions.RemoveMoney('bank', amount, "paid-fine")
+                    TriggerClientEvent('QBCore:Notify', source, Lang:t("info.fine_issued"), 'success')
+                    TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, Lang:t("info.received_fine"))
+                    exports['qb-management']:AddMoney('police', amount)
+                else
+                    TriggerClientEvent('QBCore:Notify', source, Lang:t("error.amount_higher"), 'error')
+                end
+            else
+                TriggerClientEvent('QBCore:Notify', source, Lang:t("error.fine_yourself"), 'error')
+            end
+        else
+            TriggerClientEvent('QBCore:Notify', source, Lang:t("error.not_online"), 'error')
+        end
+    else
+        TriggerClientEvent('QBCore:Notify', source, Lang:t("error.on_duty_police_only"), 'error')
+    end
+end)
+
 QBCore.Commands.Add("anklet", Lang:t("commands.anklet"), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -617,15 +651,13 @@ QBCore.Functions.CreateCallback('police:server:IsPoliceForcePresent', function(_
     cb(retval)
 end)
 
+QBCore.Functions.CreateCallback('police:server:addVehItems', function(_,cb,plate)
+    if QBCore.Shared.QBJobsStatus then return end
+    addTrunkItems(plate)
+    cb("ok")
+end)
 -- Events
 
-RegisterNetEvent('police:server:addVehItems', function(plate)
-    if QBCore.Shared.QBJobsStatus then return end
-    local trunkItems = SetCarItemsInfo()
-    if trunkItems then
-        exports['qb-inventory']:addTrunkItems(plate, trunkItems)
-    end
-end)
 
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
@@ -806,29 +838,31 @@ RegisterNetEvent('heli:spotlight', function(state)
     TriggerClientEvent('heli:spotlight', -1, serverID, state)
 end)
 
--- RegisterNetEvent('police:server:FlaggedPlateTriggered', function(camId, plate, street1, street2, blipSettings)
---     local src = source
---     for k, v in pairs(QBCore.Functions.GetPlayers()) do
---         local Player = QBCore.Functions.GetPlayer(v)
---         if Player then
---             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
---                 if street2 then
---                     TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
---                         camId = camId,
---                         plate = plate,
---                         streetLabel = street1 .. " " .. street2
---                     }, blipSettings)
---                 else
---                     TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
---                         camId = camId,
---                         plate = plate,
---                         streetLabel = street1
---                     }, blipSettings)
---                 end
---             end
---         end
---     end
--- end)
+--[[
+RegisterNetEvent('police:server:FlaggedPlateTriggered', function(camId, plate, street1, street2, blipSettings)
+    local src = source
+    for k, v in pairs(QBCore.Functions.GetPlayers()) do
+        local Player = QBCore.Functions.GetPlayer(v)
+        if Player then
+            if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
+                if street2 then
+                    TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
+                        camId = camId,
+                        plate = plate,
+                        streetLabel = street1 .. " " .. street2
+                    }, blipSettings)
+                else
+                    TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
+                        camId = camId,
+                        plate = plate,
+                        streetLabel = street1
+                    }, blipSettings)
+                end
+            end
+        end
+    end
+end)
+]]--
 
 RegisterNetEvent('police:server:SearchPlayer', function(playerId)
     local src = source
