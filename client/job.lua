@@ -778,7 +778,7 @@ else
     local dutyZones = {}
     for _, v in pairs(Config.Locations["duty"]) do
         dutyZones[#dutyZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1.75, 1, {
+            vector3(v.x, v.y, v.z), 1.75, 1, {
             name="box_zone",
             debugPoly = false,
             minZ = v.z - 1,
