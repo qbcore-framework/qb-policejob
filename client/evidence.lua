@@ -183,7 +183,7 @@ RegisterNetEvent('evidence:client:ClearCasingsInArea', function()
             end
             TriggerServerEvent('evidence:server:ClearCasings', casingList)
             QBCore.Functions.Notify(Lang:t("success.bullet_casing_removed"), "success")
-            
+
         end
     end, function() -- Cancel
         QBCore.Functions.Notify(Lang:t("error.bullet_casing_not_removed"), "error")
@@ -315,7 +315,7 @@ CreateThread(function()
     while true do
         Wait(10)
         if LocalPlayer.state.isLoggedIn then
-            if PlayerJob.name == 'police' and PlayerJob.onduty then
+            if (PlayerJob.name == 'police' or PlayerJob.type == 'leo') and PlayerJob.onduty then
                 if IsPlayerFreeAiming(PlayerId()) and GetSelectedPedWeapon(PlayerPedId()) == `WEAPON_FLASHLIGHT` then
                     if next(Casings) then
                         local pos = GetEntityCoords(PlayerPedId(), true)
