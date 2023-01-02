@@ -549,7 +549,7 @@ local function stash()
     CreateThread(function()
         while true do
             Wait(0)
-            if inStash and (PlayerJob.name == "police" or PlayerJob.name == "leo") then
+            if inStash and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsControlJustReleased(0, 38) then
                     TriggerServerEvent("inventory:server:OpenInventory", "stash", "policestash_"..QBCore.Functions.GetPlayerData().citizenid)
@@ -590,7 +590,7 @@ local function fingerprint()
     CreateThread(function()
         while true do
             Wait(0)
-            if inFingerprint and (PlayerJob.name == "police" or PlayerJob.name == "leo") then
+            if inFingerprint and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsControlJustReleased(0, 38) then
                     TriggerEvent("qb-police:client:scanFingerPrint")
@@ -608,7 +608,7 @@ local function armoury()
     CreateThread(function()
         while true do
             Wait(0)
-            if inAmoury and (PlayerJob.name == "police" or PlayerJob.name == "leo") then
+            if inAmoury and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsControlJustReleased(0, 38) then
                     TriggerEvent("qb-police:client:openArmoury")
@@ -626,7 +626,7 @@ local function heli()
     CreateThread(function()
         while true do
             Wait(0)
-            if inHelicopter and (PlayerJob.name == "police" or PlayerJob.name == "leo") then
+            if inHelicopter and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsControlJustReleased(0, 38) then
                     TriggerEvent("qb-police:client:spawnHelicopter")
@@ -644,7 +644,7 @@ local function impound()
     CreateThread(function()
         while true do
             Wait(0)
-            if inImpound and (PlayerJob.name == "police" or PlayerJob.name == "leo") then
+            if inImpound and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                     if IsControlJustReleased(0, 38) then
@@ -664,7 +664,7 @@ local function garage()
     CreateThread(function()
         while true do
             Wait(0)
-            if inGarage and (PlayerJob.name == "police" or PlayerJob.name == "leo") then
+            if inGarage and (PlayerJob.name == "police" or PlayerJob.type == "leo") then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                     if IsControlJustReleased(0, 38) then
@@ -697,7 +697,7 @@ if Config.UseTarget then
                         icon = "fas fa-sign-in-alt",
                         label = "Sign In",
                         canInteract = function()
-                            if (PlayerJob.name == "police" or PlayerJob.name == "leo") then return true end
+                            if (PlayerJob.name == "police" or PlayerJob.type == "leo") then return true end
                             return false
                         end
                     },
@@ -722,7 +722,7 @@ if Config.UseTarget then
                         icon = "fas fa-dungeon",
                         label = "Open Personal Stash",
                         canInteract = function()
-                            if (PlayerJob.name == "police" or PlayerJob.name == "leo") then return true end
+                            if (PlayerJob.name == "police" or PlayerJob.type == "leo") then return true end
                             return false
                         end
                     },
@@ -747,7 +747,7 @@ if Config.UseTarget then
                         icon = "fas fa-trash",
                         label = "Open Trash",
                         canInteract = function()
-                            if (PlayerJob.name == "police" or PlayerJob.name == "leo") then return true end
+                            if (PlayerJob.name == "police" or PlayerJob.type == "leo") then return true end
                             return false
                         end
                     },
@@ -772,7 +772,7 @@ if Config.UseTarget then
                         icon = "fas fa-fingerprint",
                         label = "Open Fingerprint",
                         canInteract = function()
-                            if (PlayerJob.name == "police" or PlayerJob.name == "leo") then return true end
+                            if (PlayerJob.name == "police" or PlayerJob.type == "leo") then return true end
                             return false
                         end
                     },
@@ -797,7 +797,7 @@ if Config.UseTarget then
                         icon = "fas fa-swords",
                         label = "Open Armory",
                         canInteract = function()
-                            if (PlayerJob.name == "police" or PlayerJob.name == "leo") then return true end
+                            if (PlayerJob.name == "police" or PlayerJob.type == "leo") then return true end
                             return false
                         end
                     },
@@ -961,7 +961,7 @@ CreateThread(function()
     local evidenceCombo = ComboZone:Create(evidenceZones, {name = "evidenceCombo", debugPoly = false})
     evidenceCombo:onPlayerInOut(function(isPointInside)
         if isPointInside then
-            if (PlayerJob.name == "police" or PlayerJob.name == "leo") and PlayerJob.onduty then
+            if (PlayerJob.name == "police" or PlayerJob.type == "leo") and PlayerJob.onduty then
                 local currentEvidence = 0
                 local pos = GetEntityCoords(PlayerPedId())
 
