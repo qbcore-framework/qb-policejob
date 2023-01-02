@@ -25,6 +25,8 @@ local Translations = {
         have_evidence_bag = 'Yanınızda boş bir kanıt çantası olmalı',
         no_driver_license = 'Sürücü belgesi yok',
         not_cuffed_dead = 'Sivil kelepçeli veya ölü değil',
+        fine_yourself = '???',
+        not_online = "???"
     },
     success = {
         uncuffed = 'Kelepçeniz söküldü',
@@ -111,7 +113,9 @@ local Translations = {
         target_location = '%{firstname} %{lastname} konumu haritanızda işaretlendi',
         anklet_location = 'Takip Cihazının Lokasyonu',
         new_call = 'Yeni Çağrı',
-        officer_down = 'Memur %{lastname} | %{callsign} Düştü'
+        officer_down = 'Memur %{lastname} | %{callsign} Düştü',
+        fine_issued = '???',
+        received_fine = '???'
     },
     evidence = {
         red_hands = 'Kırmızı eller',
@@ -173,6 +177,7 @@ local Translations = {
         message_sent = 'Gönderilecek mesaj',
         civilian_call = 'Sivil Çağrı',
         emergency_call = 'Yeni 911 Çağrısı',
+        fine = '???'
     },
     progressbar = {
         blood_clear = 'Kan Temizleniyor...',
