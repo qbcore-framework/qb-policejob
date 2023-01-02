@@ -44,7 +44,7 @@ function GetClosestSpike()
 end
 
 local function DrawText3D(x, y, z, text)
-	SetTextScale(0.35, 0.35)
+    SetTextScale(0.35, 0.35)
     SetTextFont(4)
     SetTextProportional(1)
     SetTextColour(255, 255, 255, 215)
