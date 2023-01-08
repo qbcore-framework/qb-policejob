@@ -17,8 +17,9 @@ Config.LicenseRank = 2
 Config.UseTarget = GetConvar('UseTarget', 'false') == 'true'
 Config.Locations = {
     ["duty"] = {
-        [1] = vector3(440.085, -974.924, 30.689),
-        [2] = vector3(-449.811, 6012.909, 31.815),
+        [1] = {coords = vector3(440.085, -974.924, 30.689), length = 1, width = 2.45, heading = 11, distance = 2.5}, --mrpd
+        [2] = {coords = vector3(-449.811, 6012.909, 31.815), length = 1, width = 2.45, heading = 49.48, distance = 2.5}, --paleto
+        [3] = {coords = vector3(1851.58, 3691.67, 34.26), length = 1, width = 2.45, heading = 38.97, distance = 2.5}, --sandy
     },
     ["vehicle"] = {
         [1] = vector4(448.159, -1017.41, 28.562, 90.654),
@@ -26,7 +27,7 @@ Config.Locations = {
         [3] = vector4(-455.39, 6002.02, 31.34, 87.93),
     },
     ["stash"] = {
-        [1] = vector3(453.075, -980.124, 30.889),
+        [1] = {coords = vector3(453.075, -980.124, 30.889), length = 1.5, width = 2.5, heading = 264.99, distance = 1.5}, --mrpd
     },
     ["impound"] = {
         [1] = vector3(436.68, -1007.42, 27.32),
@@ -37,13 +38,13 @@ Config.Locations = {
         [2] = vector4(-475.43, 5988.353, 31.716, 31.34),
     },
     ["armory"] = {
-        [1] = vector3(462.23, -981.12, 30.68),
+        [1] = {coords = vector3(462.23, -981.12, 30.68), length = 5, width = 1, heading = 11, distance = 1.5}, --mrpd
     },
     ["trash"] = {
-        [1] = vector3(439.0907, -976.746, 30.776),
+        [1] = {coords = vector3(439.0907, -976.746, 30.776), length = 1, width = 1.75, heading = 11, distance = 1.5},
     },
     ["fingerprint"] = {
-        [1] = vector3(460.9667, -989.180, 24.92),
+        [1] = {coords = vector3(460.9667, -989.180, 24.92), length = 2, width = 1, heading = 11, distance = 1.5},
     },
     ["evidence"] = {
         [1] = vector3(442.1722, -996.067, 30.689),
@@ -51,9 +52,12 @@ Config.Locations = {
         [3] = vector3(455.1456, -985.462, 30.689),
     },
     ["stations"] = {
-        [1] = {label = "Police Station", coords = vector4(428.23, -984.28, 29.76, 3.5)},
+        [1] = {label = "Police Station", coords = vector4(428.23, -984.28, 29.76, 3.5)}, -- MRPD
         [2] = {label = "Prison", coords = vector4(1845.903, 2585.873, 45.672, 272.249)},
-        [3] = {label = "Police Station Paleto", coords = vector4(-451.55, 6014.25, 31.716, 223.81)},
+        [3] = {label = "Police Station", coords = vector4(-451.55, 6014.25, 31.716, 223.81)}, -- Paleto
+        [4] = {label = "Police Station", coords = vector4(364.75, -1587.68, 29.29, 223.81)}, -- Davis
+        [5] = {label = "Police Station", coords = vector4(1854.09, 3686.66, 34.26, 193.67)}, -- Sandy
+        [6] = {label = "Police Station", coords = vector4(-1085.08, -810.74, 19.34, 211.39)}, -- Vespucci
     },
 }
 
