@@ -8,6 +8,8 @@ Config.Objects = {
     ["light"] = {model = `prop_worklight_03b`, freeze = true},
 }
 
+Config.BlockWallThermals = true -- true/false; lowers thermal cam intensity to stop penetration through walls or tunnels
+
 Config.MaxSpikes = 5
 
 Config.HandCuffItem = 'handcuffs'
