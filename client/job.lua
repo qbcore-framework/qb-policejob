@@ -117,7 +117,7 @@ function TakeOutImpound(vehicle)
             QBCore.Functions.TriggerCallback('qb-garage:server:GetVehicleProperties', function(properties)
                 QBCore.Functions.SetVehicleProperties(veh, properties)
                 SetVehicleNumberPlateText(veh, vehicle.plate)
-		SetVehicleDirtLevel(veh, 0.0)
+                SetVehicleDirtLevel(veh, 0.0)
                 SetEntityHeading(veh, coords.w)
                 exports['LegacyFuel']:SetFuel(veh, vehicle.fuel)
                 doCarDamage(veh, vehicle)
@@ -685,34 +685,34 @@ if Config.UseTarget then
     CreateThread(function()
         -- Toggle Duty
         for k, v in pairs(Config.Locations["duty"]) do
-            exports['qb-target']:AddBoxZone("PoliceDuty_"..k, vector3(v.x, v.y, v.z), 1, 1, {
+            exports['qb-target']:AddBoxZone("PoliceDuty_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), v.length, v.width, {
                 name = "PoliceDuty_"..k,
-                heading = 11,
+                heading = v.heading,
                 debugPoly = false,
-                minZ = v.z - 1,
-                maxZ = v.z + 1,
-            }, {
+                minZ = v.coords.z - 1,
+                maxZ = v.coords.z + 1,
+            },{
                 options = {
                     {
                         type = "client",
                         event = "qb-policejob:ToggleDuty",
                         icon = "fas fa-sign-in-alt",
-                        label = "Sign In",
+                        label = "Sign In/Out",
                         job = "police",
                     },
                 },
-                distance = 1.5
+                distance = v.distance
             })
         end
 
         -- Personal Stash
         for k, v in pairs(Config.Locations["stash"]) do
-            exports['qb-target']:AddBoxZone("PoliceStash_"..k, vector3(v.x, v.y, v.z), 1.5, 1.5, {
+            exports['qb-target']:AddBoxZone("PoliceStash_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), v.length, v.width, {
                 name = "PoliceStash_"..k,
-                heading = 11,
+                heading = v.heading,
                 debugPoly = false,
-                minZ = v.z - 1,
-                maxZ = v.z + 1,
+                minZ = v.coords.z - 1,
+                maxZ = v.coords.z + 1,
             }, {
                 options = {
                     {
@@ -723,18 +723,18 @@ if Config.UseTarget then
                         job = "police",
                     },
                 },
-                distance = 1.5
+                distance = v.distance
             })
         end
 
         -- Police Trash
         for k, v in pairs(Config.Locations["trash"]) do
-            exports['qb-target']:AddBoxZone("PoliceTrash_"..k, vector3(v.x, v.y, v.z), 1, 1.75, {
+            exports['qb-target']:AddBoxZone("PoliceTrash_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), v.length, v.width, {
                 name = "PoliceTrash_"..k,
-                heading = 11,
+                heading = v.heading,
                 debugPoly = false,
-                minZ = v.z - 1,
-                maxZ = v.z + 1,
+                minZ = v.coords.z - 1,
+                maxZ = v.coords.z + 1,
             }, {
                 options = {
                     {
@@ -745,18 +745,18 @@ if Config.UseTarget then
                         job = "police",
                     },
                 },
-                distance = 1.5
+                distance = v.distance
             })
         end
 
         -- Fingerprint
         for k, v in pairs(Config.Locations["fingerprint"]) do
-            exports['qb-target']:AddBoxZone("PoliceFingerprint_"..k, vector3(v.x, v.y, v.z), 2, 1, {
+            exports['qb-target']:AddBoxZone("PoliceFingerprint_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), v.length, v.width, {
                 name = "PoliceFingerprint_"..k,
-                heading = 11,
+                heading = v.heading,
                 debugPoly = false,
-                minZ = v.z - 1,
-                maxZ = v.z + 1,
+                minZ = v.coords.z - 1,
+                maxZ = v.coords.z + 1,
             }, {
                 options = {
                     {
@@ -767,29 +767,29 @@ if Config.UseTarget then
                         job = "police",
                     },
                 },
-                distance = 1.5
+                distance = v.distance
             })
         end
 
         -- Armoury
         for k, v in pairs(Config.Locations["armory"]) do
-            exports['qb-target']:AddBoxZone("PoliceArmory_"..k, vector3(v.x, v.y, v.z), 5, 1, {
+            exports['qb-target']:AddBoxZone("PoliceArmory_"..k, vector3(v.coords.x, v.coords.y, v.coords.z), v.length, v.width, {
                 name = "PoliceArmory_"..k,
-                heading = 11,
+                heading = v.heading,
                 debugPoly = false,
-                minZ = v.z - 1,
-                maxZ = v.z + 1,
+                minZ = v.coords.z - 1,
+                maxZ = v.coords.z + 1,
             }, {
                 options = {
                     {
                         type = "client",
                         event = "qb-police:client:openArmoury",
-                        icon = "fas fa-swords",
+                        icon = "fas fa-dungeon",
                         label = "Open Armory",
                         job = "police",
                     },
                 },
-                distance = 1.5
+                distance = v.distance
             })
         end
 
@@ -801,11 +801,11 @@ else
     local dutyZones = {}
     for _, v in pairs(Config.Locations["duty"]) do
         dutyZones[#dutyZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1.75, 1, {
+            vector3(vector3(v.coords.x, v.coords.y, v.coords.z)), v.length, v.width, {
             name="box_zone",
             debugPoly = false,
-            minZ = v.z - 1,
-            maxZ = v.z + 1,
+            minZ = v.coords.z - 1,
+            maxZ = v.coords.z + 1,
         })
     end
 
@@ -830,11 +830,11 @@ else
     local stashZones = {}
     for _, v in pairs(Config.Locations["stash"]) do
         stashZones[#stashZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1.5, 1.5, {
+            vector3(vector3(v.coords.x, v.coords.y, v.coords.z)), v.length, v.width, {
             name="box_zone",
             debugPoly = false,
-            minZ = v.z - 1,
-            maxZ = v.z + 1,
+            minZ = v.coords.z - 1,
+            maxZ = v.coords.z + 1,
         })
     end
 
@@ -856,11 +856,11 @@ else
     local trashZones = {}
     for _, v in pairs(Config.Locations["trash"]) do
         trashZones[#trashZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1, 1.75, {
+            vector3(vector3(v.coords.x, v.coords.y, v.coords.z)), v.length, v.width, {
             name="box_zone",
             debugPoly = false,
-            minZ = v.z - 1,
-            maxZ = v.z + 1,
+            minZ = v.coords.z - 1,
+            maxZ = v.coords.z + 1,
         })
     end
 
@@ -882,11 +882,11 @@ else
     local fingerprintZones = {}
     for _, v in pairs(Config.Locations["fingerprint"]) do
         fingerprintZones[#fingerprintZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 2, 1, {
+            vector3(vector3(v.coords.x, v.coords.y, v.coords.z)), v.length, v.width, {
             name="box_zone",
             debugPoly = false,
-            minZ = v.z - 1,
-            maxZ = v.z + 1,
+            minZ = v.coords.z - 1,
+            maxZ = v.coords.z + 1,
         })
     end
 
@@ -908,11 +908,11 @@ else
     local armouryZones = {}
     for _, v in pairs(Config.Locations["armory"]) do
         armouryZones[#armouryZones+1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 5, 1, {
+            vector3(vector3(v.coords.x, v.coords.y, v.coords.z)), v.length, v.width, {
             name="box_zone",
             debugPoly = false,
-            minZ = v.z - 1,
-            maxZ = v.z + 1,
+            minZ = v.coords.z - 1,
+            maxZ = v.coords.z + 1,
         })
     end
 
