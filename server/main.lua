@@ -1081,8 +1081,22 @@ RegisterNetEvent('police:server:SetTracker', function(targetId)
     end
 end)
 
-RegisterNetEvent('police:server:SyncSpikes', function(table)
-    TriggerClientEvent('police:client:SyncSpikes', -1, table)
+QBCore.Functions.CreateUseableItem('spikestrip', function(src)
+    TriggerClientEvent("police:client:usespikes", src)
+end)
+
+RegisterNetEvent('police:server:removespikes', function()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    Player.Functions.RemoveItem('spikestrip', 1)
+end)
+
+RegisterNetEvent("police:server:pickupspikes", function()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if Player.PlayerData.job.name == 'police' then 
+        Player.Functions.AddItem('spikestrip', 1)
+    end
 end)
 
 -- Threads

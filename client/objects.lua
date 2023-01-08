@@ -1,10 +1,36 @@
 -- Variables
 local ObjectList = {}
-local SpawnedSpikes = {}
-local spikemodel = `P_ld_stinger_s`
-local ClosestSpike = nil
-
+local closestStinger = 0
+local wheels = {
+    ["wheel_lf"] = 0,
+    ["wheel_rf"] = 1,
+    ["wheel_lm"] = 2,
+    ["wheel_rm"] = 3,
+    ["wheel_lr"] = 4,
+    ["wheel_rr"] = 5,
+}
 -- Functions
+local function LoadDict(Dict)
+    while not HasAnimDictLoaded(Dict) do 
+        Wait(0)
+        RequestAnimDict(Dict)
+    end
+
+    return Dict
+end
+
+local function LoadModel(model)
+    model = type(model) == "string" and GetHashKey(model) or model
+    if not HasModelLoaded(model) and IsModelInCdimage(model) then
+        local timer = GetGameTimer() + 20000 -- 20 seconds to load
+        RequestModel(model)
+        while not HasModelLoaded(model) and timer >= GetGameTimer() do -- wait for the model to load
+            Wait(50)
+        end
+    end
+    return {loaded = HasModelLoaded(model), model = model}
+end
+
 local function GetClosestPoliceObject()
     local pos = GetEntityCoords(PlayerPedId(), true)
     local current = nil
@@ -25,40 +51,99 @@ local function GetClosestPoliceObject()
     return current, dist
 end
 
-function GetClosestSpike()
-    local pos = GetEntityCoords(PlayerPedId(), true)
-    local current = nil
-    local dist = nil
+local function DeployStinger()
+    local stinger = CreateObject(LoadModel("p_ld_stinger_s").model, GetOffsetFromEntityInWorldCoords(PlayerPedId(), -0.2, 2.0, 0.0), true, true, 0)
+    SetEntityAsMissionEntity(stinger, true, true)
+    SetEntityHeading(stinger, GetEntityHeading(PlayerPedId()))
+    FreezeEntityPosition(stinger, true)
+    PlaceObjectOnGroundProperly(stinger)
+    SetEntityVisible(stinger, false)
 
-    for id, _ in pairs(SpawnedSpikes) do
-        if current then
-            if #(pos - vector3(SpawnedSpikes[id].coords.x, SpawnedSpikes[id].coords.y, SpawnedSpikes[id].coords.z)) < dist then
-                current = id
-            end
-        else
-            dist = #(pos - vector3(SpawnedSpikes[id].coords.x, SpawnedSpikes[id].coords.y, SpawnedSpikes[id].coords.z))
-            current = id
+    -- init scene
+    local scene = NetworkCreateSynchronisedScene(GetEntityCoords(PlayerPedId()), GetEntityRotation(PlayerPedId(), 2), 2, false, false, 1065353216, 0, 1.0)
+    NetworkAddPedToSynchronisedScene(PlayerPedId(), scene, LoadDict("amb@medic@standing@kneel@enter"), "enter", 8.0, -8.0, 3341, 16, 1148846080, 0)
+    NetworkStartSynchronisedScene(scene)
+    -- wait for the scene to start
+    while not IsSynchronizedSceneRunning(NetworkConvertSynchronisedSceneToSynchronizedScene(scene)) do
+        Wait(0)
+    end
+    -- make the scene faster (looks better)
+    SetSynchronizedSceneRate(NetworkConvertSynchronisedSceneToSynchronizedScene(scene), 3.0)
+    -- wait a bit
+    while GetSynchronizedScenePhase(NetworkConvertSynchronisedSceneToSynchronizedScene(scene)) < 0.14 do
+        Wait(0)
+    end
+    -- stop the scene early
+    NetworkStopSynchronisedScene(scene)
+
+    -- play deploy animation for stinger
+    PlayEntityAnim(stinger, "P_Stinger_S_Deploy", LoadDict("p_ld_stinger_s"), 1000.0, false, true, 0, 0.0, 0)
+    while not IsEntityPlayingAnim(stinger, "p_ld_stinger_s", "P_Stinger_S_Deploy", 3) do
+        Wait(0)
+    end
+    SetEntityVisible(stinger, true)
+    while IsEntityPlayingAnim(stinger, "p_ld_stinger_s", "P_Stinger_S_Deploy", 3) and GetEntityAnimCurrentTime(stinger, "p_ld_stinger_s", "P_Stinger_S_Deploy") <= 0.99 do
+        Wait(0)
+    end
+    PlayEntityAnim(stinger, "p_stinger_s_idle_deployed", LoadDict("p_ld_stinger_s"), 1000.0, false, true, 0, 0.99, 0)
+
+    return stinger
+end
+
+local function RemoveStinger()
+    if DoesEntityExist(closestStinger) then
+        NetworkRequestControlOfEntity(closestStinger)
+        SetEntityAsMissionEntity(closestStinger, true, true)
+        DeleteEntity(closestStinger)
+
+        Wait(250)
+        if not DoesEntityExist(closestStinger) then
+            TriggerServerEvent("police:server:pickupspikes")
         end
     end
-    ClosestSpike = current
 end
 
-local function DrawText3D(x, y, z, text)
-	SetTextScale(0.35, 0.35)
-    SetTextFont(4)
-    SetTextProportional(1)
-    SetTextColour(255, 255, 255, 215)
-    SetTextEntry("STRING")
-    SetTextCentre(true)
-    AddTextComponentString(text)
-    SetDrawOrigin(x,y,z, 0)
-    DrawText(0.0, 0.0)
-    local factor = (string.len(text)) / 370
-    DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
-    ClearDrawOrigin()
+local function TouchingStinger(coords, stinger)
+    local min, max = GetModelDimensions(GetEntityModel(stinger))
+    local size = max - min
+    local w, l, h = size.x, size.y, size.z
+
+    local offset1 = GetOffsetFromEntityInWorldCoords(stinger, 0.0, l/2, h*-1)
+    local offset2 = GetOffsetFromEntityInWorldCoords(stinger, 0.0, l/2 * -1, h)
+
+    return IsPointInAngledArea(coords, offset1, offset2, w*2, 0, false)
 end
+
+
 
 -- Events
+RegisterNetEvent('police:client:usespikes',function()
+    local player = QBCore.Functions.GetPlayerData()
+    if QBCore.Functions.HasItem then 
+        QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_spike"), 2500, false, true, {
+            disableMovement = true,
+            disableCarMovement = true,
+            disableMouse = false,
+            disableCombat = true,
+        }, {}, {}, {}, function() -- Done
+            if player.job.name == 'police' then 
+                DeployStinger()
+                TriggerServerEvent('police:server:removespikes')
+            else 
+                QBCore.Functions.Notify('You are not trained to use this', 'error', 7500)
+            end
+        end, function() -- Cancel
+
+        end)
+    else 
+        QBCore.Functions.Notify(Lang:t("error.no_spikestripe"), 'error')
+    end
+end)
+
+RegisterNetEvent("police:client:removespike", function()
+    RemoveStinger()
+end)
+
 RegisterNetEvent('police:client:spawnCone', function()
     QBCore.Functions.Progressbar("spawn_object", Lang:t("progressbar.place_object"), 2500, false, true, {
         disableMovement = true,
@@ -198,102 +283,63 @@ RegisterNetEvent('police:client:spawnObject', function(objectId, type, player)
     }
 end)
 
-RegisterNetEvent('police:client:SpawnSpikeStrip', function()
-    if #SpawnedSpikes + 1 < Config.MaxSpikes then
-        if PlayerJob.name == "police" and PlayerJob.onduty then
-            local spawnCoords = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 2.0, 0.0)
-            local spike = CreateObject(spikemodel, spawnCoords.x, spawnCoords.y, spawnCoords.z, 1, 1, 1)
-            local netid = NetworkGetNetworkIdFromEntity(spike)
-            SetNetworkIdExistsOnAllMachines(netid, true)
-            SetNetworkIdCanMigrate(netid, false)
-            SetEntityHeading(spike, GetEntityHeading(PlayerPedId()))
-            PlaceObjectOnGroundProperly(spike)
-            SpawnedSpikes[#SpawnedSpikes+1] = {
-                coords = vector3(spawnCoords.x, spawnCoords.y, spawnCoords.z),
-                netid = netid,
-                object = spike,
-            }
-            TriggerServerEvent('police:server:SyncSpikes', SpawnedSpikes)
-        end
-    else
-        QBCore.Functions.Notify(Lang:t("error.no_spikestripe"), 'error')
-    end
-end)
 
-RegisterNetEvent('police:client:SyncSpikes', function(table)
-    SpawnedSpikes = table
-end)
 
 -- Threads
-CreateThread(function()
+-- thread to find the closest stinger / spikestrip
+Citizen.CreateThread(function()
     while true do
-        if LocalPlayer.state.isLoggedIn then
-            GetClosestSpike()
+        local driving = DoesEntityExist(GetVehiclePedIsUsing(PlayerPedId()))
+        Wait((driving and 50) or 1000)
+        local coords = GetEntityCoords((driving and GetVehiclePedIsUsing(PlayerPedId())) or PlayerPedId())
+
+        local stinger = GetClosestObjectOfType(coords, 10.0, GetHashKey("p_ld_stinger_s"), false, false, false)
+        if DoesEntityExist(stinger) then
+            closestStinger = stinger
+            closestStingerDistance = #(coords - GetEntityCoords(stinger))
         end
-        Wait(500)
+
+        if not DoesEntityExist(closestStinger) or #(coords - GetEntityCoords(closestStinger)) > 10.0 then
+            closestStinger = 0
+        end
     end
 end)
 
+-- This while loop manages bursting tyres.
 CreateThread(function()
     while true do
-        if LocalPlayer.state.isLoggedIn then
-            if ClosestSpike then
-                local tires = {
-                    {bone = "wheel_lf", index = 0},
-                    {bone = "wheel_rf", index = 1},
-                    {bone = "wheel_lm", index = 2},
-                    {bone = "wheel_rm", index = 3},
-                    {bone = "wheel_lr", index = 4},
-                    {bone = "wheel_rr", index = 5}
-                }
-
-                for a = 1, #tires do
-                    local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-                    local tirePos = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, tires[a].bone))
-                    local spike = GetClosestObjectOfType(tirePos.x, tirePos.y, tirePos.z, 15.0, spikemodel, 1, 1, 1)
-                    local spikePos = GetEntityCoords(spike, false)
-                    local distance = #(tirePos - spikePos)
-
-                    if distance < 1.8 then
-                        if not IsVehicleTyreBurst(vehicle, tires[a].index, true) or IsVehicleTyreBurst(vehicle, tires[a].index, false) then
-                            SetVehicleTyreBurst(vehicle, tires[a].index, false, 1000.0)
-                        end
-                    end
-                end
-            end
-        end
-
-        Wait(3)
-    end
-end)
-
-CreateThread(function()
-    while true do
-        local sleep = 1000
-        if LocalPlayer.state.isLoggedIn then
-            if ClosestSpike then
-                local ped = PlayerPedId()
-                local pos = GetEntityCoords(ped)
-                local dist = #(pos - SpawnedSpikes[ClosestSpike].coords)
-                if dist < 4 then
-                    if not IsPedInAnyVehicle(PlayerPedId()) then
-                        if PlayerJob.name == "police" and PlayerJob.onduty then
-                            sleep = 0
-                            DrawText3D(pos.x, pos.y, pos.z, Lang:t('info.delete_spike'))
-                            if IsControlJustPressed(0, 38) then
-                                NetworkRegisterEntityAsNetworked(SpawnedSpikes[ClosestSpike].object)
-                                NetworkRequestControlOfEntity(SpawnedSpikes[ClosestSpike].object)
-                                SetEntityAsMissionEntity(SpawnedSpikes[ClosestSpike].object)
-                                DeleteEntity(SpawnedSpikes[ClosestSpike].object)
-                                SpawnedSpikes[ClosestSpike] = nil
-                                ClosestSpike = nil
-                                TriggerServerEvent('police:server:SyncSpikes', SpawnedSpikes)
+        Wait(1500)
+        while DoesEntityExist(GetVehiclePedIsUsing(PlayerPedId())) do
+            Wait(50)
+            local vehicle = GetVehiclePedIsUsing(PlayerPedId())
+            while DoesEntityExist(closestStinger) and closestStingerDistance <= 5.0 do
+                Wait(5)
+                if IsEntityTouchingEntity(vehicle, closestStinger) then
+                    for boneName, wheelId in pairs(wheels) do
+                        if not IsVehicleTyreBurst(vehicle, wheelId, false) then
+                            if TouchingStinger(GetWorldPositionOfEntityBone(vehicle,
+                                GetEntityBoneIndexByName(vehicle, boneName)), closestStinger) then
+                                SetVehicleTyreBurst(vehicle, wheelId, 1, 1148846080)
                             end
                         end
                     end
                 end
             end
         end
-        Wait(sleep)
     end
 end)
+
+-- target
+exports['qb-target']:AddTargetModel('p_ld_stinger_s', {
+    options = {
+      {
+        num = 1,
+        event = 'police:client:removespike',
+        icon = "fa fa fa-circle",
+        label = Lang:t("info.pickup_spike"),
+        job = 'police',
+      },
+    },
+    distance = 2.0
+})
+
