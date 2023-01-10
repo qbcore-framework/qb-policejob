@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'No drivers license',
         not_cuffed_dead = 'Civilian isn\'t cuffed or dead',
         fine_yourself = 'You Cannot Fine Yourself',
-        not_online = "This person is not online"
+        not_online = "This person is not online",
+        has_heli = 'You already own a helicopter!',
     },
     success = {
         uncuffed = 'You have been uncuffed',

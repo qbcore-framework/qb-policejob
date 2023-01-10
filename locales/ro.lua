@@ -30,7 +30,8 @@ local Translations = {
         no_driver_license = 'Lipsa permis conducere',
         not_cuffed_dead = 'Cetateanul nu are catusele puse si nici nu este mort/ranit.',
         fine_yourself = '???',
-        not_online = "???"
+        not_online = "???",
+        has_heli = 'You already own a helicopter!',
     },
     success = {
         uncuffed = 'Ti-au fost scoase catusele',

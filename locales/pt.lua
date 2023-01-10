@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'Sem licença de condução',
         not_cuffed_dead = 'O civil não está algemado ou morto',
         fine_yourself = '???',
-        not_online = "???"
+        not_online = "???",
+        has_heli = 'You already own a helicopter!',
     },
     success = {
         uncuffed = 'Foste desalgemado',

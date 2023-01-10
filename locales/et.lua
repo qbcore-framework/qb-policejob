@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'Puudub juhiluba',
         not_cuffed_dead = 'Tsiviil ei ole raudus ega surnud',
         fine_yourself = '???',
-        not_online = "???"
+        not_online = "???",
+        has_heli = 'You already own a helicopter!',
     },
     success = {
         uncuffed = 'Teil võeti rauad maha',

@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'ไม่มีใบอนุญาตขับขี่',
         not_cuffed_dead = 'พลเรือนไม่ได้ถูกใส่กุญแจมือหรือตาย',
         fine_yourself = '???',
-        not_online = "???"
+        not_online = "???",
+        has_heli = 'You already own a helicopter!',
     },
     success = {
         uncuffed = 'คุณได้รับการปลดกุญแจมือ',

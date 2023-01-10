@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'Žiaden vodičský preukaz',
         not_cuffed_dead = 'Civilista nie je spútaný a ani mŕtvy',
         fine_yourself = '???',
-        not_online = "???"
+        not_online = "???",
+        has_heli = 'You already own a helicopter!',
     },
     success = {
         uncuffed = 'Boli ste zbavení pút',

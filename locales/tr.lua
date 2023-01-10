@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'Sürücü belgesi yok',
         not_cuffed_dead = 'Sivil kelepçeli veya ölü değil',
         fine_yourself = 'Kendinize Ceza Veremezsiniz',
-        not_online = "Bu kişi çevrimiçi değil"
+        not_online = "Bu kişi çevrimiçi değil",
+        has_heli = 'Zaten bir helikoptere sahipsin!',
     },
     success = {
         uncuffed = 'Kelepçeniz söküldü',
