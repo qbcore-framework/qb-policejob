@@ -281,10 +281,12 @@ CreateThread(function()
                             sleep = 0
                             DrawText3D(pos.x, pos.y, pos.z, Lang:t('info.delete_spike'))
                             if IsControlJustPressed(0, 38) then
-                                NetworkRegisterEntityAsNetworked(SpawnedSpikes[ClosestSpike].object)
-                                NetworkRequestControlOfEntity(SpawnedSpikes[ClosestSpike].object)
-                                SetEntityAsMissionEntity(SpawnedSpikes[ClosestSpike].object)
-                                DeleteEntity(SpawnedSpikes[ClosestSpike].object)
+                                local spike = NetToEnt(SpawnedSpikes[ClosestSpike].netid)
+                                NetworkRegisterEntityAsNetworked(spike)
+                                NetworkRequestControlOfEntity(spike)
+                                SetEntityAsMissionEntity(spike)
+                                Wait(500)
+                                DeleteEntity(spike)
                                 SpawnedSpikes[ClosestSpike] = nil
                                 ClosestSpike = nil
                                 TriggerServerEvent('police:server:SyncSpikes', SpawnedSpikes)
