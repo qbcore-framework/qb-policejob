@@ -130,7 +130,7 @@ RegisterNetEvent('police:client:sendBillingMail', function(amount)
 end)
 
 RegisterNetEvent('police:client:UpdateBlips', function(players)
-    if PlayerJob and (PlayerJob.name == 'police' or PlayerJob.name == 'ambulance') and
+    if PlayerJob and (PlayerJob.name == 'police' or PlayerJob.type == 'leo' or PlayerJob.name == 'ambulance') and
         PlayerJob.onduty then
         if DutyBlips then
             for _, v in pairs(DutyBlips) do
