@@ -8,6 +8,8 @@ Config.Objects = {
     ["light"] = {model = `prop_worklight_03b`, freeze = true},
 }
 
+Config.DutyBlips = true
+
 Config.MaxSpikes = 5
 
 Config.HandCuffItem = 'handcuffs'
