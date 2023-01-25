@@ -210,7 +210,7 @@ Config.CarItems = {
 }
 
 Config.Items = {
-    label = "Police Armory",
+    label = "Police Armoury",
     slots = 30,
     items = {
         [1] = {
