@@ -251,9 +251,9 @@ CreateThread(function()
                 local vehiclePos = GetEntityCoords(vehicle, false)
                 local spike = GetClosestObjectOfType(vehiclePos.x, vehiclePos.y, vehiclePos.z, 15.0, spikemodel, 1, 1, 1)
                 local spikePos = GetEntityCoords(spike, false)
+		local tirePos = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, tires[a].bone))
                 local distance = #(vehiclePos - spikePos)
                 for a = 1, #tires do
-                    local tirePos = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, tires[a].bone))
                     if distance < 1.8 then
                         if not IsVehicleTyreBurst(vehicle, tires[a].index, true) or IsVehicleTyreBurst(vehicle, tires[a].index, false) then
                             SetVehicleTyreBurst(vehicle, tires[a].index, false, 1000.0)
