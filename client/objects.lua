@@ -234,26 +234,26 @@ CreateThread(function()
     end
 end)
 
+local tires = {
+    {bone = "wheel_lf", index = 0},
+    {bone = "wheel_rf", index = 1},
+    {bone = "wheel_lm", index = 2},
+    {bone = "wheel_rm", index = 3},
+    {bone = "wheel_lr", index = 4},
+    {bone = "wheel_rr", index = 5}
+}
+
 CreateThread(function()
     while true do
-        if LocalPlayer.state.isLoggedIn then
+        if NetworkIsSessionStarted() then
             if ClosestSpike then
-                local tires = {
-                    {bone = "wheel_lf", index = 0},
-                    {bone = "wheel_rf", index = 1},
-                    {bone = "wheel_lm", index = 2},
-                    {bone = "wheel_rm", index = 3},
-                    {bone = "wheel_lr", index = 4},
-                    {bone = "wheel_rr", index = 5}
-                }
-
+                local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+                local vehiclePos = GetEntityCoords(vehicle, false)
+                local spike = GetClosestObjectOfType(vehiclePos.x, vehiclePos.y, vehiclePos.z, 15.0, spikemodel, 1, 1, 1)
+                local spikePos = GetEntityCoords(spike, false)
+                local distance = #(vehiclePos - spikePos)
                 for a = 1, #tires do
-                    local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
                     local tirePos = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle, tires[a].bone))
-                    local spike = GetClosestObjectOfType(tirePos.x, tirePos.y, tirePos.z, 15.0, spikemodel, 1, 1, 1)
-                    local spikePos = GetEntityCoords(spike, false)
-                    local distance = #(tirePos - spikePos)
-
                     if distance < 1.8 then
                         if not IsVehicleTyreBurst(vehicle, tires[a].index, true) or IsVehicleTyreBurst(vehicle, tires[a].index, false) then
                             SetVehicleTyreBurst(vehicle, tires[a].index, false, 1000.0)
@@ -262,8 +262,7 @@ CreateThread(function()
                 end
             end
         end
-
-        Wait(3)
+        Citizen.Wait(3)
     end
 end)
 
