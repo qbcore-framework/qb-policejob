@@ -8,6 +8,7 @@ local inArmoury = false
 local inHelicopter = false
 local inImpound = false
 local inGarage = false
+local ownedHeli = false
 
 local function loadAnimDict(dict) -- interactions, job,
     while (not HasAnimDictLoaded(dict)) do
@@ -492,11 +493,14 @@ end)
 RegisterNetEvent('qb-police:client:spawnHelicopter', function(k)
     if IsPedInAnyVehicle(PlayerPedId(), false) then
         QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+        ownedHeli = false
     else
         local coords = Config.Locations["helicopter"][k]
         if not coords then coords = GetEntityCoords(PlayerPedId()) end
+        if ownedHeli then QBCore.Functions.Notify(Lang:t("error.has_heli"), "error") return end
         QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)
             local veh = NetToVeh(netId)
+            ownedHeli = true
             SetVehicleLivery(veh , 0)
             SetVehicleMod(veh, 0, 48)
             SetVehicleNumberPlateText(veh, "ZULU"..tostring(math.random(1000, 9999)))
@@ -996,6 +1000,7 @@ CreateThread(function()
                     exports['qb-core']:DrawText(Lang:t('info.store_heli'), 'left')
                     heli()
                 else
+                    if not ownedHeli then return end
                     exports['qb-core']:DrawText(Lang:t('info.take_heli'), 'left')
                     heli()
                 end
