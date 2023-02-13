@@ -4,7 +4,7 @@ local inFingerprint = false
 local FingerPrintSessionId = nil
 local inStash = false
 local inTrash = false
-local inAmoury = false
+local inArmoury = false
 local inHelicopter = false
 local inImpound = false
 local inGarage = false
@@ -532,8 +532,8 @@ local function dutylistener()
         while dutylisten do
             if PlayerJob.name == "police" then
                 if IsControlJustReleased(0, 38) then
-                    TriggerServerEvent("police:server:UpdateCurrentCops")
                     TriggerServerEvent("QBCore:ToggleDuty")
+                    TriggerServerEvent("police:server:UpdateCurrentCops")
                     TriggerServerEvent("police:server:UpdateBlips")
                     dutylisten = false
                     break
@@ -610,7 +610,7 @@ local function armoury()
     CreateThread(function()
         while true do
             Wait(0)
-            if inAmoury and PlayerJob.name == "police" then
+            if inArmoury and PlayerJob.name == "police" then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsControlJustReleased(0, 38) then
                     TriggerEvent("qb-police:client:openArmoury")
@@ -919,13 +919,13 @@ else
     local armouryCombo = ComboZone:Create(armouryZones, {name = "armouryCombo", debugPoly = false})
     armouryCombo:onPlayerInOut(function(isPointInside)
         if isPointInside then
-            inAmoury = true
+            inArmoury = true
             if PlayerJob.name == 'police' and PlayerJob.onduty then
                 exports['qb-core']:DrawText(Lang:t('info.enter_armory'),'left')
                 armoury()
             end
         else
-            inAmoury = false
+            inArmoury = false
             exports['qb-core']:HideText()
         end
     end)
