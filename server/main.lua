@@ -401,10 +401,22 @@ QBCore.Commands.Add('fine', Lang:t("commands.fine"), {{name = 'id', help = Lang:
         if billed ~= nil then
             if biller.PlayerData.citizenid ~= billed.PlayerData.citizenid then
                 if amount and amount > 0 then
-                    billed.Functions.RemoveMoney('bank', amount, "paid-fine")
-                    TriggerClientEvent('QBCore:Notify', source, Lang:t("info.fine_issued"), 'success')
-                    TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, Lang:t("info.received_fine"))
-                    exports['qb-management']:AddMoney('police', amount)
+                    if billed.Functions.RemoveMoney('bank', amount, "paid-fine") then
+                        TriggerClientEvent('QBCore:Notify', source, Lang:t("info.fine_issued"), 'success')
+                        TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, Lang:t("info.received_fine"))
+                        exports['qb-management']:AddMoney(biller.PlayerData.job.name, amount)
+                    elseif billed.Functions.RemoveMoney('cash', amount, "paid-fine") then
+                        TriggerClientEvent('QBCore:Notify', source, Lang:t("info.fine_issued"), 'success')
+                        TriggerClientEvent('QBCore:Notify', billed.PlayerData.source, Lang:t("info.received_fine"))
+                        exports['qb-management']:AddMoney(biller.PlayerData.job.name, amount)
+                    else
+                        MySQL.Async.insert('INSERT INTO phone_invoices (citizenid, amount, society, sender, sendercitizenid) VALUES (?, ?, ?, ?, ?)',{billed.PlayerData.citizenid, amount, biller.PlayerData.job.name, biller.PlayerData.charinfo.firstname, biller.PlayerData.citizenid}, function(id)
+                            if id then
+                                TriggerClientEvent('qb-phone:client:AcceptorDenyInvoice', billed.PlayerData.source, id, biller.PlayerData.charinfo.firstname, biller.PlayerData.job.name, biller.PlayerData.citizenid, amount, GetInvokingResource())
+                            end
+                        end)
+                        TriggerClientEvent('qb-phone:RefreshPhone', billed.PlayerData.source)
+                    end
                 else
                     TriggerClientEvent('QBCore:Notify', source, Lang:t("error.amount_higher"), 'error')
                 end
