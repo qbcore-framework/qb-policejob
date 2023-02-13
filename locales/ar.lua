@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'بدون رخصة قيادة',
         not_cuffed_dead = 'الشخص ليس مكلبش أو ميت',
         fine_yourself = '???',
-        not_online = "???"
+        not_online = "???",
+        has_heli = 'You already own a helicopter!',
     },
     success = {
         uncuffed = 'أنت لست مكلبش',

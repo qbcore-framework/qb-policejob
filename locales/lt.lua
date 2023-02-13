@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'Neturi vairutojo pažymėjimo',
         not_cuffed_dead = 'Civilis nėra surakintas ar miręs',
         fine_yourself = '???',
-        not_online = "???"
+        not_online = "???",
+        has_heli = 'You already own a helicopter!',
     },
     success = {
         uncuffed = 'Jūs buvote atrakintas',

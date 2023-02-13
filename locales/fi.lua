@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'Ei ajokorttia',
         not_cuffed_dead = 'Siviili ei ole raudoitettu tai kuollut',
         fine_yourself = '???',
-        not_online = "???"
+        not_online = "???",
+        has_heli = 'You already own a helicopter!',
     },
     success = {
         uncuffed = 'Olet nyt vapaa',
