@@ -13,7 +13,7 @@ local function UpdateBlips()
     local dutyPlayers = {}
     local players = QBCore.Functions.GetQBPlayers()
     for _, v in pairs(players) do
-        if v and (v.PlayerData.job.name == "police" or v.PlayerData.job.type == "leo" or v.PlayerData.job.name == "ambulance") and v.PlayerData.job.onduty then
+        if v and (v.PlayerData.job.name == "police" or v.PlayerData.job.type == "leo" or v.PlayerData.job.name == "ambulance" or v.PlayerData.job.type == "ems") and v.PlayerData.job.onduty then
             local coords = GetEntityCoords(GetPlayerPed(v.PlayerData.source))
             local heading = GetEntityHeading(GetPlayerPed(v.PlayerData.source))
             dutyPlayers[#dutyPlayers+1] = {
@@ -517,7 +517,7 @@ end)
 QBCore.Functions.CreateUseableItem("moneybag", function(source, item)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    if not Player or not Player.Functions.GetItemByName("moneybag") or not item.info or item.info == "" or Player.PlayerData.job.name == "police" or not Player.Functions.RemoveItem("moneybag", 1, item.slot) then return end
+    if not Player or not Player.Functions.GetItemByName("moneybag") or not item.info or item.info == "" or Player.PlayerData.job.name == "police" or player.PlayerData.job.type == "leo" or not Player.Functions.RemoveItem("moneybag", 1, item.slot) then return end
     Player.Functions.AddMoney("cash", tonumber(item.info.cash), "used-moneybag")
 end)
 
@@ -661,7 +661,7 @@ RegisterNetEvent('police:server:CuffPlayer', function(playerId, isSoftcuff)
 
     local Player = QBCore.Functions.GetPlayer(src)
     local CuffedPlayer = QBCore.Functions.GetPlayer(playerId)
-    if not Player or not CuffedPlayer or (not Player.Functions.GetItemByName("handcuffs") and Player.PlayerData.job.name ~= "police") then return end
+    if not Player or not CuffedPlayer or (not Player.Functions.GetItemByName("handcuffs") and (Player.PlayerData.job.name ~= "police" or Player.PlayerData.job.type ~= "leo")) then return end
 
     TriggerClientEvent("police:client:GetCuffed", CuffedPlayer.PlayerData.source, Player.PlayerData.source, isSoftcuff)
 end)
@@ -678,7 +678,7 @@ RegisterNetEvent('police:server:EscortPlayer', function(playerId)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if not Player or not EscortPlayer then return end
 
-    if (Player.PlayerData.job.name == "police" or Player.PlayerData.job.type == "leo" or Player.PlayerData.job.name == "ambulance") or (EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or EscortPlayer.PlayerData.metadata["inlaststand"]) then
+    if (Player.PlayerData.job.name == "police" or Player.PlayerData.job.type == "leo" or Player.PlayerData.job.name == "ambulance" or Player.PlayerData.job.type == "ems") or (EscortPlayer.PlayerData.metadata["ishandcuffed"] or EscortPlayer.PlayerData.metadata["isdead"] or EscortPlayer.PlayerData.metadata["inlaststand"]) then
         TriggerClientEvent("police:client:GetEscorted", EscortPlayer.PlayerData.source, Player.PlayerData.source)
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t("error.not_cuffed_dead"), 'error')
@@ -802,7 +802,7 @@ end)
 --     for k, v in pairs(QBCore.Functions.GetPlayers()) do
 --         local Player = QBCore.Functions.GetPlayer(v)
 --         if Player then
---             if (Player.PlayerData.job.name == "police" and Player.PlayerData.job.onduty) then
+--             if ((Player.PlayerData.job.name == "police" or Player.PlayerData.job.type == "leo") and Player.PlayerData.job.onduty) then
 --                 if street2 then
 --                     TriggerClientEvent("112:client:SendPoliceAlert", v, "flagged", {
 --                         camId = camId,
