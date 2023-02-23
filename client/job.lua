@@ -157,6 +157,26 @@ function TakeOutVehicle(vehicleInfo)
     end
 end
 
+function TakeOutHelicopter(helicopterInfo)
+    local coords = Config.Locations["helicopter"][currentGarage]
+    if coords then
+        QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)
+            local veh = NetToVeh(netId)
+            if Config.HelicopterSettings[helicopterInfo] ~= nil then
+                if Config.HelicopterSettings[helicopterInfo].livery ~= nil then
+                    SetVehicleLivery(veh, Config.HelicopterSettings[helicopterInfo].livery)
+                end
+            end
+            SetVehicleNumberPlateText(veh, Lang:t('info.police_plate')..tostring(math.random(1000, 9999)))
+            SetEntityHeading(veh, coords.w)
+            exports['LegacyFuel']:SetFuel(veh, 100.0)
+            closeMenuFull()
+            TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+            TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+        end, helicopterInfo, coords, true)
+    end
+end
+
 local function IsArmoryWhitelist() -- being removed
     local retval = false
 
@@ -172,6 +192,40 @@ local function SetWeaponSeries()
             Config.Items.items[k].info.serie = tostring(QBCore.Shared.RandomInt(2) .. QBCore.Shared.RandomStr(3) .. QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomStr(2) .. QBCore.Shared.RandomInt(3) .. QBCore.Shared.RandomStr(4))
         end
     end
+end
+
+function MenuHelicopter(currentSelection)
+    local helicopterMenu = {
+        {
+            header = Lang:t('menu.garage_title'),
+            isMenuHeader = true
+        }
+    }
+
+    local authorizedHelicopters = Config.AuthorizedHelicopters[QBCore.Functions.GetPlayerData().job.grade.level]
+    for veh, label in pairs(authorizedHelicopters) do
+        helicopterMenu[#helicopterMenu+1] = {
+            header = label,
+            txt = "",
+            params = {
+                event = "police:client:TakeOutHelicopter",
+                args = {
+                    vehicle = veh,
+                    currentSelection = currentSelection
+                }
+            }
+        }
+    end
+
+    helicopterMenu[#helicopterMenu+1] = {
+        header = Lang:t('menu.close'),
+        txt = "",
+        params = {
+            event = "qb-menu:client:closeMenu"
+        }
+
+    }
+    exports['qb-menu']:openMenu(helicopterMenu)
 end
 
 function MenuGarage(currentSelection)
@@ -400,6 +454,10 @@ RegisterNetEvent("police:client:VehicleMenuHeader", function (data)
     currentGarage = data.currentSelection
 end)
 
+RegisterNetEvent("police:client:HelicopterMenuHeader", function (data)
+    MenuHelicopter(data.currentSelection)
+    currentGarage = data.currentSelection
+end)
 
 RegisterNetEvent("police:client:ImpoundMenuHeader", function (data)
     MenuImpound(data.currentSelection)
@@ -417,6 +475,13 @@ RegisterNetEvent('police:client:TakeOutVehicle', function(data)
     if inGarage then
         local vehicle = data.vehicle
         TakeOutVehicle(vehicle)
+    end
+end)
+
+RegisterNetEvent('police:client:TakeOutHelicopter', function(data)
+    if inHelicopter then
+        local vehicle = data.vehicle
+        TakeOutHelicopter(vehicle)
     end
 end)
 
@@ -487,27 +552,6 @@ RegisterNetEvent('qb-police:client:openArmoury', function()
     end
     SetWeaponSeries()
     TriggerServerEvent("inventory:server:OpenInventory", "shop", "police", authorizedItems)
-end)
-
-RegisterNetEvent('qb-police:client:spawnHelicopter', function(k)
-    if IsPedInAnyVehicle(PlayerPedId(), false) then
-        QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
-    else
-        local coords = Config.Locations["helicopter"][k]
-        if not coords then coords = GetEntityCoords(PlayerPedId()) end
-        QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)
-            local veh = NetToVeh(netId)
-            SetVehicleLivery(veh , 0)
-            SetVehicleMod(veh, 0, 48)
-            SetVehicleNumberPlateText(veh, "ZULU"..tostring(math.random(1000, 9999)))
-            SetEntityHeading(veh, coords.w)
-            exports['LegacyFuel']:SetFuel(veh, 100.0)
-            closeMenuFull()
-            TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-            TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
-            SetVehicleEngineOn(veh, true, true)
-        end, Config.PoliceHelicopter, coords, true)
-    end
 end)
 
 RegisterNetEvent("qb-police:client:openStash", function()
@@ -623,16 +667,18 @@ local function armoury()
     end)
 end
 
--- Helicopter Thread
+-- Police Helicopter Garage Thread
 local function heli()
     CreateThread(function()
         while true do
             Wait(0)
             if inHelicopter and PlayerJob.name == "police" then
-                if PlayerJob.onduty then sleep = 5 end
-                if IsControlJustReleased(0, 38) then
-                    TriggerEvent("qb-police:client:spawnHelicopter")
-                    break
+                if onDuty then sleep = 5 end
+                if IsPedInAnyVehicle(PlayerPedId(), false) then
+                    if IsControlJustReleased(0, 38) then
+                        QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                        break
+                    end
                 end
             else
                 break
@@ -987,21 +1033,37 @@ CreateThread(function()
     end
 
     local helicopterCombo = ComboZone:Create(helicopterZones, {name = "helicopterCombo", debugPoly = false})
-    helicopterCombo:onPlayerInOut(function(isPointInside)
+    helicopterCombo:onPlayerInOut(function(isPointInside, point)
         if isPointInside then
             inHelicopter = true
-            if PlayerJob.name == 'police' and PlayerJob.onduty then
+            if onDuty and PlayerJob.name == 'police' then
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
-                    exports['qb-core']:HideText()
                     exports['qb-core']:DrawText(Lang:t('info.store_heli'), 'left')
-                    heli()
+		            heli()
                 else
-                    exports['qb-core']:DrawText(Lang:t('info.take_heli'), 'left')
-                    heli()
+                    local currentSelection = 0
+
+                    for k, v in pairs(Config.Locations["helicopter"]) do
+                        if #(point - vector3(v.x, v.y, v.z)) < 10 then
+                            currentSelection = k
+                        end
+                    end
+                    exports['qb-menu']:showHeader({
+                        {
+                            header = Lang:t('menu.helicopter_garage'),
+                            params = {
+                                event = 'police:client:HelicopterMenuHeader',
+                                args = {
+                                    currentSelection = currentSelection,
+                                }
+                            }
+                        }
+                    })
                 end
             end
         else
             inHelicopter = false
+            exports['qb-menu']:closeMenu()
             exports['qb-core']:HideText()
         end
     end)
