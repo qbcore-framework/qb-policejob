@@ -23,10 +23,16 @@ local vehicle_detected = nil
 local locked_on_vehicle = nil
 
 -- Functions
-local function IsPlayerInPolmav()
+local function IsPlayerInPoliceHelicopter()
 	local lPed = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(lPed)
-	return IsVehicleModel(vehicle, GetHashKey(Config.PoliceHelicopter))
+	local authorizedHelicopters = Config.AuthorizedHelicopters[QBCore.Functions.GetPlayerData().job.grade.level]
+    	for veh, label in pairs(authorizedHelicopters) do
+        	if IsVehicleModel(vehicle, GetHashKey(veh)) then
+			return true
+		end
+    	end
+	return false
 end
 
 local function IsHeliHighEnough(heli)
@@ -139,7 +145,7 @@ CreateThread(function()
 		Wait(0)
 		if LocalPlayer.state.isLoggedIn then
 			if PlayerJob.name == 'police' and PlayerJob.onduty then
-				if IsPlayerInPolmav() then
+				if IsPlayerInPoliceHelicopter() then
 					local lPed = PlayerPedId()
 					local heli = GetVehiclePedIsIn(lPed)
 
