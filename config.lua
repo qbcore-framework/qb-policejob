@@ -102,15 +102,15 @@ Config.SecurityCameras = {
 Config.AuthorizedHelicopters = {
 	-- Grade 0
 	[0] = {
-        	["polmav"] = "Police Maverick",
+        ["polmav"] = "Police Maverick",
 	},
 	-- Grade 1
 	[1] = {
-        	["polmav"] = "Police Maverick",
+        ["polmav"] = "Police Maverick",
 	},
 	-- Grade 2
 	[2] = {
-        	["polmav"] = "Police Maverick",
+        ["polmav"] = "Police Maverick",
 	},
 	-- Grade 3
 	[3] = {
