@@ -59,8 +59,6 @@ Config.Locations = {
 
 Config.ArmoryWhitelist = {}
 
-Config.PoliceHelicopter = "POLMAV"
-
 Config.SecurityCameras = {
     hideradar = false,
     cameras = {
@@ -99,6 +97,29 @@ Config.SecurityCameras = {
         [33] = {label = "Vangelico Jewelery CAM#3", coords = vector3(-620.3, -224.31, 40.23), r = {x = -35.0, y = 0.0, z = 165.78}, canRotate = true, isOnline = true},
         [34] = {label = "Vangelico Jewelery CAM#4", coords = vector3(-622.57, -236.3, 40.31), r = {x = -35.0, y = 0.0, z = 5.78}, canRotate = true, isOnline = true},
     },
+}
+
+Config.AuthorizedHelicopters = {
+	-- Grade 0
+	[0] = {
+        	["polmav"] = "Police Maverick",
+	},
+	-- Grade 1
+	[1] = {
+        	["polmav"] = "Police Maverick",
+	},
+	-- Grade 2
+	[2] = {
+        	["polmav"] = "Police Maverick",
+	},
+	-- Grade 3
+	[3] = {
+		["polmav"] = "Police Maverick",
+	},
+	-- Grade 4
+	[4] = {
+		["polmav"] = "Police Maverick",
+	}
 }
 
 Config.AuthorizedVehicles = {
@@ -390,6 +411,15 @@ Config.Items = {
             slot = 17,
             authorizedJobGrades = {0, 1, 2, 3, 4}
         }
+    }
+}
+
+Config.HelicopterSettings = {
+    ["polmav"] = { --- Model name
+		["livery"] = 0,
+    },
+    ["helicopter2"] = {
+		["livery"] = 1,
     }
 }
 
