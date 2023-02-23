@@ -673,7 +673,7 @@ local function heli()
         while true do
             Wait(0)
             if inHelicopter and PlayerJob.name == "police" then
-                if onDuty then sleep = 5 end
+                if PlayerJob.onduty then sleep = 5 end
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                     if IsControlJustReleased(0, 38) then
                         QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
@@ -1036,7 +1036,7 @@ CreateThread(function()
     helicopterCombo:onPlayerInOut(function(isPointInside, point)
         if isPointInside then
             inHelicopter = true
-            if onDuty and PlayerJob.name == 'police' then
+            if PlayerJob.onduty and PlayerJob.name == 'police' then
                 if IsPedInAnyVehicle(PlayerPedId(), false) then
                     exports['qb-core']:DrawText(Lang:t('info.store_heli'), 'left')
 		            heli()
