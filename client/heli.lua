@@ -27,11 +27,11 @@ local function IsPlayerInPoliceHelicopter()
 	local lPed = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(lPed)
 	local authorizedHelicopters = Config.AuthorizedHelicopters[QBCore.Functions.GetPlayerData().job.grade.level]
-    	for veh, label in pairs(authorizedHelicopters) do
-        	if IsVehicleModel(vehicle, GetHashKey(veh)) then
+	for veh, _ in pairs(authorizedHelicopters) do
+        if IsVehicleModel(vehicle, GetHashKey(veh)) then
 			return true
 		end
-    	end
+    end
 	return false
 end
 
