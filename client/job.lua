@@ -532,8 +532,8 @@ local function dutylistener()
         while dutylisten do
             if PlayerJob.name == "police" then
                 if IsControlJustReleased(0, 38) then
-                    TriggerServerEvent("police:server:UpdateCurrentCops")
                     TriggerServerEvent("QBCore:ToggleDuty")
+                    TriggerServerEvent("police:server:UpdateCurrentCops")
                     TriggerServerEvent("police:server:UpdateBlips")
                     dutylisten = false
                     break
