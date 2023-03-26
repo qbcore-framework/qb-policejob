@@ -25,8 +25,8 @@ local Translations = {
         have_evidence_bag = 'Debes tener una bolsa de evidencia vacía contigo',
         no_driver_license = 'No tienes permiso de conducir',
         not_cuffed_dead = 'Civil no está esposado ni muerto',
-        fine_yourself = '???',
-        not_online = "???"
+        fine_yourself = 'No puedes multarte a ti mismo',
+        not_online = "Esta persona no está en línea"
     },
     success = {
         uncuffed = 'Has sido desesposado',
@@ -114,9 +114,9 @@ local Translations = {
         anklet_location = 'Localizacion tobillera',
         new_call = 'Nueva llamada',
         officer_down = 'official %{lastname} | %{callsign} Salio de servicio',
-        fine_issued = '???',
-        received_fine = '???'
-    },
+        fine_issued = 'Se ha emitido multa al infractor con éxito',
+        received_fine = 'Recuperación de deudas del Estado ha recuperado automáticamente las multas debidas...'
+        },
     evidence = {
         red_hands = 'Manos rojas',
         wide_pupils = 'Pupilas dilatadas',
@@ -177,7 +177,7 @@ local Translations = {
         message_sent = 'Mensaje a enviar',
         civilian_call = 'Llamada civil',
         emergency_call = 'Nueva llamada al 911',
-        fine = '???'
+        fine = 'Multa a una persona'
     },
     progressbar = {
         blood_clear = 'Limpiar la sangre ...',
