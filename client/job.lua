@@ -489,7 +489,7 @@ RegisterNetEvent('qb-police:client:openArmoury', function()
     TriggerServerEvent("inventory:server:OpenInventory", "shop", "police", authorizedItems)
 end)
 
-RegisterNetEvent('qb-police:client:spawnHelicopter', function(k)
+RegisterNetEvent('qb-police:client:spawnHelicopter', function()
     if IsPedInAnyVehicle(PlayerPedId(), false) then
         QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
     else
