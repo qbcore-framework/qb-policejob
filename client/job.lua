@@ -494,7 +494,7 @@ RegisterNetEvent('qb-police:client:spawnHelicopter', function(k)
         QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
     else
         local coords = GetEntityCoords(PlayerPedId())
-        for k, v in pairs(Config.Locations["helicopter"]) do
+        for _, v in pairs(Config.Locations["helicopter"]) do
             if #(vector3(v.x, v.y, v.z) - coords) <= 5 then
                 coords = v
             end
