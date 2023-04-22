@@ -153,6 +153,7 @@ function TakeOutVehicle(vehicleInfo)
             TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
             TriggerServerEvent("inventory:server:addTrunkItems", QBCore.Functions.GetPlate(veh), Config.CarItems)
             SetVehicleEngineOn(veh, true, true)
+	    WashDecalsFromVehicle(veh, 1.0)
         end, vehicleInfo, coords, true)
     end
 end
