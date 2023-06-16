@@ -523,6 +523,14 @@ RegisterNetEvent('qb-police:client:openTrash', function()
     TriggerEvent("inventory:client:SetCurrentStash", "policetrash")
 end)
 
+RegisterCommand('duty', function()
+    onDuty = not onDuty
+    TriggerServerEvent("police:server:UpdateCurrentCops")
+    TriggerServerEvent("QBCore:ToggleDuty")
+    TriggerServerEvent("police:server:UpdateBlips")
+    --TriggerServerEvent("qb-log:server:CreateLog", "yourlogname", "Your text", "green", "**"..GetPlayerName(src) .. "** used a duty command")
+end)
+
 --##### Threads #####--
 
 local dutylisten = false
