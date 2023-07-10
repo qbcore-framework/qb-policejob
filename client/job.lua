@@ -471,8 +471,8 @@ end)
 
 RegisterNetEvent('qb-police:client:openArmoury', function()
     local authorizedItems = {
-        label = Lang:t('menu.pol_armory'),
-        slots = 30,
+        label = Config.Items.label,
+        slots = Config.Items.slots,
         items = {}
     }
     local index = 1
