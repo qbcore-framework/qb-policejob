@@ -26,7 +26,10 @@ local Translations = {
         no_driver_license = 'Pas de permis de conduire',
         not_cuffed_dead = 'Le civil n\'est pas menotté ou mort.',
         fine_yourself = '???',
-        not_online = "???"
+        not_online = "???",
+        no_object = "Aucun objet à supprimer à proximité.",
+        far_away = "L'objet est trop loin.",
+        does_no_exist = "Objet inexistant"
     },
     success = {
         uncuffed = 'Vous avez été démenotté!',
