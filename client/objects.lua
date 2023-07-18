@@ -156,7 +156,9 @@ end)
 
 RegisterNetEvent('police:client:deleteObject', function()
     local objectId, dist = GetClosestPoliceObject()
-    if dist < 5.0 then
+    if objectId == nil then
+        QBCore.Functions.Notify(Lang:t("error.no_object"), "error")
+    elseif dist < 5.0 then
         QBCore.Functions.Progressbar("remove_object", Lang:t('progressbar.remove_object'), 2500, false, true, {
             disableMovement = true,
             disableCarMovement = true,
@@ -173,13 +175,19 @@ RegisterNetEvent('police:client:deleteObject', function()
             StopAnimTask(PlayerPedId(), "weapons@first_person@aim_rng@generic@projectile@thermal_charge@", "plant_floor", 1.0)
             QBCore.Functions.Notify(Lang:t("error.canceled"), "error")
         end)
+    else
+        QBCore.Functions.Notify(Lang:t("error.far_away"), "error")
     end
 end)
 
 RegisterNetEvent('police:client:removeObject', function(objectId)
-    NetworkRequestControlOfEntity(ObjectList[objectId].object)
-    DeleteObject(ObjectList[objectId].object)
-    ObjectList[objectId] = nil
+    if ObjectList[objectId] == nil then
+        QBCore.Functions.Notify(Lang:t("error.does_no_exist"), "error")
+    else
+        NetworkRequestControlOfEntity(ObjectList[objectId].object)
+        DeleteObject(ObjectList[objectId].object)
+        ObjectList[objectId] = nil
+    end
 end)
 
 RegisterNetEvent('police:client:spawnObject', function(objectId, type, player)
