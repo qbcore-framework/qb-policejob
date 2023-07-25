@@ -15,11 +15,11 @@ const CameraApp = new Vue({
     methods: {
         OpenCameras(label, connected, cameraId, time) {
             var today = new Date();
-            var date = today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+            var date = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
             var formatTime = "00:" + time
 
             this.camerasOpen = true;
-            this.ipLabel = "145.101.0."+cameraId;
+            this.ipLabel = "145.101.0." + cameraId;
             if (connected) {
                 $("#blockscreen").css("display", "none");
                 this.cameraLabel = label;
@@ -39,7 +39,7 @@ const CameraApp = new Vue({
                 $("#connectedlabel").removeClass("connect");
                 $("#connectedlabel").addClass("disconnect");
             }
-            
+
         },
 
         CloseCameras() {
@@ -62,16 +62,16 @@ HeliCam = {}
 Databank = {}
 Fingerprint = {}
 
-HeliCam.Open = function(data) {
+HeliCam.Open = function (data) {
     $("#helicontainer").css("display", "block");
     $(".scanBar").css("height", "0%");
 }
 
-HeliCam.UpdateScan = function(data) {
-    $(".scanBar").css("height", data.scanvalue +"%");
+HeliCam.UpdateScan = function (data) {
+    $(".scanBar").css("height", data.scanvalue + "%");
 }
 
-HeliCam.UpdateVehicleInfo = function(data) {
+HeliCam.UpdateVehicleInfo = function (data) {
     $(".vehicleinfo").css("display", "block");
     $(".scanBar").css("height", "100%");
     $(".heli-model").find("p").html("MODEL: " + data.model);
@@ -80,24 +80,24 @@ HeliCam.UpdateVehicleInfo = function(data) {
     $(".heli-speed").find("p").html(data.speed + " KM/U");
 }
 
-HeliCam.DisableVehicleInfo = function() {
+HeliCam.DisableVehicleInfo = function () {
     $(".vehicleinfo").css("display", "none");
 }
 
-HeliCam.Close = function() {
+HeliCam.Close = function () {
     $("#helicontainer").css("display", "none");
     $(".vehicleinfo").css("display", "none");
     $(".scanBar").css("height", "0%");
 }
 
-Databank.Open = function() {
+Databank.Open = function () {
     $(".databank-container").css("display", "block").css("user-select", "none");
     $(".databank-container iframe").css("display", "block");
     $(".tablet-frame").css("display", "block").css("user-select", "none");
     $(".databank-bg").css("display", "block");
 }
 
-Databank.Close = function() {
+Databank.Close = function () {
     $(".databank-container iframe").css("display", "none");
     $(".databank-container").css("display", "none");
     $(".tablet-frame").css("display", "none");
@@ -105,27 +105,29 @@ Databank.Close = function() {
     $.post("https://qb-policejob/closeDatabank", JSON.stringify({}));
 }
 
-Fingerprint.Open = function() {
+Fingerprint.Open = function () {
     $(".fingerprint-container").fadeIn(150);
     $(".fingerprint-id").html("Fingerprint ID<p>No result</p>");
+    $(".fingerprint-lname").html("Name<p>No result</p>");
 }
 
-Fingerprint.Close = function() {
+Fingerprint.Close = function () {
     $(".fingerprint-container").fadeOut(150);
     $.post('https://qb-policejob/closeFingerprint');
 }
 
-Fingerprint.Update = function(data) {
-    $(".fingerprint-id").html("Fingerprint ID<p>"+data.fingerprintId+"</p>");
+Fingerprint.Update = function (data) {
+    $(".fingerprint-id").html("Fingerprint ID<p>" + data.fingerprintId + "</p>");
+    $(".fingerprint-lname").html("Name<p>" + data.name + "</p>");
 }
 
-$(document).on('click', '.take-fingerprint', function(){
+$(document).on('click', '.take-fingerprint', function () {
     $.post('https://qb-policejob/doFingerScan');
 })
 
 document.onreadystatechange = () => {
     if (document.readyState === "complete") {
-        window.addEventListener('message', function(event) {
+        window.addEventListener('message', function (event) {
 
             if (event.data.type == "enablecam") {
                 CameraApp.OpenCameras(event.data.label, event.data.connected, event.data.id, event.data.time);
@@ -160,8 +162,8 @@ document.onreadystatechange = () => {
     };
 };
 
-$(document).on('keydown', function() {
-    switch(event.keyCode) {
+$(document).on('keydown', function () {
+    switch (event.keyCode) {
         case 27: // ESC
             Databank.Close();
             Fingerprint.Close();
