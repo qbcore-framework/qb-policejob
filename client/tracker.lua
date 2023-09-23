@@ -44,7 +44,7 @@ RegisterNetEvent('police:client:TrackerMessage', function(msg, coords)
     SetBlipAlpha(blip, transG)
     SetBlipScale(blip, 1.0)
     BeginTextCommandSetBlipName('STRING')
-    AddTextComponentString(Lang:t('info.ankle_location'))
+    AddTextComponentSubstringPlayerName(Lang:t('info.ankle_location'))
     EndTextCommandSetBlipName(blip)
     while transG ~= 0 do
         Wait(180 * 4)

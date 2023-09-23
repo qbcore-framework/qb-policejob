@@ -27,7 +27,7 @@ local function CreateDutyBlips(playerId, playerLabel, playerJob, playerLocation)
         end
         SetBlipAsShortRange(blip, true)
         BeginTextCommandSetBlipName('STRING')
-        AddTextComponentString(playerLabel)
+        AddTextComponentSubstringPlayerName(playerLabel)
         EndTextCommandSetBlipName(blip)
         DutyBlips[#DutyBlips+1] = blip
     end
@@ -172,7 +172,7 @@ RegisterNetEvent('police:client:policeAlert', function(coords, text)
     SetBlipAsShortRange(blip2, false)
     PulseBlip(blip2)
     BeginTextCommandSetBlipName('STRING')
-    AddTextComponentString(blipText)
+    AddTextComponentSubstringPlayerName(blipText)
     EndTextCommandSetBlipName(blip)
     while transG ~= 0 do
         Wait(180 * 4)
@@ -210,7 +210,7 @@ CreateThread(function()
         SetBlipScale(blip, 0.8)
         SetBlipColour(blip, 29)
         BeginTextCommandSetBlipName("STRING")
-        AddTextComponentString(station.label)
+        AddTextComponentSubstringPlayerName(station.label)
         EndTextCommandSetBlipName(blip)
     end
 end)
