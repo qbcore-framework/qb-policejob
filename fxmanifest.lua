@@ -1,14 +1,14 @@
 fx_version 'cerulean'
 game 'gta5'
-
+lua54 'yes'
 description 'QB-PoliceJob'
-version '1.2.5'
+version '1.3.5'
 
 shared_scripts {
-    'config.lua',
-    '@qb-core/shared/locale.lua',
-    'locales/en.lua',
-    'locales/*.lua'
+	'config.lua',
+	'@qb-core/shared/locale.lua',
+	'locales/en.lua',
+	'locales/*.lua'
 }
 
 client_scripts {
@@ -42,5 +42,3 @@ files {
 	'html/main.css',
 	'html/vcr-ocd.ttf'
 }
-
-lua54 'yes'

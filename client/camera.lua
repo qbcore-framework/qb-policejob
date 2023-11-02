@@ -10,7 +10,7 @@ local function GetCurrentTime()
     if minutes < 10 then
         minutes = tostring(0 .. GetClockMinutes())
     end
-    return tostring(hours .. ":" .. minutes)
+    return tostring(hours .. ':' .. minutes)
 end
 
 local function ChangeSecurityCamera(x, y, z, r)
@@ -19,7 +19,7 @@ local function ChangeSecurityCamera(x, y, z, r)
         createdCamera = 0
     end
 
-    local cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", 1)
+    local cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', 1)
     SetCamCoord(cam, x, y, z)
     SetCamRot(cam, r.x, r.y, r.z, 2)
     RenderScriptCams(1, 0, 0, 1, 1)
@@ -31,7 +31,7 @@ local function CloseSecurityCamera()
     DestroyCam(createdCamera, 0)
     RenderScriptCams(0, 0, 1, 1, 1)
     createdCamera = 0
-    ClearTimecycleModifier("scanline_cam_cheap")
+    ClearTimecycleModifier('scanline_cam_cheap')
     SetFocusEntity(GetPlayerPed(PlayerId()))
     if Config.SecurityCameras.hideradar then
         DisplayRadar(true)
@@ -44,7 +44,7 @@ local function InstructionButton(ControlButton)
 end
 
 local function InstructionButtonMessage(text)
-    BeginTextCommandScaleformString("STRING")
+    BeginTextCommandScaleformString('STRING')
     AddTextComponentScaleform(text)
     EndTextCommandScaleformString()
 end
@@ -54,23 +54,23 @@ local function CreateInstuctionScaleform(scaleform)
     while not HasScaleformMovieLoaded(scaleform) do
         Wait(0)
     end
-    PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
+    PushScaleformMovieFunction(scaleform, 'CLEAR_ALL')
     PopScaleformMovieFunctionVoid()
 
-    PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
+    PushScaleformMovieFunction(scaleform, 'SET_CLEAR_SPACE')
     PushScaleformMovieFunctionParameterInt(200)
     PopScaleformMovieFunctionVoid()
 
-    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunction(scaleform, 'SET_DATA_SLOT')
     PushScaleformMovieFunctionParameterInt(1)
     InstructionButton(GetControlInstructionalButton(1, 194, true))
     InstructionButtonMessage(Lang:t('info.close_camera'))
     PopScaleformMovieFunctionVoid()
 
-    PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
+    PushScaleformMovieFunction(scaleform, 'DRAW_INSTRUCTIONAL_BUTTONS')
     PopScaleformMovieFunctionVoid()
 
-    PushScaleformMovieFunction(scaleform, "SET_BACKGROUND_COLOUR")
+    PushScaleformMovieFunction(scaleform, 'SET_BACKGROUND_COLOUR')
     PushScaleformMovieFunctionParameterInt(0)
     PushScaleformMovieFunctionParameterInt(0)
     PushScaleformMovieFunctionParameterInt(0)
@@ -88,7 +88,7 @@ RegisterNetEvent('police:client:ActiveCamera', function(cameraId)
             Wait(0)
         end
         SendNUIMessage({
-            type = "enablecam",
+            type = 'enablecam',
             label = Config.SecurityCameras.cameras[cameraId].label,
             id = cameraId,
             connected = Config.SecurityCameras.cameras[cameraId].isOnline,
@@ -109,11 +109,11 @@ RegisterNetEvent('police:client:ActiveCamera', function(cameraId)
         end
         CloseSecurityCamera()
         SendNUIMessage({
-            type = "disablecam",
+            type = 'disablecam',
         })
         DoScreenFadeIn(250)
     else
-        QBCore.Functions.Notify(Lang:t("error.no_camera"), "error")
+        QBCore.Functions.Notify(Lang:t('error.no_camera'), 'error')
     end
 end)
 
@@ -147,9 +147,9 @@ CreateThread(function()
         local sleep = 2000
         if createdCamera ~= 0 then
             sleep = 5
-            local instructions = CreateInstuctionScaleform("instructional_buttons")
+            local instructions = CreateInstuctionScaleform('instructional_buttons')
             DrawScaleformMovieFullscreen(instructions, 255, 255, 255, 255, 0)
-            SetTimecycleModifier("scanline_cam_cheap")
+            SetTimecycleModifier('scanline_cam_cheap')
             SetTimecycleModifierStrength(1.0)
 
             if Config.SecurityCameras.hideradar then
@@ -164,7 +164,7 @@ CreateThread(function()
                 end
                 CloseSecurityCamera()
                 SendNUIMessage({
-                    type = "disablecam",
+                    type = 'disablecam',
                 })
                 DoScreenFadeIn(250)
             end
