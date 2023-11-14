@@ -801,7 +801,7 @@ if Config.UseTarget then
                         event = 'qb-policejob:client:EvidenceStashDrawer',
                         icon = 'fas fa-dungeon',
                         label = 'Open Evidence Stash',
-                        job = 'leo',
+                        jobType = 'leo',
                     },
                 },
                 distance = 1.5
