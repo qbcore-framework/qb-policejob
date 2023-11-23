@@ -766,7 +766,7 @@ RegisterNetEvent('police:server:BillPlayer', function(playerId, price)
     if not Player or not OtherPlayer or Player.PlayerData.job.name ~= 'police' then return end
 
     OtherPlayer.Functions.RemoveMoney('bank', price, 'paid-bills')
-    exports['qb-banking']:AddMoney('police', price)
+    exports['qb-banking']:AddMoney('police', price, 'Fine paid')
     TriggerClientEvent('QBCore:Notify', OtherPlayer.PlayerData.source, Lang:t('info.fine_received', { fine = price }))
 end)
 
