@@ -84,6 +84,7 @@ local Translations = {
         amount = 'السعر',
         police_plate = 'LSPD', --Should only be 4 characters long
         vehicle_info = 'المحرك: %{value} % | البنزين: %{value2} %',
+        evidence_stash_prompt = 'خزنة الأدلة',
         evidence_stash = 'خزنة الأدلة | %{value}',
         slot = '(1,2,3)',
         current_evidence = '%{value} | الدرج %{value2}',

@@ -84,6 +84,7 @@ local Translations = {
         amount = 'จำนวน',
         police_plate = 'LSPD', --Should only be 4 characters long
         vehicle_info = 'เครื่องยนต์: %{value} % | น้ำมัน: %{value2} %',
+        evidence_stash_prompt = 'หลักฐานที่รวบรวมไว้',
         evidence_stash = 'หลักฐานที่รวบรวมไว้ | %{value}',
         slot = 'เลขที่ช่อง. (1,2,3)',
         current_evidence = '%{value} | ลิ้นชัก %{value2}',

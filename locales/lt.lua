@@ -84,6 +84,7 @@ local Translations = {
         amount = 'Suma',
         police_plate = 'LSPD', --Should only be 4 characters long
         vehicle_info = 'Variklis: %{value} % | Kuras: %{value2} %',
+        evidence_stash_prompt = 'Įkalčių saugykla',
         evidence_stash = 'Įkalčių saugykla | %{value}',
         slot = 'Lentynos nr. (1,2,3)',
         current_evidence = '%{value} | Lentyna %{value2}',

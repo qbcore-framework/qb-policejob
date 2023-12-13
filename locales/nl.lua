@@ -84,6 +84,7 @@ local Translations = {
     amount = 'Bedrag',
     police_plate = 'LSPD', -- Moet slechts 4 tekens lang zijn
     vehicle_info = 'Motor: %{value} % | Brandstof: %{value2} %',
+    evidence_stash_prompt = 'Bewijsopslag',
     evidence_stash = 'Bewijsopslag | %{value}',
     slot = 'Slot nr. (1, 2, 3)',
     current_evidence = '%{value} | Lade %{value2}',

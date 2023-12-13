@@ -959,7 +959,7 @@ else
         if isPointInside then
             inEvidence = true
             if PlayerJob.type == 'leo' and PlayerJob.onduty then
-                exports['qb-core']:DrawText(Lang:t('info.evidence_stash'), 'left')
+                exports['qb-core']:DrawText(Lang:t('info.evidence_stash_prompt'), 'left')
                 evidence()
             end
         else

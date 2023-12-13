@@ -83,6 +83,7 @@ local Translations = {
         amount = 'Čiastka',
         police_plate = 'PD', --Should only be 4 characters long
         vehicle_info = 'Motor: %{value} % | Palivo: %{value2} %',
+        evidence_stash_prompt = 'Úložisko pre Dôkazy',
         evidence_stash = 'Úložisko pre Dôkazy | %{value}',
         slot = 'Priestor č. (1,2,3)',
         current_evidence = '%{value} | Zásuvka %{value2}',

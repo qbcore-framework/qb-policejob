@@ -84,6 +84,7 @@ local Translations = {
         amount = 'Betrag',
         police_plate = 'HCPD', --Should only be 4 characters long
         vehicle_info = 'Motor: %{value} % | Tank: %{value2} %',
+        evidence_stash_prompt = 'BeweisStash',
         evidence_stash = 'BeweisStash | %{value}',
         slot = 'Lade-Nr. (1,2,3)',
         current_evidence = '%{value} | Lade %{value2}',
