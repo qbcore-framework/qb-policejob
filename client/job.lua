@@ -618,7 +618,7 @@ local function evidence()
             if inEvidence and PlayerJob.type == 'leo' then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsControlJustReleased(0, 38) then
-                    TriggerEvent('qb-policejob:client:EvidenceStashDrawer')
+                    TriggerEvent('police:client:EvidenceStashDrawer')
                     break
                 end
             else
@@ -798,7 +798,7 @@ if Config.UseTarget then
                 options = {
                     {
                         type = 'client',
-                        event = 'qb-policejob:client:EvidenceStashDrawer',
+                        event = 'police:client:EvidenceStashDrawer',
                         icon = 'fas fa-dungeon',
                         label = 'Open Evidence Stash',
                         jobType = 'leo',
