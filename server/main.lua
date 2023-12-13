@@ -472,7 +472,7 @@ QBCore.Commands.Add('takedna', Lang:t('commands.takedna'), { { name = 'id', help
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local OtherPlayer = QBCore.Functions.GetPlayer(tonumber(args[1]))
-    if not OtherPlayer or Player.PlayerData.job.name ~= 'police' or not Player.PlayerData.job.onduty then return end
+    if not OtherPlayer or Player.PlayerData.job.type ~= 'leo' or not Player.PlayerData.job.onduty then return end
     if Player.Functions.RemoveItem('empty_evidence_bag', 1) then
         local info = {
             label = Lang:t('info.dna_sample'),
@@ -673,7 +673,7 @@ RegisterNetEvent('police:server:CuffPlayer', function(playerId, isSoftcuff)
 
     local Player = QBCore.Functions.GetPlayer(src)
     local CuffedPlayer = QBCore.Functions.GetPlayer(playerId)
-    if not Player or not CuffedPlayer or (not Player.Functions.GetItemByName('handcuffs') and Player.PlayerData.job.name ~= 'police') then return end
+    if not Player or not CuffedPlayer or (not Player.Functions.GetItemByName('handcuffs') and Player.PlayerData.job.type ~= 'leo') then return end
 
     TriggerClientEvent('police:client:GetCuffed', CuffedPlayer.PlayerData.source, Player.PlayerData.source, isSoftcuff)
 end)
@@ -763,7 +763,7 @@ RegisterNetEvent('police:server:BillPlayer', function(playerId, price)
 
     local Player = QBCore.Functions.GetPlayer(src)
     local OtherPlayer = QBCore.Functions.GetPlayer(playerId)
-    if not Player or not OtherPlayer or Player.PlayerData.job.name ~= 'police' then return end
+    if not Player or not OtherPlayer or Player.PlayerData.job.type ~= 'leo' then return end
 
     OtherPlayer.Functions.RemoveMoney('bank', price, 'paid-bills')
     exports['qb-banking']:AddMoney('police', price, 'Fine paid')
@@ -780,7 +780,7 @@ RegisterNetEvent('police:server:JailPlayer', function(playerId, time)
 
     local Player = QBCore.Functions.GetPlayer(src)
     local OtherPlayer = QBCore.Functions.GetPlayer(playerId)
-    if not Player or not OtherPlayer or Player.PlayerData.job.name ~= 'police' then return end
+    if not Player or not OtherPlayer or Player.PlayerData.job.type ~= 'leo' then return end
 
     local currentDate = os.date('*t')
     if currentDate.day == 31 then
