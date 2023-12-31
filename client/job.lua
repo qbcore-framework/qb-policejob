@@ -401,7 +401,6 @@ RegisterNetEvent('police:client:EvidenceStashDrawer', function()
             currentEvidence = k
         end
     end
-    local pos = GetEntityCoords(PlayerPedId())
     local takeLoc = Config.Locations['evidence'][currentEvidence]
 
     if not takeLoc then return end
@@ -461,7 +460,7 @@ RegisterNetEvent('qb-police:client:openArmoury', function()
                         price = item.price,
                         amount = item.amount,
                         info = item.info or {},
-                        type = itemType,
+                        type = itemInfo.type,
                         slot = #authorizedItemsList + 1
                     }
                 end
