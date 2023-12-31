@@ -84,6 +84,7 @@ local Translations = {
         amount = 'Paljonko',
         police_plate = 'POLI', --Should only be 4 characters long
         vehicle_info = 'Moottori: %{value} % | Bensa: %{value2} %',
+        evidence_stash_prompt = 'Todisteet',
         evidence_stash = 'Todisteet | %{value}',
         slot = 'Kolikkopelin numero. (1,2,3)',
         current_evidence = '%{value} | Laatikko %{value2}',

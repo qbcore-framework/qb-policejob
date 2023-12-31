@@ -84,6 +84,7 @@ local Translations = {
         amount = 'Tutar',
         police_plate = 'LSPD', --Should only be 4 characters long
         vehicle_info = 'Motor: %{value} % | Yakıt: %{value2} %',
+        evidence_stash_prompt = 'Kanıt Zulası',
         evidence_stash = 'Kanıt Zulası | %{value}',
         slot = 'Yuva numarası (1,2,3)',
         current_evidence = '%{value} | Çekmece %{value2}',

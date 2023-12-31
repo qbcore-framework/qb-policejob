@@ -84,6 +84,7 @@ local Translations = {
         amount = 'Beløb',
         police_plate = 'DKPL', --Bør kun være 4 tegn langt
         vehicle_info = 'Motor: %{value} % | Brændstof: %{value2} %',
+        evidence_stash_prompt = 'Bevis Stash',
         evidence_stash = 'Bevis Stash | %{value}',
         slot = 'Slot nr. (1,2,3)',
         current_evidence = '%{value} | Skuffe %{value2}',
