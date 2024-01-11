@@ -128,8 +128,9 @@ function TakeOutImpound(vehicle)
                 closeMenuFull()
                 TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
                 TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
-                SetVehicleEngineOn(veh, true, true)
+                SetVehicleEngineOn(veh, true, true, true)
             end, vehicle.plate)
+
         end, vehicle.vehicle, coords, true)
     end
 end
