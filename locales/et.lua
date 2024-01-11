@@ -84,6 +84,7 @@ local Translations = {
         amount = 'Kogus',
         police_plate = 'LSPD', --Should only be 4 characters long
         vehicle_info = 'Mootor: %{value} % | Kütus: %{value2} %',
+        evidence_stash_prompt = 'Asitõendid',
         evidence_stash = 'Asitõendid | %{value}',
         slot = 'Riiul no. (1,2,3)',
         current_evidence = '%{value} | Sahtel %{value2}',

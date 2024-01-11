@@ -84,6 +84,7 @@ local Translations = {
         amount = 'Montant',
         police_plate = 'LSPD', --Should only be 4 characters long
         vehicle_info = 'Moteur: %{value} % | Essence: %{value2} %',
+        evidence_stash_prompt = 'Coffre des Preuves',
         evidence_stash = 'Coffre des Preuves | %{value}',
         slot = 'Emplacement N° (1,2,3)',
         current_evidence = '%{value} | Tirroir %{value2}',

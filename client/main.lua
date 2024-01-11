@@ -77,7 +77,7 @@ AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
         TriggerEvent('qb-clothing:client:loadOutfit', trackerClothingData)
     end
 
-    if PlayerJob and PlayerJob.name ~= 'police' then
+    if PlayerJob and PlayerJob.type ~= 'leo' then
         if DutyBlips then
             for _, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -109,7 +109,7 @@ RegisterNetEvent('QBCore:Client:SetDuty', function(newDuty)
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    if JobInfo.name ~= 'police' then
+    if JobInfo.type ~= 'leo' then
         if DutyBlips then
             for _, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -139,7 +139,7 @@ end)
 
 RegisterNetEvent('police:client:UpdateBlips', function(players)
     if PlayerJob and (PlayerJob.type == 'leo' or PlayerJob.type == 'ems') and
-        PlayerJob.onduty then
+            PlayerJob.onduty then
         if DutyBlips then
             for _, v in pairs(DutyBlips) do
                 RemoveBlip(v)
