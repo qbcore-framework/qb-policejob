@@ -116,7 +116,8 @@ local Translations = {
         new_call = 'Nova Chamada',
         officer_down = 'Oficial %{lastname} | %{callsign} Ferido',
         fine_issued = 'Multa foi emitida para o infrator com sucesso',
-        received_fine = 'A Central de Recuperação de Dívidas Estaduais recuperou automaticamente as multas pendentes...'
+        received_fine = 'A Central de Recuperação de Dívidas Estaduais recuperou automaticamente as multas pendentes...',
+        camera_speed= 'Camera do radar marcou o veículo #%{radarid}'
     },
     evidence = {
         red_hands = 'Mãos vermelhas',
@@ -188,6 +189,14 @@ local Translations = {
         remove_object = 'Removendo Objeto...',
         impound = 'Apreendendo Veículo...',
     },
+    target = {
+        sign_in = 'Entrada/Saída de serviço',
+        open_personal_stash = 'Abrir Compartimento Pessoal',
+        open_trash = 'Abrir Lixeira',
+        open_fingerprint = 'Abrir Impressão Digital',
+        open_armory = 'Abrir Arsenal',
+        open_evidence_stash = 'Abrir Esconderijo de Evidências',
+    }
 }
 
 
