@@ -232,8 +232,7 @@ QBCore.Commands.Add('unjail', Lang:t('commands.unjail_player'), { { name = 'id',
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player.PlayerData.job.type == 'leo' and Player.PlayerData.job.onduty then
-        local playerId = tonumber(args[1])
-        TriggerClientEvent('prison:client:UnjailPerson', playerId)
+        TriggerClientEvent('prison:client:UnjailPerson', tonumber(args[1]))
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t('error.on_duty_police_only'), 'error')
     end
@@ -658,7 +657,6 @@ RegisterNetEvent('police:server:TakeOutImpound', function(plate, garage)
     local playerCoords = GetEntityCoords(playerPed)
     local targetCoords = Config.Locations['impound'][garage]
     if #(playerCoords - targetCoords) > 10.0 then return DropPlayer(src, 'Attempted exploit abuse') end
-
     MySQL.update('UPDATE player_vehicles SET state = ? WHERE plate = ?', { 0, plate })
     TriggerClientEvent('QBCore:Notify', src, Lang:t('success.impound_vehicle_removed'), 'success')
 end)

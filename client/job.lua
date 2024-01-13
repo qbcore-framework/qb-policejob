@@ -128,8 +128,9 @@ function TakeOutImpound(vehicle)
                 closeMenuFull()
                 TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
                 TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
-                SetVehicleEngineOn(veh, true, true)
+                SetVehicleEngineOn(veh, true, true, true)
             end, vehicle.plate)
+
         end, vehicle.vehicle, coords, true)
     end
 end
@@ -699,7 +700,7 @@ if Config.UseTarget then
                         type = 'client',
                         event = 'qb-policejob:ToggleDuty',
                         icon = 'fas fa-sign-in-alt',
-                        label = 'Sign In',
+                        label = Lang:t('target.sign_in'),
                         jobType = 'leo',
                     },
                 },
@@ -719,7 +720,7 @@ if Config.UseTarget then
                         type = 'client',
                         event = 'qb-police:client:openStash',
                         icon = 'fas fa-dungeon',
-                        label = 'Open Personal Stash',
+                        label = Lang:t('target.open_personal_stash'),
                         jobType = 'leo',
                     },
                 },
@@ -739,7 +740,7 @@ if Config.UseTarget then
                         type = 'client',
                         event = 'qb-police:client:openTrash',
                         icon = 'fas fa-trash',
-                        label = 'Open Trash',
+                        label = Lang:t('target.open_trash'),
                         jobType = 'leo',
                     },
                 },
@@ -759,7 +760,7 @@ if Config.UseTarget then
                         type = 'client',
                         event = 'qb-police:client:scanFingerPrint',
                         icon = 'fas fa-fingerprint',
-                        label = 'Open Fingerprint',
+                        label = Lang:t('target.open_fingerprint'),
                         jobType = 'leo',
                     },
                 },
@@ -779,7 +780,7 @@ if Config.UseTarget then
                         type = 'client',
                         event = 'qb-police:client:openArmoury',
                         icon = 'fas fa-gun',
-                        label = 'Open Armory',
+                        label = Lang:t('target.open_armory'),
                         jobType = 'leo',
                     },
                 },
@@ -799,7 +800,7 @@ if Config.UseTarget then
                         type = 'client',
                         event = 'police:client:EvidenceStashDrawer',
                         icon = 'fas fa-dungeon',
-                        label = 'Open Evidence Stash',
+                        label = Lang:t('target.open_evidence_stash'),
                         jobType = 'leo',
                     },
                 },

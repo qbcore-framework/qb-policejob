@@ -27,7 +27,7 @@ local function HandleSpeedCam(speedCam, radarID)
 						sprite = 488,
 						color = 1,
 						scale = 0.9,
-						text = 'Speed camera #' .. radarID .. ' - Marked vehicle'
+						text = Lang:t('info.camera_speed', { radarid = radarID})
 					}
 					local street1, street2 = table.unpack(GetStreetNameAtCoord(coords.x, coords.y, coords.z))
 					TriggerServerEvent('police:server:FlaggedPlateTriggered', radarID, plate, street1, street2, blipsettings)
