@@ -1,7 +1,8 @@
 fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
-description 'QB-PoliceJob'
+author 'Kakarot'
+description 'Provides police tools, evidence, job and more functionality for players to use as a cop'
 version '1.3.5'
 
 shared_scripts {
