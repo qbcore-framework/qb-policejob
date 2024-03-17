@@ -95,6 +95,17 @@ Police Job for QB-Core Framework :police_officer:
 
 # Additional Commands
 - /pboat - Spawn a police boat
+<details>
+  <summary>Click to Expand - Add to '''qb-radialmenu/config.lua'''</summary>
+{
+            id = 'pboat',
+            title = 'Police Boat',
+            icon = 'ship',
+            type = 'command',
+            event = 'pboat',
+            shouldClose = true
+        },
+</details>
 
 ## Installation
 ### Manual
