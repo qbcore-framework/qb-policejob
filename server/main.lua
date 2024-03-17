@@ -1115,22 +1115,21 @@ end)
 TriggerEvent('QBCore:GetObject', function(obj) QBCore = obj end)
 
 RegisterCommand('pboat', function(source, args, rawCommand)
-    local boatModel = args[1] -- Assuming the first argument is the boat model
-    if boatModel and Config.AllowedBoats[boatModel] then
-        TriggerClientEvent('policejob:checkProximityToWater', source, boatModel)
-    else
-        TriggerClientEvent('QBCore:Notify', source, 'Invalid or unspecified boat model.', 'error')
+    local Player = QBCore.Functions.GetPlayer(source)
+    if Player then
+        local playerJob = Player.PlayerData.job.name
+        if playerJob == 'police' then
+            TriggerClientEvent('policejob:checkProximityToWater', source)
+        else
+            TriggerClientEvent('QBCore:Notify', source, 'You do not have the required job to do this.', 'error')
+        end
     end
 end, false)
 
-RegisterNetEvent('policejob:spawnVehicleForPlayer', function(vehicleName)
+RegisterNetEvent('policejob:spawnVehicleForPlayer', function()
     local source = source
     local Player = QBCore.Functions.GetPlayer(source)
     if Player then
-        if Config.AllowedBoats[vehicleName] then
-            TriggerClientEvent('policejob:pboat', source, vehicleName)
-        else
-            TriggerClientEvent('QBCore:Notify', source, 'This boat cannot be spawned.', 'error')
-        end
+        TriggerClientEvent('policejob:pboat', source, 'predator') -- Replace 'predator' with the name of the vehicle you want to spawn
     end
 end)
