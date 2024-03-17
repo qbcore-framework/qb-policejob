@@ -93,6 +93,9 @@ Police Job for QB-Core Framework :police_officer:
 - /takedrivinglicense - Takes the driving license from nearby player.
 - /takedna [id] - Takes a DNA sample from the player.
 
+# Additional Commands
+- /pboat - Spawn a police boat
+
 ## Installation
 ### Manual
 - Download the script and put it in the `[qb]` directory.
@@ -103,6 +106,8 @@ ensure qb-policejob
 ```
 
 ## Configuration
+<details>
+  <summary>Click to Expand - Config</summary>
 ```
 Config = {}
 
@@ -497,3 +502,4 @@ Config.Items = { -- Items to be displayed on Armory
     }
 }
 ```
+</details>

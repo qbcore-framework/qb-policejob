@@ -221,3 +221,28 @@ CreateThread(function()
         EndTextCommandSetBlipName(blip)
     end
 end)
+
+-- Spawn Police Boat
+RegisterNetEvent('policejob:checkProximityToWater', function()
+    local playerPed = PlayerPedId()
+    local playerCoords = GetEntityCoords(playerPed)
+    if IsEntityInWater(playerPed) then
+        TriggerServerEvent('policejob:spawnVehicleForPlayer')
+    else
+        QBCore.Functions.Notify('You need to be near water to do this.', 'error')
+    end
+end)
+
+RegisterNetEvent('policejob:pboat', function(vehicleName)
+    local playerPed = PlayerPedId()
+    local pos = GetEntityCoords(playerPed)
+    local vehicleHash = GetHashKey(vehicleName)
+
+    RequestModel(vehicleHash)
+    while not HasModelLoaded(vehicleHash) do
+        Wait(1)
+    end
+
+    local spawnedVehicle = CreateVehicle(vehicleHash, pos.x, pos.y, pos.z, GetEntityHeading(playerPed), true, false)
+    SetPedIntoVehicle(playerPed, spawnedVehicle, -1)
+end)
