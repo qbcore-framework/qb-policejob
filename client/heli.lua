@@ -9,20 +9,17 @@ local toggle_rappel = 154   -- control id to rappel out of the heli. Default: IN
 local toggle_spotlight = 74 -- control id to toggle the front spotlight Default: INPUT_VEH_HEADLIGHT (H)
 local toggle_lock_on = 22   -- control id to lock onto a vehicle with the camera. Default is INPUT_SPRINT (spacebar)
 local spotlight_state = false
-
--- Script starts here
 local helicam = false
 local fov = (fov_max + fov_min) * 0.5
 local vision_state = 0 -- 0 is normal, 1 is nightmode, 2 is thermal vision
-
 local isScanning = false
 local isScanned = false
 local scanValue = 0
-
 local vehicle_detected = nil
 local locked_on_vehicle = nil
 
 -- Functions
+
 local function IsPlayerInPolmav()
 	local lPed = PlayerPedId()
 	local vehicle = GetVehiclePedIsIn(lPed)
