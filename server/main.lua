@@ -680,11 +680,11 @@ RegisterNetEvent('police:server:SearchPlayer', function()
     if not Player then return end
     local PlayerData = Player.PlayerData
     if PlayerData.job.type ~= 'leo' then return end
-    local player, distance = QBCore.Functions.GetClosestPlayer()
+    local player, distance = QBCore.Functions.GetClosestPlayer(src)
     if player ~= -1 and distance < 2.5 then
         local SearchedPlayer = QBCore.Functions.GetPlayer(player)
         if not SearchedPlayer then return end
-        exports['qb-inventory']:OpenInventoryById(src, playerId)
+        exports['qb-inventory']:OpenInventoryById(src, player)
         TriggerClientEvent('QBCore:Notify', src, Lang:t('info.cash_found', { cash = SearchedPlayer.PlayerData.money['cash'] }))
         TriggerClientEvent('QBCore:Notify', player, Lang:t('info.being_searched'))
     else
