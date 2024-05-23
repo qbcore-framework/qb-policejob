@@ -139,7 +139,7 @@ end)
 
 RegisterNetEvent('police:client:UpdateBlips', function(players)
     if PlayerJob and (PlayerJob.type == 'leo' or PlayerJob.type == 'ems') and
-            PlayerJob.onduty then
+        PlayerJob.onduty then
         if DutyBlips then
             for _, v in pairs(DutyBlips) do
                 RemoveBlip(v)
@@ -210,7 +210,8 @@ end)
 
 -- Threads
 CreateThread(function()
-    for _, station in pairs(Config.Locations['stations']) do
+    for i = 1, #Config.Locations['stations'] do
+        local station = Config.Locations['stations'][i]
         local blip = AddBlipForCoord(station.coords.x, station.coords.y, station.coords.z)
         SetBlipSprite(blip, 60)
         SetBlipAsShortRange(blip, true)

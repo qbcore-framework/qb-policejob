@@ -27,7 +27,7 @@ local function HandleSpeedCam(speedCam, radarID)
 						sprite = 488,
 						color = 1,
 						scale = 0.9,
-						text = Lang:t('info.camera_speed', { radarid = radarID})
+						text = Lang:t('info.camera_speed', { radarid = radarID })
 					}
 					local street1, street2 = table.unpack(GetStreetNameAtCoord(coords.x, coords.y, coords.z))
 					TriggerServerEvent('police:server:FlaggedPlateTriggered', radarID, plate, street1, street2, blipsettings)
@@ -45,8 +45,9 @@ end
 CreateThread(function()
 	while true do
 		if IsPedInAnyVehicle(PlayerPedId(), false) then
-			for key, value in pairs(Config.Radars) do
-				HandleSpeedCam(value, key)
+			for i = 1, #Config.Radars do
+				local value = Config.Radars[i]
+				HandleSpeedCam(value, i)
 			end
 			Wait(200)
 		else

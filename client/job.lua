@@ -152,7 +152,6 @@ function TakeOutVehicle(vehicleInfo)
             end
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
             TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
-            TriggerServerEvent('inventory:server:addTrunkItems', QBCore.Functions.GetPlate(veh), Config.CarItems)
             SetVehicleEngineOn(veh, true, true)
         end, vehicleInfo, coords, true)
     end
@@ -394,9 +393,10 @@ end)
 RegisterNetEvent('police:client:EvidenceStashDrawer', function()
     local pos = GetEntityCoords(PlayerPedId())
     local currentEvidence = 0
-    for k, v in pairs(Config.Locations['evidence']) do
-        if #(pos - v) < 2 then
-            currentEvidence = k
+    for i = 1, #Config.Locations['evidence'] do
+        local v = Config.Locations['evidence'][i]
+        if #(pos - vector3(v.x, v.y, v.z)) < 2 then
+            currentEvidence = i
         end
     end
     local takeLoc = Config.Locations['evidence'][currentEvidence]
@@ -418,11 +418,7 @@ RegisterNetEvent('police:client:EvidenceStashDrawer', function()
         })
         if drawer then
             if not drawer.slot then return end
-            TriggerServerEvent('inventory:server:OpenInventory', 'stash', Lang:t('info.current_evidence', { value = currentEvidence, value2 = drawer.slot }), {
-                maxweight = 4000000,
-                slots = 500,
-            })
-            TriggerEvent('inventory:client:SetCurrentStash', Lang:t('info.current_evidence', { value = currentEvidence, value2 = drawer.slot }))
+            TriggerServerEvent('qb-policejob:server:evidence', Lang:t('info.current_evidence', { value = currentEvidence, value2 = drawer.slot }))
         end
     else
         exports['qb-menu']:closeMenu()
@@ -445,34 +441,6 @@ RegisterNetEvent('qb-police:client:scanFingerPrint', function()
     end
 end)
 
-RegisterNetEvent('qb-police:client:openArmoury', function()
-    local authorizedItemsList = {}
-    local playerGrade = PlayerJob.grade.level
-    for grade = 0, playerGrade do
-        if Config.Items[grade] then
-            for _, item in ipairs(Config.Items[grade]) do
-                local itemInfo = QBCore.Shared.Items[item.name]
-                if itemInfo then
-                    authorizedItemsList[#authorizedItemsList + 1] = {
-                        name = item.name,
-                        price = item.price,
-                        amount = item.amount,
-                        info = item.info or {},
-                        type = itemInfo.type,
-                        slot = #authorizedItemsList + 1
-                    }
-                end
-            end
-        end
-    end
-    local authorizedItems = {
-        label = 'Police Armory',
-        slots = #authorizedItemsList,
-        items = authorizedItemsList
-    }
-    TriggerServerEvent('inventory:server:OpenInventory', 'shop', 'police', authorizedItems)
-end)
-
 RegisterNetEvent('qb-police:client:spawnHelicopter', function(k)
     if IsPedInAnyVehicle(PlayerPedId(), false) then
         QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
@@ -492,19 +460,6 @@ RegisterNetEvent('qb-police:client:spawnHelicopter', function(k)
             SetVehicleEngineOn(veh, true, true)
         end, Config.PoliceHelicopter, coords, true)
     end
-end)
-
-RegisterNetEvent('qb-police:client:openStash', function()
-    TriggerServerEvent('inventory:server:OpenInventory', 'stash', 'policestash_' .. QBCore.Functions.GetPlayerData().citizenid)
-    TriggerEvent('inventory:client:SetCurrentStash', 'policestash_' .. QBCore.Functions.GetPlayerData().citizenid)
-end)
-
-RegisterNetEvent('qb-police:client:openTrash', function()
-    TriggerServerEvent('inventory:server:OpenInventory', 'stash', 'policetrash', {
-        maxweight = 4000000,
-        slots = 300,
-    })
-    TriggerEvent('inventory:client:SetCurrentStash', 'policetrash')
 end)
 
 --##### Threads #####--
@@ -538,8 +493,7 @@ local function stash()
             if inStash and PlayerJob.type == 'leo' then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsControlJustReleased(0, 38) then
-                    TriggerServerEvent('inventory:server:OpenInventory', 'stash', 'policestash_' .. QBCore.Functions.GetPlayerData().citizenid)
-                    TriggerEvent('inventory:client:SetCurrentStash', 'policestash_' .. QBCore.Functions.GetPlayerData().citizenid)
+                    TriggerServerEvent('qb-policejob:server:stash')
                     break
                 end
             else
@@ -557,11 +511,7 @@ local function trash()
             if inTrash and PlayerJob.type == 'leo' then
                 if PlayerJob.onduty then sleep = 5 end
                 if IsControlJustReleased(0, 38) then
-                    TriggerServerEvent('inventory:server:OpenInventory', 'stash', 'policetrash', {
-                        maxweight = 4000000,
-                        slots = 300,
-                    })
-                    TriggerEvent('inventory:client:SetCurrentStash', 'policetrash')
+                    TriggerServerEvent('qb-policejob:server:trash')
                     break
                 end
             else
@@ -580,24 +530,6 @@ local function fingerprint()
                 if PlayerJob.onduty then sleep = 5 end
                 if IsControlJustReleased(0, 38) then
                     TriggerEvent('qb-police:client:scanFingerPrint')
-                    break
-                end
-            else
-                break
-            end
-        end
-    end)
-end
-
--- Armoury Thread
-local function armoury()
-    CreateThread(function()
-        while true do
-            Wait(0)
-            if inArmoury and PlayerJob.type == 'leo' then
-                if PlayerJob.onduty then sleep = 5 end
-                if IsControlJustReleased(0, 38) then
-                    TriggerEvent('qb-police:client:openArmoury')
                     break
                 end
             else
@@ -686,9 +618,10 @@ end
 if Config.UseTarget then
     CreateThread(function()
         -- Toggle Duty
-        for k, v in pairs(Config.Locations['duty']) do
-            exports['qb-target']:AddCircleZone('PoliceDuty_' .. k, vector3(v.x, v.y, v.z), 0.5, {
-                name = 'PoliceDuty_' .. k,
+        for i = 1, #Config.Locations['duty'] do
+            local v = Config.Locations['duty'][i]
+            exports['qb-target']:AddCircleZone('PoliceDuty_' .. i, vector3(v.x, v.y, v.z), 0.5, {
+                name = 'PoliceDuty_' .. i,
                 useZ = true,
                 debugPoly = false,
             }, {
@@ -706,16 +639,17 @@ if Config.UseTarget then
         end
 
         -- Personal Stash
-        for k, v in pairs(Config.Locations['stash']) do
-            exports['qb-target']:AddCircleZone('PoliceStash_' .. k, vector3(v.x, v.y, v.z), 1.0, {
-                name = 'PoliceStash_' .. k,
+        for i = 1, #Config.Locations['stash'] do
+            local v = Config.Locations['stash'][i]
+            exports['qb-target']:AddCircleZone('PoliceStash_' .. i, vector3(v.x, v.y, v.z), 1.0, {
+                name = 'PoliceStash_' .. i,
                 useZ = true,
                 debugPoly = false,
             }, {
                 options = {
                     {
-                        type = 'client',
-                        event = 'qb-police:client:openStash',
+                        type = 'server',
+                        event = 'qb-policejob:server:stash',
                         icon = 'fas fa-dungeon',
                         label = Lang:t('target.open_personal_stash'),
                         jobType = 'leo',
@@ -726,16 +660,17 @@ if Config.UseTarget then
         end
 
         -- Police Trash
-        for k, v in pairs(Config.Locations['trash']) do
-            exports['qb-target']:AddCircleZone('PoliceTrash_' .. k, vector3(v.x, v.y, v.z), 0.5, {
-                name = 'PoliceTrash_' .. k,
+        for i = 1, #Config.Locations['trash'] do
+            local v = Config.Locations['trash'][i]
+            exports['qb-target']:AddCircleZone('PoliceTrash_' .. i, vector3(v.x, v.y, v.z), 0.5, {
+                name = 'PoliceTrash_' .. i,
                 useZ = true,
                 debugPoly = false,
             }, {
                 options = {
                     {
-                        type = 'client',
-                        event = 'qb-police:client:openTrash',
+                        type = 'server',
+                        event = 'qb-policejob:server:trash',
                         icon = 'fas fa-trash',
                         label = Lang:t('target.open_trash'),
                         jobType = 'leo',
@@ -746,9 +681,10 @@ if Config.UseTarget then
         end
 
         -- Fingerprint
-        for k, v in pairs(Config.Locations['fingerprint']) do
-            exports['qb-target']:AddCircleZone('PoliceFingerprint_' .. k, vector3(v.x, v.y, v.z), 0.5, {
-                name = 'PoliceFingerprint_' .. k,
+        for i = 1, #Config.Locations['fingerprint'] do
+            local v = Config.Locations['fingerprint'][i]
+            exports['qb-target']:AddCircleZone('PoliceFingerprint_' .. i, vector3(v.x, v.y, v.z), 0.5, {
+                name = 'PoliceFingerprint_' .. i,
                 useZ = true,
                 debugPoly = false,
             }, {
@@ -765,30 +701,11 @@ if Config.UseTarget then
             })
         end
 
-        -- Armoury
-        for k, v in pairs(Config.Locations['armory']) do
-            exports['qb-target']:AddCircleZone('PoliceArmory_' .. k, vector3(v.x, v.y, v.z), 1.0, {
-                name = 'PoliceArmory_' .. k,
-                useZ = true,
-                debugPoly = false,
-            }, {
-                options = {
-                    {
-                        type = 'client',
-                        event = 'qb-police:client:openArmoury',
-                        icon = 'fas fa-gun',
-                        label = Lang:t('target.open_armory'),
-                        jobType = 'leo',
-                    },
-                },
-                distance = 1.5
-            })
-        end
-
         -- Evidence
-        for k, v in pairs(Config.Locations['evidence']) do
-            exports['qb-target']:AddCircleZone('PoliceEvidence_' .. k, vector3(v.x, v.y, v.z), 0.5, {
-                name = 'PoliceEvidence_' .. k,
+        for i = 1, #Config.Locations['evidence'] do
+            local v = Config.Locations['evidence'][i]
+            exports['qb-target']:AddCircleZone('PoliceEvidence_' .. i, vector3(v.x, v.y, v.z), 0.5, {
+                name = 'PoliceEvidence_' .. i,
                 useZ = true,
                 debugPoly = false,
             }, {
@@ -808,9 +725,10 @@ if Config.UseTarget then
 else
     -- Toggle Duty
     local dutyZones = {}
-    for _, v in pairs(Config.Locations['duty']) do
+    for i = 1, #Config.Locations['duty'] do
+        local v = Config.Locations['duty'][i]
         dutyZones[#dutyZones + 1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1.75, 1, {
+            vector3(v.x, v.y, v.z), 1.75, 1, {
                 name = 'box_zone',
                 debugPoly = false,
                 minZ = v.z - 1,
@@ -837,9 +755,10 @@ else
 
     -- Personal Stash
     local stashZones = {}
-    for _, v in pairs(Config.Locations['stash']) do
+    for i = 1, #Config.Locations['stash'] do
+        local v = Config.Locations['stash'][i]
         stashZones[#stashZones + 1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1.5, 1.5, {
+            vector3(v.x, v.y, v.z), 1.5, 1.5, {
                 name = 'box_zone',
                 debugPoly = false,
                 minZ = v.z - 1,
@@ -863,9 +782,10 @@ else
 
     -- Police Trash
     local trashZones = {}
-    for _, v in pairs(Config.Locations['trash']) do
+    for i = 1, #Config.Locations['trash'] do
+        local v = Config.Locations['trash'][i]
         trashZones[#trashZones + 1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 1, 1.75, {
+            vector3(v.x, v.y, v.z), 1, 1.75, {
                 name = 'box_zone',
                 debugPoly = false,
                 minZ = v.z - 1,
@@ -889,9 +809,10 @@ else
 
     -- Fingerprints
     local fingerprintZones = {}
-    for _, v in pairs(Config.Locations['fingerprint']) do
+    for i = 1, #Config.Locations['fingerprint'] do
+        local v = Config.Locations['fingerprint'][i]
         fingerprintZones[#fingerprintZones + 1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 2, 1, {
+            vector3(v.x, v.y, v.z), 2, 1, {
                 name = 'box_zone',
                 debugPoly = false,
                 minZ = v.z - 1,
@@ -913,37 +834,12 @@ else
         end
     end)
 
-    -- Armoury
-    local armouryZones = {}
-    for _, v in pairs(Config.Locations['armory']) do
-        armouryZones[#armouryZones + 1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 5, 1, {
-                name = 'box_zone',
-                debugPoly = false,
-                minZ = v.z - 1,
-                maxZ = v.z + 1,
-            })
-    end
-
-    local armouryCombo = ComboZone:Create(armouryZones, { name = 'armouryCombo', debugPoly = false })
-    armouryCombo:onPlayerInOut(function(isPointInside)
-        if isPointInside then
-            inArmoury = true
-            if PlayerJob.type == 'leo' and PlayerJob.onduty then
-                exports['qb-core']:DrawText(Lang:t('info.enter_armory'), 'left')
-                armoury()
-            end
-        else
-            inArmoury = false
-            exports['qb-core']:HideText()
-        end
-    end)
-
     -- Evidence
     local evidenceZones = {}
-    for _, v in pairs(Config.Locations['evidence']) do
+    for i = 1, #Config.Locations['evidence'] do
+        local v = Config.Locations['evidence'][i]
         evidenceZones[#evidenceZones + 1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 2, 1, {
+            vector3(v.x, v.y, v.z), 2, 1, {
                 name = 'box_zone',
                 debugPoly = false,
                 minZ = v.z - 1,
@@ -969,9 +865,10 @@ end
 CreateThread(function()
     -- Helicopter
     local helicopterZones = {}
-    for _, v in pairs(Config.Locations['helicopter']) do
+    for i = 1, #Config.Locations['helicopter'] do
+        local v = Config.Locations['helicopter'][i]
         helicopterZones[#helicopterZones + 1] = BoxZone:Create(
-            vector3(vector3(v.x, v.y, v.z)), 10, 10, {
+            vector3(v.x, v.y, v.z), 10, 10, {
                 name = 'box_zone',
                 debugPoly = false,
                 minZ = v.z - 1,
@@ -1001,7 +898,8 @@ CreateThread(function()
 
     -- Police Impound
     local impoundZones = {}
-    for _, v in pairs(Config.Locations['impound']) do
+    for i = 1, #Config.Locations['impound'] do
+        local v = Config.Locations['impound'][i]
         impoundZones[#impoundZones + 1] = BoxZone:Create(
             vector3(v.x, v.y, v.z), 1, 1, {
                 name = 'box_zone',
@@ -1023,9 +921,10 @@ CreateThread(function()
                 else
                     local currentSelection = 0
 
-                    for k, v in pairs(Config.Locations['impound']) do
+                    for i = 1, #Config.Locations['impound'] do
+                        local v = Config.Locations['impound'][i]
                         if #(point - vector3(v.x, v.y, v.z)) < 4 then
-                            currentSelection = k
+                            currentSelection = i
                         end
                     end
                     exports['qb-menu']:showHeader({
@@ -1050,7 +949,8 @@ CreateThread(function()
 
     -- Police Garage
     local garageZones = {}
-    for _, v in pairs(Config.Locations['vehicle']) do
+    for i = 1, #Config.Locations['vehicle'] do
+        local v = Config.Locations['vehicle'][i]
         garageZones[#garageZones + 1] = BoxZone:Create(
             vector3(v.x, v.y, v.z), 3, 3, {
                 name = 'box_zone',
@@ -1071,9 +971,10 @@ CreateThread(function()
                 else
                     local currentSelection = 0
 
-                    for k, v in pairs(Config.Locations['vehicle']) do
+                    for i = 1, #Config.Locations['vehicle'] do
+                        local v = Config.Locations['vehicle'][i]
                         if #(point - vector3(v.x, v.y, v.z)) < 4 then
-                            currentSelection = k
+                            currentSelection = i
                         end
                     end
                     exports['qb-menu']:showHeader({

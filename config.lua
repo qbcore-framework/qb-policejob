@@ -9,61 +9,58 @@ Config.PoliceHelicopter = 'POLMAV'
 Config.FuelResource = 'LegacyFuel' -- supports any that has a GetFuel() and SetFuel() export
 
 Config.AmmoLabels = {
-    ['AMMO_PISTOL'] = '9x19mm parabellum bullet',
-    ['AMMO_SMG'] = '9x19mm parabellum bullet',
-    ['AMMO_RIFLE'] = '7.62x39mm bullet',
-    ['AMMO_MG'] = '7.92x57mm mauser bullet',
-    ['AMMO_SHOTGUN'] = '12-gauge bullet',
-    ['AMMO_SNIPER'] = 'Large caliber bullet',
+    AMMO_PISTOL = '9x19mm parabellum bullet',
+    AMMO_SMG = '9x19mm parabellum bullet',
+    AMMO_RIFLE = '7.62x39mm bullet',
+    AMMO_MG = '7.92x57mm mauser bullet',
+    AMMO_SHOTGUN = '12-gauge bullet',
+    AMMO_SNIPER = 'Large caliber bullet',
 }
 
 Config.Objects = {
-    ['cone'] = { model = `prop_roadcone02a`, freeze = false },
-    ['barrier'] = { model = `prop_barrier_work06a`, freeze = true },
-    ['roadsign'] = { model = `prop_snow_sign_road_06g`, freeze = true },
-    ['tent'] = { model = `prop_gazebo_03`, freeze = true },
-    ['light'] = { model = `prop_worklight_03b`, freeze = true },
+    cone = { model = `prop_roadcone02a`, freeze = false },
+    barrier = { model = `prop_barrier_work06a`, freeze = true },
+    roadsign = { model = `prop_snow_sign_road_06g`, freeze = true },
+    tent = { model = `prop_gazebo_03`, freeze = true },
+    light = { model = `prop_worklight_03b`, freeze = true },
 }
 
 Config.Locations = {
-    ['duty'] = {
-        [1] = vector3(440.085, -974.924, 30.689),
-        [2] = vector3(-449.811, 6012.909, 31.815),
+    duty = {
+        vector3(440.085, -974.924, 30.689),
+        vector3(-449.811, 6012.909, 31.815),
     },
-    ['vehicle'] = {
-        [1] = vector4(448.159, -1017.41, 28.562, 90.654),
-        [2] = vector4(471.13, -1024.05, 28.17, 274.5),
-        [3] = vector4(-455.39, 6002.02, 31.34, 87.93),
+    vehicle = {
+        vector4(448.159, -1017.41, 28.562, 90.654),
+        vector4(471.13, -1024.05, 28.17, 274.5),
+        vector4(-455.39, 6002.02, 31.34, 87.93),
     },
-    ['stash'] = {
-        [1] = vector3(453.075, -980.124, 30.889),
+    stash = {
+        vector3(453.075, -980.124, 30.889),
     },
-    ['impound'] = {
-        [1] = vector3(436.68, -1007.42, 27.32),
-        [2] = vector3(-436.14, 5982.63, 31.34),
+    impound = {
+        vector3(436.68, -1007.42, 27.32),
+        vector3(-436.14, 5982.63, 31.34),
     },
-    ['helicopter'] = {
-        [1] = vector4(449.168, -981.325, 43.691, 87.234),
-        [2] = vector4(-475.43, 5988.353, 31.716, 31.34),
+    helicopter = {
+        vector4(449.168, -981.325, 43.691, 87.234),
+        vector4(-475.43, 5988.353, 31.716, 31.34),
     },
-    ['armory'] = {
-        [1] = vector3(462.23, -981.12, 30.68),
+    trash = {
+        vector3(439.0907, -976.746, 30.776),
     },
-    ['trash'] = {
-        [1] = vector3(439.0907, -976.746, 30.776),
+    fingerprint = {
+        vector3(460.9667, -989.180, 24.92),
     },
-    ['fingerprint'] = {
-        [1] = vector3(460.9667, -989.180, 24.92),
+    evidence = {
+        vector3(442.1722, -996.067, 30.689),
+        vector3(451.7031, -973.232, 30.689),
+        vector3(455.1456, -985.462, 30.689),
     },
-    ['evidence'] = {
-        [1] = vector3(442.1722, -996.067, 30.689),
-        [2] = vector3(451.7031, -973.232, 30.689),
-        [3] = vector3(455.1456, -985.462, 30.689),
-    },
-    ['stations'] = {
-        [1] = { label = 'Police Station', coords = vector4(428.23, -984.28, 29.76, 3.5) },
-        [2] = { label = 'Prison', coords = vector4(1845.903, 2585.873, 45.672, 272.249) },
-        [3] = { label = 'Police Station Paleto', coords = vector4(-451.55, 6014.25, 31.716, 223.81) },
+    stations = {
+        { label = 'Police Station',        coords = vector4(428.23, -984.28, 29.76, 3.5) },
+        { label = 'Prison',                coords = vector4(1845.903, 2585.873, 45.672, 272.249) },
+        { label = 'Police Station Paleto', coords = vector4(-451.55, 6014.25, 31.716, 223.81) },
     },
 }
 
@@ -121,94 +118,18 @@ Config.Radars = {
     vector4(-823.3688, -1146.980, 8.0, 300.0),
 }
 
-Config.CarItems = {
-    { name = 'heavyarmor',         amount = 2 },
-    { name = 'empty_evidence_bag', amount = 10 },
-    { name = 'police_stormram',    amount = 1 },
-}
-
 Config.AuthorizedVehicles = {
     -- Grade 0 and higher
     [0] = {
-        ['police'] = 'Police Car 1',
-        ['police2'] = 'Police Car 2',
-        ['police3'] = 'Police Car 3',
-        ['police4'] = 'Police Car 4',
-        ['policeb'] = 'Police Car 5',
-        ['policet'] = 'Police Car 6',
-        ['sheriff'] = 'Sheriff Car 1',
-        ['sheriff2'] = 'Sheriff Car 2',
+        police = 'Police Car 1',
+        police2 = 'Police Car 2',
+        police3 = 'Police Car 3',
+        police4 = 'Police Car 4',
+        policeb = 'Police Car 5',
+        policet = 'Police Car 6',
+        sheriff = 'Sheriff Car 1',
+        sheriff2 = 'Sheriff Car 2',
     },
-}
-
-Config.Items = {
-    -- Grade 0 and higher
-    [0] = {
-        {
-            name = 'weapon_pistol',
-            price = 0,
-            amount = 50,
-            info = {
-                attachments = {
-                    { component = 'COMPONENT_AT_PI_FLSH', label = 'Flashlight' },
-                }
-            }
-        },
-        {
-            name = 'weapon_stungun',
-            price = 0,
-            amount = 50,
-            info = {
-                attachments = {
-                    { component = 'COMPONENT_AT_AR_FLSH', label = 'Flashlight' },
-                }
-            }
-        },
-        {
-            name = 'weapon_pumpshotgun',
-            price = 0,
-            amount = 50,
-            info = {
-                attachments = {
-                    { component = 'COMPONENT_AT_AR_FLSH', label = 'Flashlight' },
-                }
-            }
-        },
-        {
-            name = 'weapon_smg',
-            price = 0,
-            amount = 50,
-            info = {
-                attachments = {
-                    { component = 'COMPONENT_AT_SCOPE_MACRO_02', label = '1x Scope' },
-                    { component = 'COMPONENT_AT_AR_FLSH',        label = 'Flashlight' },
-                }
-            }
-        },
-        {
-            name = 'weapon_carbinerifle',
-            price = 0,
-            amount = 50,
-            info = {
-                attachments = {
-                    { component = 'COMPONENT_AT_AR_FLSH',      label = 'Flashlight' },
-                    { component = 'COMPONENT_AT_SCOPE_MEDIUM', label = '3x Scope' },
-                }
-            }
-        },
-        { name = 'weapon_nightstick',  price = 0, amount = 50 },
-        { name = 'weapon_flashlight',  price = 0, amount = 50 },
-        { name = 'pistol_ammo',        price = 0, amount = 50 },
-        { name = 'smg_ammo',           price = 0, amount = 50 },
-        { name = 'shotgun_ammo',       price = 0, amount = 50 },
-        { name = 'rifle_ammo',         price = 0, amount = 50 },
-        { name = 'handcuffs',          price = 0, amount = 50 },
-        { name = 'empty_evidence_bag', price = 0, amount = 50 },
-        { name = 'police_stormram',    price = 0, amount = 50 },
-        { name = 'armor',              price = 0, amount = 50 },
-        { name = 'radio',              price = 0, amount = 50 },
-        { name = 'heavyarmor',         price = 0, amount = 50 },
-    }
 }
 
 Config.VehicleSettings = {
