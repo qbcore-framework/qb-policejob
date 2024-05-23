@@ -220,7 +220,7 @@ CreateThread(function() -- Gunpowder Status when shooting
             local weapon = GetSelectedPedWeapon(ped)
             if not WhitelistedWeapon(weapon) then
                 shotAmount = shotAmount + 1
-                if shotAmount > 5 and (CurrentStatusList == nil or CurrentStatusList['gunpowder'] == nil) then
+                if shotAmount >= 5 and (CurrentStatusList == nil or CurrentStatusList['gunpowder'] == nil) then
                     if math.random(1, 10) <= 7 then
                         TriggerEvent('evidence:client:SetStatus', 'gunpowder', 200)
                     end
