@@ -11,7 +11,7 @@ local updatingCops = false
 -- Functions
 local function UpdateBlips()
     local dutyPlayers = {}
-    local players = QBCore.Functions.GetQBPlayers()
+    local players = QBCore.Functions.GetPlayers()
     for i = 1, #players do
         local v = players[i]
         if v and (v.PlayerData.job.type == 'leo' or v.PlayerData.job.type == 'ems') and v.PlayerData.job.onduty then
