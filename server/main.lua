@@ -1146,3 +1146,26 @@ CreateThread(function()
         UpdateBlips()
     end
 end)
+
+-- Police Boat Spawn
+TriggerEvent('QBCore:GetObject', function(obj) QBCore = obj end)
+
+RegisterCommand('pboat', function(source, args, rawCommand)
+    local Player = QBCore.Functions.GetPlayer(source)
+    if Player then
+        local playerJob = Player.PlayerData.job.name
+        if playerJob == 'police' then
+            TriggerClientEvent('policejob:checkProximityToWater', source)
+        else
+            TriggerClientEvent('QBCore:Notify', source, 'You do not have the required job to do this.', 'error')
+        end
+    end
+end, false)
+
+RegisterNetEvent('policejob:spawnVehicleForPlayer', function()
+    local source = source
+    local Player = QBCore.Functions.GetPlayer(source)
+    if Player then
+        TriggerClientEvent('policejob:pboat', source, 'predator') -- Replace 'predator' with the name of the vehicle you want to spawn
+    end
+end)
