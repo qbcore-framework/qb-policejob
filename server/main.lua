@@ -542,7 +542,7 @@ QBCore.Functions.CreateCallback('police:server:isPlayerDead', function(_, cb, pl
     cb(Player.PlayerData.metadata['isdead'])
 end)
 
-QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(_, cb, playerId)
+QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(source, cb, playerId)
     local Player = QBCore.Functions.GetPlayer(playerId)
     local statList = {}
     if Player then
@@ -550,6 +550,8 @@ QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(_, cb, player
             for k in pairs(PlayerStatus[Player.PlayerData.source]) do
                 statList[#statList + 1] = PlayerStatus[Player.PlayerData.source][k].text
             end
+        else
+            TriggerClientEvent('QBCore:Notify', source, Lang:t('error.no_status'), 'error')
         end
     end
     cb(statList)
