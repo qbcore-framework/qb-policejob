@@ -354,7 +354,7 @@ RegisterNetEvent('police:client:CheckStatus', function()
                 QBCore.Functions.TriggerCallback('police:GetPlayerStatus', function(result)
                     if result then
                         for _, v in pairs(result) do
-                            QBCore.Functions.Notify('' .. v .. '')
+                            QBCore.Functions.Notify('Player comes back with ' .. v)
                         end
                     end
                 end, playerId)

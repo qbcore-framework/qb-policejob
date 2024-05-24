@@ -86,16 +86,6 @@ RegisterNetEvent('police:client:PutInVehicle', function()
     end
 end)
 
-RegisterNetEvent('police:client:SeizeCash', function()
-    local player, distance = QBCore.Functions.GetClosestPlayer()
-    if player ~= -1 and distance < 2.5 then
-        local playerId = GetPlayerServerId(player)
-        TriggerServerEvent('police:server:SeizeCash', playerId)
-    else
-        QBCore.Functions.Notify(Lang:t('error.none_nearby'), 'error')
-    end
-end)
-
 RegisterNetEvent('police:client:SeizeDriverLicense', function()
     local player, distance = QBCore.Functions.GetClosestPlayer()
     if player ~= -1 and distance < 2.5 then
