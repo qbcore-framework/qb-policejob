@@ -282,6 +282,17 @@ RegisterNetEvent('police:client:CuffPlayer', function()
     end
 end)
 
+RegisterNetEvent('police:client:SearchPlayer', function()
+    local player, distance = QBCore.Functions.GetClosestPlayer()
+    if player ~= -1 and distance < 2.5 then
+        local playerId = GetPlayerServerId(player)
+        TriggerServerEvent("inventory:server:OpenInventory", "otherplayer", playerId)
+        TriggerServerEvent("police:server:SearchPlayer", playerId)
+    else
+        QBCore.Functions.Notify(Lang:t("error.none_nearby"), "error")
+    end
+end)
+
 RegisterNetEvent('police:client:GetEscorted', function(playerId)
     local ped = PlayerPedId()
     QBCore.Functions.GetPlayerData(function(PlayerData)
