@@ -26,7 +26,8 @@ local Translations = {
         no_driver_license = 'No drivers license',
         not_cuffed_dead = 'Civilian isn\'t cuffed or dead',
         fine_yourself = 'You Cannot Fine Yourself',
-        not_online = 'This person is not online'
+        not_online = 'This person is not online',
+        no_status = 'No status found for the person',
     },
     success = {
         uncuffed = 'You have been uncuffed',
@@ -117,7 +118,7 @@ local Translations = {
         officer_down = 'Officer %{lastname} | %{callsign} Down',
         fine_issued = 'Fine has been issued to offender succesfully',
         received_fine = 'State Debt Recovery has automatically recovered the fines owed...',
-        camera_speed= 'Speed camera #%{radarid} - Marked vehicle'
+        camera_speed = 'Speed camera #%{radarid} - Marked vehicle'
 
     },
     evidence = {

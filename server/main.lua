@@ -249,16 +249,6 @@ QBCore.Commands.Add('clearblood', Lang:t('commands.clearblood'), {}, false, func
     end
 end)
 
-QBCore.Commands.Add('seizecash', Lang:t('commands.seizecash'), {}, false, function(source)
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    if Player.PlayerData.job.type == 'leo' and Player.PlayerData.job.onduty then
-        TriggerClientEvent('police:client:SeizeCash', src)
-    else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t('error.on_duty_police_only'), 'error')
-    end
-end)
-
 QBCore.Commands.Add('sc', Lang:t('commands.softcuff'), {}, false, function(source)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -542,7 +532,7 @@ QBCore.Functions.CreateCallback('police:server:isPlayerDead', function(_, cb, pl
     cb(Player.PlayerData.metadata['isdead'])
 end)
 
-QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(_, cb, playerId)
+QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(source, cb, playerId)
     local Player = QBCore.Functions.GetPlayer(playerId)
     local statList = {}
     if Player then
@@ -550,6 +540,8 @@ QBCore.Functions.CreateCallback('police:GetPlayerStatus', function(_, cb, player
             for k in pairs(PlayerStatus[Player.PlayerData.source]) do
                 statList[#statList + 1] = PlayerStatus[Player.PlayerData.source][k].text
             end
+        else
+            TriggerClientEvent('QBCore:Notify', source, Lang:t('error.no_status'), 'error')
         end
     end
     cb(statList)
@@ -681,11 +673,19 @@ RegisterNetEvent('police:server:SearchPlayer', function()
     local PlayerData = Player.PlayerData
     if PlayerData.job.type ~= 'leo' then return end
     local player, distance = QBCore.Functions.GetClosestPlayer(src)
+    player = tonumber(player)
     if player ~= -1 and distance < 2.5 then
-        local SearchedPlayer = QBCore.Functions.GetPlayer(tonumber(player))
+        local SearchedPlayer = QBCore.Functions.GetPlayer(player)
         if not SearchedPlayer then return end
-        exports['qb-inventory']:OpenInventoryById(src, tonumber(player))
+        local moneyAmount = SearchedPlayer.PlayerData.money['cash']
         TriggerClientEvent('QBCore:Notify', src, Lang:t('info.cash_found', { cash = SearchedPlayer.PlayerData.money['cash'] }))
+        if moneyAmount > 0 then
+            local info = { cash = moneyAmount }
+            SearchedPlayer.Functions.RemoveMoney('cash', moneyAmount, 'police-cash-seized')
+            exports['qb-inventory']:AddItem(src, 'moneybag', 1, false, info, 'police-cash-seized')
+            TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t('info.cash_confiscated'))
+        end
+        exports['qb-inventory']:OpenInventoryById(src, player)
         TriggerClientEvent('QBCore:Notify', player, Lang:t('info.being_searched'))
     else
         TriggerClientEvent('QBCore:Notify', src, Lang:t('error.none_nearby'), 'error')
@@ -885,25 +885,6 @@ end)
 --         end
 --     end
 -- end)
-
-RegisterNetEvent('police:server:SeizeCash', function(playerId)
-    local src = source
-    local playerPed = GetPlayerPed(src)
-    local targetPed = GetPlayerPed(playerId)
-    local playerCoords = GetEntityCoords(playerPed)
-    local targetCoords = GetEntityCoords(targetPed)
-    if #(playerCoords - targetCoords) > 2.5 then return DropPlayer(src, 'Attempted exploit abuse') end
-    local Player = QBCore.Functions.GetPlayer(src)
-    local SearchedPlayer = QBCore.Functions.GetPlayer(playerId)
-    if not Player or not SearchedPlayer then return end
-    if Player.PlayerData.job.type ~= 'leo' then return end
-    local moneyAmount = SearchedPlayer.PlayerData.money['cash']
-    local info = { cash = moneyAmount }
-    SearchedPlayer.Functions.RemoveMoney('cash', moneyAmount, 'police-cash-seized')
-    exports['qb-inventory']:AddItem(src, 'moneybag', 1, false, info, 'police:server:SeizeCash')
-    TriggerClientEvent('qb-inventory:client:ItemBox', src, QBCore.Shared.Items['moneybag'], 'add')
-    TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t('info.cash_confiscated'))
-end)
 
 RegisterNetEvent('police:server:SeizeDriverLicense', function(playerId)
     local src = source
