@@ -118,6 +118,12 @@ Config.Radars = {
     vector4(-823.3688, -1146.980, 8.0, 300.0),
 }
 
+Config.CarItems = {
+    [1] = {name = "heavyarmor", amount = 2, info = {}, type = "item", slot = 1,},
+    [2] = {name = "empty_evidence_bag", amount = 10, info = {}, type = "item", slot = 2,},
+    [3] = {name = "police_stormram", amount = 1, info = {}, type = "item", slot = 3,},
+}
+
 Config.AuthorizedVehicles = {
     -- Grade 0 and higher
     [0] = {
