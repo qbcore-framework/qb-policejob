@@ -63,6 +63,7 @@ local Translations = {
         cuff = 'You are cuffed!',
         cuffed_walk = 'You are cuffed, but you can walk',
         vehicle_flagged = 'Vehicle %{vehicle} is flagged for: %{reason}',
+        flagged_vehicle_radar = 'Flagged vehicle spotted by radar: %{plate}',
         unflag_vehicle = 'Vehicle %{vehicle} is unflagged',
         tow_driver_paid = 'You paid the tow truck driver',
         paid_lawyer = 'You paid a lawyer',
@@ -117,8 +118,6 @@ local Translations = {
         officer_down = 'Officer %{lastname} | %{callsign} Down',
         fine_issued = 'Fine has been issued to offender succesfully',
         received_fine = 'State Debt Recovery has automatically recovered the fines owed...',
-        camera_speed= 'Speed camera #%{radarid} - Marked vehicle'
-
     },
     evidence = {
         red_hands = 'Red hands',

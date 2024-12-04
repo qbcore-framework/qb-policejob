@@ -125,7 +125,7 @@ local function RenderVehicleInfo(vehicle)
 end
 
 -- Events
-RegisterNetEvent('heli:spotlight', function(serverID, state)
+RegisterNetEvent('heli:client:spotlight', function(serverID, state)
 	local heli = GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(serverID)), false)
 	SetVehicleSearchlight(heli, state, false)
 end)
@@ -159,7 +159,7 @@ CreateThread(function()
 
 					if IsControlJustPressed(0, toggle_spotlight) and (GetPedInVehicleSeat(heli, -1) == lPed or GetPedInVehicleSeat(heli, 0) == lPed) then
 						spotlight_state = not spotlight_state
-						TriggerServerEvent('heli:spotlight', spotlight_state)
+						TriggerServerEvent('heli:server:spotlight', spotlight_state)
 						PlaySoundFrontend(-1, 'SELECT', 'HUD_FRONTEND_DEFAULT_SOUNDSET', false)
 					end
 

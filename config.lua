@@ -104,24 +104,23 @@ Config.SecurityCameras = {
     },
 }
 
+Config.EnableRadars = true -- alerts for flagged plates
 Config.Radars = {
-    vector4(-623.44421386719, -823.08361816406, 25.25704574585, 145.0),
-    vector4(-652.44421386719, -854.08361816406, 24.55704574585, 325.0),
-    vector4(1623.0114746094, 1068.9924316406, 80.903594970703, 84.0),
-    vector4(-2604.8994140625, 2996.3391113281, 27.528566360474, 175.0),
-    vector4(2136.65234375, -591.81469726563, 94.272926330566, 318.0),
-    vector4(2117.5764160156, -558.51013183594, 95.683128356934, 158.0),
-    vector4(406.89505004883, -969.06286621094, 29.436267852783, 33.0),
-    vector4(657.315, -218.819, 44.06, 320.0),
-    vector4(2118.287, 6040.027, 50.928, 172.0),
-    vector4(-106.304, -1127.5530, 30.778, 230.0),
-    vector4(-823.3688, -1146.980, 8.0, 300.0),
+    vector3(1051.42, 331.11, 84.00),
+    vector3(544.43, -373.24, 33.14),
+    vector3(-2612.10, 2940.81, 16.67),
+    vector3(287.94, -517.44, 42.89),
+    vector3(2792.73, 4407.68, 48.44),
+    vector3(577.11, -1028.32, 37.07),
+    vector3(114.83, -797.89, 30.97),
+    vector3(74.33, -163.30, 54.67),
+    vector3(28.19, -971.05, 28.96),
 }
 
 Config.CarItems = {
-    [1] = {name = "heavyarmor", amount = 2, info = {}, type = "item", slot = 1,},
-    [2] = {name = "empty_evidence_bag", amount = 10, info = {}, type = "item", slot = 2,},
-    [3] = {name = "police_stormram", amount = 1, info = {}, type = "item", slot = 3,},
+    [1] = { name = 'heavyarmor', amount = 2, info = {}, type = 'item', slot = 1, },
+    [2] = { name = 'empty_evidence_bag', amount = 10, info = {}, type = 'item', slot = 2, },
+    [3] = { name = 'police_stormram', amount = 1, info = {}, type = 'item', slot = 3, },
 }
 
 Config.AuthorizedVehicles = {
